@@ -7,6 +7,7 @@ export const icons = {
   liveGames: require('./liveGames.svg'),
   betsActive: require('./betsActive.svg'),
   bets: require('./bets.svg'),
-  social: require('./social.svg')
+  social: require('./social.svg'),
+  filter: require('./filter.svg')
 };
 export type IconTypes = keyof typeof icons;
