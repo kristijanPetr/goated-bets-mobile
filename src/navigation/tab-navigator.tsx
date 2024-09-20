@@ -2,10 +2,13 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { RootStackParamList } from '.';
-import { HeaderButton } from '../src/components/HeaderButton';
-import { TabBarIcon } from '../src/components/TabBarIcon';
-import One from '../src/screens/one';
-import Two from '../src/screens/two';
+import { variables } from '~/utils/mixins';
+import { Icon } from '~/components/icon/icon';
+import Leaderboard from '~/screens/Leaderboard';
+import GamePlayers from '~/screens/GamePlayers';
+import LiveGames from '~/screens/LiveGames';
+import Bets from '~/screens/Bets';
+import Social from '~/screens/Social';
 
 const Tab = createBottomTabNavigator();
 
@@ -15,23 +18,68 @@ export default function TabLayout({ navigation }: Props) {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: 'black',
+        tabBarStyle: {
+          backgroundColor: variables.colors.black,
+          borderRadius: 35,
+          overflow: 'hidden',
+          bottom: 50,
+          height: 58,
+          width: '90%',
+          left: '5%',
+          paddingHorizontal: 15
+        },
+        tabBarItemStyle: {
+          backgroundColor: variables.colors.black,
+          height: 40,
+          width: 49,
+          marginTop: 10
+        },
+        tabBarLabelStyle: {
+          fontSize: 8,
+          color: variables.colors.white,
+          marginTop: 5
+        }
       }}>
       <Tab.Screen
-        name="One"
-        component={One}
+        name="Leaderboard"
+        component={Leaderboard}
         options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => <HeaderButton onPress={() => navigation.navigate('Modal')} />,
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <Icon icon={focused ? 'leaderboardMenuIconActive' : 'leaderboardMenuIcon'} />
+          )
         }}
       />
       <Tab.Screen
-        name="Two"
-        component={Two}
+        name="Game/Players"
+        component={GamePlayers}
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          headerShown: false,
+          tabBarIcon: ({ focused }) => <Icon icon={focused ? 'gamePlayersActive' : 'gamePlayers'} />
+        }}
+      />
+      <Tab.Screen
+        name="Live Games"
+        component={LiveGames}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused }) => <Icon icon={focused ? 'liveGamesActive' : 'liveGames'} />
+        }}
+      />
+      <Tab.Screen
+        name="Bets"
+        component={Bets}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused }) => <Icon icon={focused ? 'betsActive' : 'bets'} />
+        }}
+      />
+      <Tab.Screen
+        name="Social"
+        component={Social}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused }) => <Icon icon={focused ? 'social' : 'social'} />
         }}
       />
     </Tab.Navigator>
