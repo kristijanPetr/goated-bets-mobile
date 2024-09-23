@@ -54,7 +54,7 @@ const MatchReviewScroller = () => {
 
   return (
     <FlatList
-      style={{ marginLeft: 6 }}
+      style={styles.container}
       data={DATA}
       renderItem={renderItem}
       keyExtractor={(item) => item.id}
@@ -67,6 +67,7 @@ const MatchReviewScroller = () => {
 export default MatchReviewScroller;
 
 const styles = StyleSheet.create({
+  container: { marginLeft: 6, height: 120 },
   item: {
     paddingVertical: 5,
     paddingHorizontal: 10,

@@ -3,14 +3,17 @@ import React from 'react';
 import ScreenHeader from '~/components/common/ScreenHeader';
 import MatchReviewScroller from '~/components/leaderboard/MatchReviewScroller';
 import StatsSelectorAndFilter from '~/components/leaderboard/StatsSelectorAndFilter';
+import PlayersList from '~/components/leaderboard/PlayersList';
+import PlayerListFilterLegend from '~/components/leaderboard/PlayerListFilterLegend';
 
-// individual player stats box height of 54 , colors are in the mixin
 const Leaderboard = () => {
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <ScreenHeader title="Leaderboard" />
       <MatchReviewScroller />
       <StatsSelectorAndFilter />
+      <PlayerListFilterLegend />
+      <PlayersList />
     </View>
   );
 };

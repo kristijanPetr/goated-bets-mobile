@@ -1,4 +1,12 @@
-import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
+} from 'react-native';
 import React, { useState } from 'react';
 import { variables } from '~/utils/mixins';
 import Feather from '@expo/vector-icons/Feather';
@@ -9,7 +17,10 @@ const DATA = [
   { id: '1', name: 'Anytime', metric: 'TD' },
   { id: '2', name: 'Passing', metric: 'Yds' },
   { id: '3', name: 'Rushing', metric: 'Yds' },
-  { id: '4', name: 'Rec', metric: 'Yds' }
+  { id: '4', name: 'Rec1', metric: 'Yds' },
+  { id: '5', name: 'Rec2', metric: 'Yds' },
+  { id: '6', name: 'Rec3', metric: 'Yds' },
+  { id: '7', name: 'Rec4', metric: 'Yds' }
 ];
 const StatsSelectorAndFilter = () => {
   const [statsSelected, setStatsSelected] = useState<string[]>([]);
@@ -22,10 +33,11 @@ const StatsSelectorAndFilter = () => {
       setStatsSelected((prevState) => [...prevState, selectOption]);
     }
   };
-  const renderItem = ({ item }: any) => {
+  const renderItem = (item: any) => {
     const isItemActive = statsSelected.includes(item.name);
     return (
       <TouchableOpacity
+        key={item.id}
         onPress={() => handleStatSelect(item.name)}
         style={{
           ...styles.statsContainer,
@@ -51,7 +63,7 @@ const StatsSelectorAndFilter = () => {
 
   if (isSearchFilterSelected) {
     return (
-      <View style={styles.container}>
+      <View style={styles.searchContainer}>
         <View style={styles.searchFilterContainer}>
           <Feather name="search" size={24} color="black" />
           <TextInput
@@ -75,14 +87,12 @@ const StatsSelectorAndFilter = () => {
 
   return (
     <View style={styles.container}>
-      <View>
-        <FlatList
-          data={DATA}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          horizontal
-          scrollEnabled={false}
-        />
+      <View style={styles.horizontalContainer}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {DATA.map((item) => {
+            return renderItem(item);
+          })}
+        </ScrollView>
       </View>
       <View style={styles.verticalDivider} />
       <View style={styles.filterButtons}>
@@ -103,8 +113,21 @@ export default StatsSelectorAndFilter;
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: 'center',
+    justifyContent: 'space-between',
     flexDirection: 'row',
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+    marginBottom: 15
+  },
+  horizontalContainer: { width: '70%', flex: 1 },
+  searchContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: 10,
+    marginBottom: 15
+  },
+  flatListContentContainer: {
+    width: '80%',
+    overflow: 'hidden'
   },
   statsContainer: {
     width: 66,
@@ -124,7 +147,9 @@ const styles = StyleSheet.create({
   },
   filterButtons: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    width: '30%',
+    marginLeft: 4
   },
   buttonContainer: {
     borderRadius: 30,
@@ -139,7 +164,7 @@ const styles = StyleSheet.create({
   },
   searchFilterContainer: {
     backgroundColor: variables.colors.white,
-    width: '87.3%',
+    width: '84.8%',
     borderRadius: 30,
     alignItems: 'center',
     paddingLeft: 12,
