@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, FlatList, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { View, FlatList, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { variables } from '~/utils/mixins';
+import { Icon } from '../icon/icon';
 
 const DATA = [
   { id: '1', homeTeam: 'BAL', awayTeam: 'KC', time: '8:20pm EST' },
@@ -28,19 +29,24 @@ const MatchReviewScroller = () => {
     const textColor = isItemActive ? variables.colors.black : variables.colors.white;
     return (
       <TouchableOpacity
+        activeOpacity={0.9}
         onPress={() => handleSelectGame(item.id)}
         style={{
           ...styles.item,
-          backgroundColor: isItemActive ? variables.colors.lightGrey : variables.colors.grey
+          backgroundColor: isItemActive ? variables.colors.activeGrey : variables.colors.grey
         }}>
         <View style={styles.itemTeamContainer}>
           <View style={styles.iconAndNameContainer}>
-            <View style={styles.demoIcon}></View>
+            <View style={styles.demoIcon}>
+              <Icon icon="LClogo" />
+            </View>
             <Text style={{ ...styles.teamName, color: textColor }}>{item.homeTeam}</Text>
           </View>
           <Text style={{ ...styles.teamName, color: textColor }}>Vs</Text>
           <View style={styles.iconAndNameContainer}>
-            <View style={styles.demoIcon}></View>
+            <View style={styles.demoIcon}>
+              <Icon icon="bullLogo" />
+            </View>
             <Text style={{ ...styles.teamName, color: textColor }}>{item.awayTeam}</Text>
           </View>
         </View>
@@ -67,7 +73,7 @@ const MatchReviewScroller = () => {
 export default MatchReviewScroller;
 
 const styles = StyleSheet.create({
-  container: { marginLeft: 6, height: 120 },
+  container: { marginLeft: 6, height: 150 },
   item: {
     paddingVertical: 5,
     paddingHorizontal: 10,
@@ -76,7 +82,7 @@ const styles = StyleSheet.create({
     width: 137,
     height: 76,
     alignItems: 'center',
-    marginBottom: 16
+    marginBottom: 20
   },
   title: {
     fontSize: 24
@@ -94,15 +100,13 @@ const styles = StyleSheet.create({
     width: '90%'
   },
   teamName: {
-    fontSize: 12
+    fontSize: 12,
+    marginTop: 4
   },
   demoIcon: {
-    backgroundColor: variables.colors.black,
-    opacity: 0.3,
-    height: 26,
-    width: 26,
-    borderRadius: 20,
-    marginBottom: 5
+    height: 30,
+    width: 30,
+    borderRadius: 20
   },
   iconAndNameContainer: {
     alignItems: 'center',
@@ -113,5 +117,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 2
+  },
+  dummyImage: {
+    height: 35,
+    width: 35
   }
 });

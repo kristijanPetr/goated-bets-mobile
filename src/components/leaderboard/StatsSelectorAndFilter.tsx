@@ -37,11 +37,12 @@ const StatsSelectorAndFilter = () => {
     const isItemActive = statsSelected.includes(item.name);
     return (
       <TouchableOpacity
+        activeOpacity={0.9}
         key={item.id}
         onPress={() => handleStatSelect(item.name)}
         style={{
           ...styles.statsContainer,
-          backgroundColor: isItemActive ? variables.colors.lightGrey : variables.colors.grey
+          backgroundColor: isItemActive ? variables.colors.activeGrey : variables.colors.grey
         }}>
         <Text
           style={{
@@ -73,6 +74,7 @@ const StatsSelectorAndFilter = () => {
             onChangeText={setSearchFilter}
           />
           <TouchableOpacity
+            activeOpacity={0.9}
             style={styles.closeSearchFilterButton}
             onPress={() => setIsSearchFilterSelected(false)}>
             <Ionicons name="close" size={24} color="black" />
@@ -97,6 +99,7 @@ const StatsSelectorAndFilter = () => {
       <View style={styles.verticalDivider} />
       <View style={styles.filterButtons}>
         <TouchableOpacity
+          activeOpacity={0.9}
           onPress={() => setIsSearchFilterSelected(!isSearchFilterSelected)}
           style={{ ...styles.buttonContainer, backgroundColor: variables.colors.white }}>
           <Feather name="search" size={24} color="black" />

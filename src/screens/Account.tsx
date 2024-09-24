@@ -3,7 +3,7 @@ import React from 'react';
 import { variables } from '~/utils/mixins';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const LiveGames = () => {
+const Account = () => {
   return (
     <LinearGradient
       colors={[variables.colors.backgroundLinearDark, variables.colors.backgroundLinearBright]}
@@ -17,13 +17,13 @@ const LiveGames = () => {
         height: '100%'
       }}>
       <View style={styles.container}>
-        <Text>LiveGames</Text>
+        <Text>Account</Text>
       </View>
     </LinearGradient>
   );
 };
 
-export default LiveGames;
+export default Account;
 
 const styles = StyleSheet.create({
   container: { flex: 1 }
