@@ -1,7 +1,7 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React, { useState } from 'react';
 import { variables } from '~/utils/mixins';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import PlayerFilterOptionsButton from './PlayerFilterOptionsButton';
 
 const PlayerListFilterLegend = () => {
   const [filterSelected, setSelectedFilter] = useState<{
@@ -21,62 +21,39 @@ const PlayerListFilterLegend = () => {
   return (
     <View style={styles.container}>
       <View style={styles.playerPropContainer}>
-        <TouchableOpacity
-          onPress={() =>
+        <PlayerFilterOptionsButton
+          label="Player/Prop"
+          value={filterSelected.playerProp}
+          onChange={() =>
             setSelectedFilter({ ...filterSelected, playerProp: !filterSelected.playerProp })
           }
-          style={{ alignItems: 'center' }}
-          activeOpacity={0.8}>
-          <Text style={styles.textLegend}>Player/Prop</Text>
-          <AntDesign
-            name={filterSelected.playerProp ? 'caretup' : 'caretdown'}
-            size={12}
-            color="white"
-          />
-        </TouchableOpacity>
+        />
       </View>
       <View style={styles.barFilterContainer}>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={{ alignItems: 'center' }}
-          onPress={() => setSelectedFilter({ ...filterSelected, l5: !filterSelected.l5 })}>
-          <Text style={styles.textLegend}>L5</Text>
-          <AntDesign name={filterSelected.l5 ? 'caretup' : 'caretdown'} size={12} color="white" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={{ alignItems: 'center' }}
-          onPress={() => setSelectedFilter({ ...filterSelected, streak: !filterSelected.streak })}>
-          <Text style={styles.textLegend}>Streak</Text>
-          <AntDesign
-            name={filterSelected.streak ? 'caretup' : 'caretdown'}
-            size={12}
-            color="white"
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={{ alignItems: 'center' }}
-          onPress={() =>
+        <PlayerFilterOptionsButton
+          label="l5"
+          value={filterSelected.l5}
+          onChange={() => setSelectedFilter({ ...filterSelected, l5: !filterSelected.l5 })}
+        />
+        <PlayerFilterOptionsButton
+          label="Streak"
+          value={filterSelected.streak}
+          onChange={() => setSelectedFilter({ ...filterSelected, streak: !filterSelected.streak })}
+        />
+        <PlayerFilterOptionsButton
+          label={`Match \nGrade`}
+          value={filterSelected.matchGrade}
+          onChange={() =>
             setSelectedFilter({ ...filterSelected, matchGrade: !filterSelected.matchGrade })
-          }>
-          <Text style={styles.textLegend}>Match</Text>
-          <Text style={styles.textLegend}>Grade</Text>
-          <AntDesign
-            name={filterSelected.matchGrade ? 'caretup' : 'caretdown'}
-            size={12}
-            color="white"
-          />
-        </TouchableOpacity>
+          }
+        />
       </View>
       <View style={styles.oddsFilterContainer}>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={{ alignItems: 'center' }}
-          onPress={() => setSelectedFilter({ ...filterSelected, odds: !filterSelected.odds })}>
-          <Text style={styles.textLegend}>Odds</Text>
-          <AntDesign name={filterSelected.odds ? 'caretup' : 'caretdown'} size={12} color="white" />
-        </TouchableOpacity>
+        <PlayerFilterOptionsButton
+          label="Odds"
+          value={filterSelected.odds}
+          onChange={() => setSelectedFilter({ ...filterSelected, odds: !filterSelected.odds })}
+        />
       </View>
     </View>
   );
@@ -106,9 +83,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '20%'
-  },
-  textLegend: {
-    fontSize: 12,
-    color: variables.colors.white
   }
 });
