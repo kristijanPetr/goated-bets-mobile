@@ -82,7 +82,7 @@ const StatsSelectorAndFilter = () => {
   return (
     <View style={styles.container}>
       <View style={styles.horizontalContainer}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: '97%' }}>
           {DATA.map((item) => {
             return renderItem(item);
           })}

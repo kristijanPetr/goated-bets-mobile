@@ -1,6 +1,5 @@
 import { StyleSheet, View } from 'react-native';
 import React, { useState } from 'react';
-import { variables } from '~/utils/mixins';
 import PlayerFilterOptionsButton from './PlayerFilterOptionsButton';
 
 const PlayerListFilterLegend = () => {

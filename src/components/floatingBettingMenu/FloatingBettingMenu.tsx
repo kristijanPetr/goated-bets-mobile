@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14
   },
   sendToButtonText: {
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: 'bold'
   }
 });

@@ -50,13 +50,13 @@ export default ScreenHeader;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 70,
+    marginTop: 60,
     paddingHorizontal: 16,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     zIndex: 10,
-    marginBottom: 20
+    marginBottom: 10
   },
   header: {
     fontSize: 24,

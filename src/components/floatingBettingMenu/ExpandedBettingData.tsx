@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
   },
   clearBetslipButtonText: {
     color: variables.colors.white,
-    fontSize: 14
+    fontSize: 12
   },
   itemContainer: {
     height: 50,

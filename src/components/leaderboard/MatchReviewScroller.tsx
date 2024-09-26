@@ -38,14 +38,14 @@ const MatchReviewScroller = () => {
         <View style={styles.itemTeamContainer}>
           <View style={styles.iconAndNameContainer}>
             <View style={styles.demoIcon}>
-              <Icon icon="LClogo" />
+              <Icon icon="LClogo" style={{ width: 34, height: 34 }} />
             </View>
             <Text style={{ ...styles.teamName, color: textColor }}>{item.homeTeam}</Text>
           </View>
           <Text style={{ ...styles.teamName, color: textColor }}>Vs</Text>
           <View style={styles.iconAndNameContainer}>
             <View style={styles.demoIcon}>
-              <Icon icon="bullLogo" />
+              <Icon icon="bullLogo" style={{ width: 34, height: 34 }} />
             </View>
             <Text style={{ ...styles.teamName, color: textColor }}>{item.awayTeam}</Text>
           </View>
@@ -73,7 +73,7 @@ const MatchReviewScroller = () => {
 export default MatchReviewScroller;
 
 const styles = StyleSheet.create({
-  container: { marginLeft: 6, height: 150 },
+  container: { marginLeft: 6, height: 140, width: '94%' },
   item: {
     paddingVertical: 5,
     paddingHorizontal: 10,
@@ -81,8 +81,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: 137,
     height: 76,
-    alignItems: 'center',
-    marginBottom: 20
+    alignItems: 'center'
   },
   title: {
     fontSize: 24

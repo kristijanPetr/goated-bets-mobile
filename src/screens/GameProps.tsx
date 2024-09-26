@@ -2,6 +2,10 @@ import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { variables } from '~/utils/mixins';
 import { LinearGradient } from 'expo-linear-gradient';
+import ScreenHeader from '~/components/common/ScreenHeader';
+import GamePropsDisplayStats from '~/components/gameProps/GamePropsDisplayStats';
+import GameList from '~/components/gameProps/GameList';
+import FloatingBettingMenu from '~/components/floatingBettingMenu/FloatingBettingMenu';
 
 const GameProps = () => {
   return (
@@ -9,15 +13,12 @@ const GameProps = () => {
       colors={[variables.colors.backgroundLinearDark, variables.colors.backgroundLinearBright]}
       start={{ x: 0.8, y: 0.8 }}
       end={{ x: 1, y: 1 }}
-      style={{
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        top: 0,
-        height: '100%'
-      }}>
+      style={styles.background}>
       <View style={styles.container}>
-        <Text>GamePlayers</Text>
+        <ScreenHeader title="Game props" />
+        <GamePropsDisplayStats />
+        <GameList />
+        <FloatingBettingMenu />
       </View>
     </LinearGradient>
   );
@@ -26,5 +27,12 @@ const GameProps = () => {
 export default GameProps;
 
 const styles = StyleSheet.create({
-  container: { flex: 1 }
+  container: { flex: 1 },
+  background: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    height: '100%'
+  }
 });
