@@ -1,15 +1,13 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import ScreenHeader from '~/components/common/ScreenHeader';
-import MatchReviewScroller from '~/components/leaderboard/MatchReviewScroller';
-import StatsSelectorAndFilter from '~/components/leaderboard/StatsSelectorAndFilter';
-import PlayersList from '~/components/leaderboard/PlayersList';
-import PlayerListFilterLegend from '~/components/leaderboard/PlayerListFilterLegend';
 import { variables } from '~/utils/mixins';
 import { LinearGradient } from 'expo-linear-gradient';
+import ScreenHeader from '~/components/common/ScreenHeader';
+import GamePropsDisplayStats from '~/components/gameProps/GamePropsDisplayStats';
+import GameList from '~/components/gameProps/GameList';
 import FloatingBettingMenu from '~/components/floatingBettingMenu/FloatingBettingMenu';
 
-const Leaderboard = () => {
+const GameProps = () => {
   return (
     <LinearGradient
       colors={[variables.colors.backgroundLinearDark, variables.colors.backgroundLinearBright]}
@@ -17,18 +15,16 @@ const Leaderboard = () => {
       end={{ x: 1, y: 1 }}
       style={styles.background}>
       <View style={styles.container}>
-        <ScreenHeader title="Leaderboard" />
-        <MatchReviewScroller />
-        <StatsSelectorAndFilter />
-        <PlayerListFilterLegend />
-        <PlayersList />
+        <ScreenHeader title="Game props" />
+        <GamePropsDisplayStats />
+        <GameList />
         <FloatingBettingMenu />
       </View>
     </LinearGradient>
   );
 };
 
-export default Leaderboard;
+export default GameProps;
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
