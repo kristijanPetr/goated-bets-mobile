@@ -169,5 +169,5 @@ const PlayersList = () => {
 export default PlayersList;
 
 const styles = StyleSheet.create({
-  scrollContainer: { marginBottom: 85, paddingHorizontal: 8 }
+  scrollContainer: { marginBottom: 85, paddingHorizontal: 8, height: '60%' }
 });

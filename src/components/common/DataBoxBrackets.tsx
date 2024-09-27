@@ -10,7 +10,7 @@ interface Props {
   thirdContainerStyle?: any;
 }
 
-const DataBoxTwoBrackets = ({
+const DataBoxBrackets = ({
   firstContainerData,
   secondContainerData,
   secondContainerStyle,
@@ -32,6 +32,7 @@ const DataBoxTwoBrackets = ({
           const hasMoreData = firstContainerData.length > 1;
           return (
             <Text
+              key={index}
               style={{
                 ...styles.firstContainerText,
                 fontWeight: hasMoreData && index === 0 ? 'bold' : 'normal',
@@ -43,14 +44,22 @@ const DataBoxTwoBrackets = ({
         })}
       </TouchableOpacity>
       <View style={{ ...styles.secondContainer, ...secondContainerStyle }}>
-        {secondContainerData.map((item) => {
-          return <Text style={styles.secondContainerText}>{item}</Text>;
+        {secondContainerData.map((item, index) => {
+          return (
+            <Text key={index} style={styles.secondContainerText}>
+              {item}
+            </Text>
+          );
         })}
       </View>
       {thirdContainerData.length > 0 && (
         <View style={{ ...styles.thirdContainer, ...thirdContainerStyle }}>
-          {thirdContainerData.map((item) => {
-            return <Text style={styles.secondContainerText}>{item}</Text>;
+          {thirdContainerData.map((item, index) => {
+            return (
+              <Text key={index} style={styles.secondContainerText}>
+                {item}
+              </Text>
+            );
           })}
         </View>
       )}
@@ -58,7 +67,7 @@ const DataBoxTwoBrackets = ({
   );
 };
 
-export default DataBoxTwoBrackets;
+export default DataBoxBrackets;
 
 const styles = StyleSheet.create({
   container: {

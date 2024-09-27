@@ -73,7 +73,7 @@ const MatchReviewScroller = () => {
 export default MatchReviewScroller;
 
 const styles = StyleSheet.create({
-  container: { marginLeft: 6, height: 140, width: '94%' },
+  container: { marginLeft: 6, height: 76, marginBottom: 10, width: '94%' },
   item: {
     paddingVertical: 5,
     paddingHorizontal: 10,
