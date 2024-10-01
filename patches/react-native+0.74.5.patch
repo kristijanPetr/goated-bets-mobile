@@ -1,0 +1,16 @@
+diff --git a/node_modules/react-native/React/Base/RCTConvert.mm b/node_modules/react-native/React/Base/RCTConvert.mm
+index b868ee7..064bacd 100644
+--- a/node_modules/react-native/React/Base/RCTConvert.mm
++++ b/node_modules/react-native/React/Base/RCTConvert.mm
+@@ -86,6 +86,11 @@ RCT_CUSTOM_CONVERTER(NSData *, NSData, [json dataUsingEncoding:NSUTF8StringEncod
+   @try { // NSURL has a history of crashing with bad input, so let's be safe
+     NSURL *URL = [NSURL URLWithString:path];
+     if (URL.scheme) { // Was a well-formed absolute URL
++      NSURLComponents *components = [NSURLComponents componentsWithString:path];
++      components.percentEncodedQuery = [components.percentEncodedQuery stringByReplacingOccurrencesOfString:@"%25" withString:@"%"];
++      if (components.URL) {
++        return components.URL;
++      }  
+       return URL;
+     }
+ 
