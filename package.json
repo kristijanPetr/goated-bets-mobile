@@ -2,12 +2,14 @@
   "name": "goated-bets",
   "version": "1.0.0",
   "scripts": {
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "start": "expo start",
     "lint": "eslint \"**/*.{js,jsx,ts,tsx}\" && prettier -c \"**/*.{js,jsx,ts,tsx,json}\"",
     "format": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix && prettier \"**/*.{js,jsx,ts,tsx,json}\" --write",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "postinstall": "patch-package",
+    "build:local": "npx eas build --platform ios --local --profile development"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.0",
@@ -16,8 +18,13 @@
     "@react-navigation/stack": "^6.3.17",
     "@shopify/restyle": "^2.4.2",
     "expo": "^51.0.32",
+    "expo-dev-client": "~4.0.27",
     "expo-linear-gradient": "~13.0.2",
     "expo-status-bar": "~1.12.1",
+    "expo-updates": "~0.25.25",
+    "jsen-cls-sdk-prj-packagejs-mod-toolkit-pkg-interface-for-sdk-ecmascript": "git+http://localhost:49418/Repositories/packagejs-repository/jsen-cls-sdk-prj-packagejs-mod-toolkit-pkg-interface-for-sdk-ecmascript/1.0.0-6.0.0-compiled.git/",
+    "patch-package": "^8.0.0",
+    "postinstall-postinstall": "^2.1.0",
     "react": "18.2.0",
     "react-native": "0.74.5",
     "react-native-gesture-handler": "~2.16.1",
@@ -36,6 +43,9 @@
     "prettier": "^3.2.5",
     "react-native-svg-transformer": "^1.5.0",
     "typescript": "~5.3.3"
+  },
+  "resolutions": {
+    "react-native@0.74.5": "patch:react-native@npm:0.74.1#.yarn/patches/react-native-npm-0.74.1-754c02ae9e.patch"
   },
   "eslintConfig": {
     "extends": "universe/native",
