@@ -19,7 +19,7 @@ const Dropdown = ({
   includeName = false
 }: Props) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [dropdownValue, setDropdownValue] = useState(options[0].icon);
+  const [dropdownValue, setDropdownValue] = useState(options[0]);
   const [buttonLayout, setButtonLayout] = useState(null);
 
   const toggleModal = () => {
@@ -27,7 +27,7 @@ const Dropdown = ({
   };
 
   const selectOption = (option: any) => {
-    setDropdownValue(option.icon);
+    setDropdownValue(option);
     toggleModal();
   };
 
@@ -42,9 +42,9 @@ const Dropdown = ({
         onPress={toggleModal}
         onLayout={handleLayout}
         style={{ flexDirection: 'row', alignItems: 'center', ...customMainContainer }}>
-        <Icon icon={dropdownValue} style={{ width: 25, height: 25 }} />
+        <Icon icon={dropdownValue.icon} style={{ width: 25, height: 25, marginRight: 2 }} />
         {includeName && (
-          <Text style={{ ...styles.buttonText, fontWeight: 'bold' }}>{options[0].name}</Text>
+          <Text style={{ ...styles.buttonText, fontWeight: 'bold' }}>{dropdownValue.name}</Text>
         )}
         <AntDesign name={'caretdown'} size={8} color="white" />
       </TouchableOpacity>

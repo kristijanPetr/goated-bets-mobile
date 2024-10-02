@@ -1,26 +1,25 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import React, { useContext } from 'react';
 import { variables } from '~/utils/mixins';
 import Dropdown from './Dropdown';
 import { IconTypes } from '../icon/icons';
+import { SingletonDataContextProvider } from '~/context/singletonDataContext';
 
 interface Props {
   title: string;
 }
 
 const ScreenHeader = ({ title }: Props) => {
+  const { data } = useContext(SingletonDataContextProvider);
+
   const dataOptions = [
     { icon: 'fanDuel' as IconTypes, name: 'Fan Duel' },
     { icon: 'draftKingsLogo' as IconTypes, name: 'DraftKings' }
   ];
 
-  const sportsOptions = [
-    { icon: 'NFL' as IconTypes, name: 'NFL' },
-    { icon: 'MLB' as IconTypes, name: 'MLB' },
-    { icon: 'NBA' as IconTypes, name: 'NBA' },
-    { icon: 'NHL' as IconTypes, name: 'NHL' },
-    { icon: 'WNBA' as IconTypes, name: 'WNBA' }
-  ];
+  const dataSportsOptions = Object.keys(data.carouselSport).map((key) => {
+    return { icon: key.toLocaleUpperCase() as IconTypes, name: key.toLocaleUpperCase() };
+  });
 
   return (
     <View style={styles.container}>
@@ -35,7 +34,7 @@ const ScreenHeader = ({ title }: Props) => {
         </View>
         <View style={styles.dropdownButton}>
           <Dropdown
-            options={sportsOptions}
+            options={dataSportsOptions}
             customMainContainer={{ width: 60 }}
             customItemContainer={{ width: 110 }}
             includeName

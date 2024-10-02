@@ -2,6 +2,7 @@ export const variables = {
   colors: {
     backgroundLinearDark: '#000000',
     backgroundLinearBright: '#3E3E3E',
+    loginBackgroundColor: '#050629',
     black: '#000000',
     white: '#FFFFFF',
     grey: '#1F1F1F',

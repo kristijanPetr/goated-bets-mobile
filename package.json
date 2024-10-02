@@ -22,7 +22,7 @@
     "expo-linear-gradient": "~13.0.2",
     "expo-status-bar": "~1.12.1",
     "expo-updates": "~0.25.25",
-    "jsen-cls-sdk-prj-packagejs-mod-toolkit-pkg-interface-for-sdk-ecmascript": "git+http://localhost:49418/Repositories/packagejs-repository/jsen-cls-sdk-prj-packagejs-mod-toolkit-pkg-interface-for-sdk-ecmascript/1.0.0-6.0.0-compiled.git/",
+    "jsen-cls-sdk-prj-packagejs-mod-toolkit-pkg-interface-for-sdk-ecmascript": "git+http://192.168.0.111:49418/Repositories/packagejs-repository/jsen-cls-sdk-prj-packagejs-mod-toolkit-pkg-interface-for-sdk-ecmascript/1.0.0-6.0.0-compiled.git/",
     "patch-package": "^8.0.0",
     "postinstall-postinstall": "^2.1.0",
     "react": "18.2.0",

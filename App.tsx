@@ -9,6 +9,7 @@ import toolkit from 'jsen-cls-sdk-prj-packagejs-mod-toolkit-pkg-interface-for-sd
 
 import singleton from './src/utils/singelton';
 import Login from '~/screens/Login';
+import { SingletonDataContext } from '~/context/singletonDataContext';
 
 export default function App() {
   let dom = new toolkit.sdk.dom(
@@ -42,9 +43,10 @@ export default function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <StatusBar barStyle="light-content" />
-      {/* <RootStack /> */}
-      <Login />
+      <SingletonDataContext>
+        <StatusBar barStyle="light-content" />
+        <RootStack />
+      </SingletonDataContext>
     </ThemeProvider>
   );
 }
