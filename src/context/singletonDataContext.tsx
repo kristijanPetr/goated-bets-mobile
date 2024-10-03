@@ -1,9 +1,14 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import React, { createContext, useState } from 'react';
+import singleton from '../utils/singelton';
+import toolkit from 'jsen-cls-sdk-prj-packagejs-mod-toolkit-pkg-interface-for-sdk-ecmascript';
+import { format } from 'date-fns';
 
 type SingletonDataType = {
   data: any;
-  setData: (data: any) => void;
+  isFetching: boolean;
+  initiateData: (data: any) => void;
+  refetchData: (team: string, bookameker: string) => void;
   removeData: () => void;
 };
 
@@ -13,17 +18,49 @@ type Props = {
 
 export const SingletonDataContext = ({ children }: Props) => {
   const [data, setData] = useState({});
+  const [isFetching, setIsFetching] = useState(false);
 
-  const handleData = (data: any) => {
+  let dom = new toolkit.sdk.dom(
+    'widget_worker', // dom name
+    'http://137.184.135.111:49992/openapi.json'
+  );
+
+  let navigator = new toolkit.sdk.navigator(dom);
+  navigator.state = {
+    doms: {
+      widget_worker: dom
+    },
+    navigators: {
+      widget_worker: navigator
+    }
+  };
+
+  const loadInitialSingletonData = (data: any) => {
     setData(data);
   };
+
+  const refetchData = async (sport: string, bookmaker: string) => {
+    setIsFetching((prevState) => !prevState);
+    navigator.dom.ms_set_authorization('');
+    const date = new Date();
+    await singleton
+      .ma_reboot(toolkit, null, navigator, null, {}, sport, format(date, 'yyyyMMdd'), bookmaker)
+      .catch((error) => {
+        console.log('error', error);
+      });
+    setData(singleton.data);
+    setIsFetching((prevState) => !prevState);
+  };
+
   const removeData = () => {
     setData({});
   };
 
   const initialData = {
     data,
-    setData: handleData,
+    isFetching: isFetching,
+    initiateData: loadInitialSingletonData,
+    refetchData: refetchData,
     removeData
   };
   return (
@@ -35,7 +72,9 @@ export const SingletonDataContext = ({ children }: Props) => {
 
 export const SingletonDataContextProvider = createContext<SingletonDataType>({
   data: {},
-  setData: () => {},
+  isFetching: false,
+  initiateData: () => {},
+  refetchData: () => {},
   removeData: () => {}
 });
 const styles = StyleSheet.create({});

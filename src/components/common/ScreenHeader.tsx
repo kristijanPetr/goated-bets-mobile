@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { variables } from '~/utils/mixins';
 import Dropdown from './Dropdown';
 import { IconTypes } from '../icon/icons';
@@ -10,16 +10,38 @@ interface Props {
 }
 
 const ScreenHeader = ({ title }: Props) => {
-  const { data } = useContext(SingletonDataContextProvider);
+  const { data, refetchData } = useContext(SingletonDataContextProvider);
+  const [selectedSport, setSelectedSport] = useState(data?.sport || 'nba');
+  const [selectedBookmaker, setSelectedBookmaker] = useState(data?.bookmaker || 'fan Duel');
+
+  const handleDropdownChange = (value: string, key: string) => {
+    if (key === 'sport') {
+      refetchData(value, selectedBookmaker);
+      return setSelectedSport(value);
+    } else if (key === 'bookmaker') {
+      refetchData(selectedSport, value);
+      return setSelectedBookmaker(value);
+    }
+  };
 
   const dataOptions = [
     { icon: 'fanDuel' as IconTypes, name: 'Fan Duel' },
     { icon: 'draftKingsLogo' as IconTypes, name: 'DraftKings' }
   ];
 
-  const dataSportsOptions = Object.keys(data.carouselSport).map((key) => {
-    return { icon: key.toLocaleUpperCase() as IconTypes, name: key.toLocaleUpperCase() };
-  });
+  const sportsOptions = [
+    { icon: 'NFL' as IconTypes, name: 'nfl' },
+    { icon: 'MLB' as IconTypes, name: 'mlb' },
+    { icon: 'NBA' as IconTypes, name: 'nba' },
+    { icon: 'NHL' as IconTypes, name: 'nhl' },
+    { icon: 'WNBA' as IconTypes, name: 'wnba' }
+  ];
+
+  const dataSportsOptions = data?.carouselSport
+    ? Object.keys(data.carouselSport).map((key) => {
+        return { icon: key.toLocaleUpperCase() as IconTypes, name: key };
+      })
+    : sportsOptions;
 
   return (
     <View style={styles.container}>
@@ -27,6 +49,8 @@ const ScreenHeader = ({ title }: Props) => {
       <View style={styles.dropdownButtonContainer}>
         <View style={{ ...styles.dropdownButton, marginRight: 6 }}>
           <Dropdown
+            value={selectedBookmaker}
+            handleDropdownChange={(value) => handleDropdownChange(value, 'bookmaker')}
             options={dataOptions}
             customMainContainer={{ width: 35 }}
             customItemContainer={{ width: 150 }}
@@ -34,10 +58,13 @@ const ScreenHeader = ({ title }: Props) => {
         </View>
         <View style={styles.dropdownButton}>
           <Dropdown
+            value={selectedSport}
+            handleDropdownChange={(value) => handleDropdownChange(value, 'sport')}
             options={dataSportsOptions}
             customMainContainer={{ width: 60 }}
             customItemContainer={{ width: 110 }}
             includeName
+            useUppercaseName
           />
         </View>
       </View>

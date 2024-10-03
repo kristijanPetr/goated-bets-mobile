@@ -1,19 +1,20 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, FlatList, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { variables } from '~/utils/mixins';
-import { Icon } from '../icon/icon';
-
-const DATA = [
-  { id: '1', homeTeam: 'BAL', awayTeam: 'KC', time: '8:20pm EST' },
-  { id: '2', homeTeam: 'GB', awayTeam: 'PHI', time: '8:20pm EST' },
-  { id: '3', homeTeam: 'LAC', awayTeam: 'HOU', time: '8:20pm EST' },
-  { id: '4', homeTeam: 'BAL', awayTeam: 'KC', time: '8:20pm EST' },
-  { id: '5', homeTeam: 'BAL', awayTeam: 'KC', time: '8:20pm EST' },
-  { id: '6', homeTeam: 'BAL', awayTeam: 'KC', time: '8:20pm EST' }
-];
+import { SingletonDataContextProvider } from '~/context/singletonDataContext';
+import { MatchReviewScrollerSkeleton } from '../skeletons/MatchReviewScrollerSkeleton';
 
 const MatchReviewScroller = () => {
+  const { data, isFetching } = useContext(SingletonDataContextProvider);
   const [selectedGames, setSelectedGames] = useState<number[]>([]);
+  if (isFetching) {
+    return (
+      <View style={{ ...styles.container, marginBottom: 9 }}>
+        <MatchReviewScrollerSkeleton />
+      </View>
+    );
+  }
+  const matchData = data?.tickers || [];
 
   const handleSelectGame = (id: number) => {
     if (selectedGames.includes(id)) {
@@ -23,14 +24,14 @@ const MatchReviewScroller = () => {
     }
   };
 
-  const renderItem = ({ item }: any) => {
-    const isItemActive = selectedGames.includes(item.id);
+  const renderItem = ({ item, index }: any) => {
+    const isItemActive = selectedGames.includes(index);
 
     const textColor = isItemActive ? variables.colors.black : variables.colors.white;
     return (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => handleSelectGame(item.id)}
+        onPress={() => handleSelectGame(index)}
         style={{
           ...styles.item,
           backgroundColor: isItemActive ? variables.colors.activeGrey : variables.colors.grey
@@ -38,21 +39,29 @@ const MatchReviewScroller = () => {
         <View style={styles.itemTeamContainer}>
           <View style={styles.iconAndNameContainer}>
             <View style={styles.demoIcon}>
-              <Icon icon="LClogo" style={{ width: 34, height: 34 }} />
+              <Image source={{ uri: item.homeLogoImage }} style={{ width: 34, height: 34 }} />
             </View>
-            <Text style={{ ...styles.teamName, color: textColor }}>{item.homeTeam}</Text>
+            <Text
+              style={{
+                ...styles.teamName,
+                color: textColor
+              }}>
+              {item.homeName.substring(0, 3)}
+            </Text>
           </View>
           <Text style={{ ...styles.teamName, color: textColor }}>Vs</Text>
           <View style={styles.iconAndNameContainer}>
             <View style={styles.demoIcon}>
-              <Icon icon="bullLogo" style={{ width: 34, height: 34 }} />
+              <Image source={{ uri: item.awayLogoImage }} style={{ width: 34, height: 34 }} />
             </View>
-            <Text style={{ ...styles.teamName, color: textColor }}>{item.awayTeam}</Text>
+            <Text style={{ ...styles.teamName, color: textColor }}>
+              {item.awayName.substring(0, 3)}
+            </Text>
           </View>
         </View>
         <View style={styles.divider} />
         <View>
-          <Text style={{ ...styles.time, color: textColor }}>{item.time}</Text>
+          <Text style={{ ...styles.time, color: textColor }}>{item.startTime}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -61,9 +70,9 @@ const MatchReviewScroller = () => {
   return (
     <FlatList
       style={styles.container}
-      data={DATA}
+      data={matchData}
       renderItem={renderItem}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item, index) => `${index.toString()}${item.sport}`}
       horizontal
       showsHorizontalScrollIndicator={false}
     />

@@ -13,7 +13,7 @@ import OverlayLoader from '~/components/common/OverlayLoader';
 //kristijan@localhost
 //test'
 const Login = (props: LoginProps) => {
-  const { setData } = React.useContext(SingletonDataContextProvider);
+  const { initiateData } = React.useContext(SingletonDataContextProvider);
   const [isLoading, setIsLoading] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -56,6 +56,7 @@ const Login = (props: LoginProps) => {
       await loginForm
         .ma_submit()
         .then((res: any) => {
+          console.log(res, 'see this');
           isLoggedIn = true;
         })
         .catch((error: any) => {
@@ -69,8 +70,7 @@ const Login = (props: LoginProps) => {
         await singleton.ma_reboot(toolkit, null, navigator, null, {}, 'mlb').catch((error) => {
           console.log('error', error);
         });
-
-        setData(singleton.data);
+        initiateData(singleton.data);
         setIsLoading(false);
         return navigation.navigate('TabNavigator');
       } else {

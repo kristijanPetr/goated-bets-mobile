@@ -8,18 +8,23 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 
 interface Props {
   options: { icon: IconTypes; name: string }[];
+  value: string;
+  handleDropdownChange: (value: string) => void;
   customItemContainer: any;
   customMainContainer: any;
   includeName?: boolean;
+  useUppercaseName?: boolean;
 }
 const Dropdown = ({
   options,
+  value,
+  handleDropdownChange,
   customItemContainer,
   customMainContainer,
-  includeName = false
+  includeName = false,
+  useUppercaseName = false
 }: Props) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [dropdownValue, setDropdownValue] = useState(options[0]);
   const [buttonLayout, setButtonLayout] = useState(null);
 
   const toggleModal = () => {
@@ -27,13 +32,14 @@ const Dropdown = ({
   };
 
   const selectOption = (option: any) => {
-    setDropdownValue(option);
+    handleDropdownChange(option.name);
     toggleModal();
   };
 
   const handleLayout = (event: any) => {
     setButtonLayout(event.nativeEvent.layout);
   };
+  const selectedOption = options.find((item) => item.name === value) || options[0];
 
   return (
     <View style={styles.container}>
@@ -42,9 +48,11 @@ const Dropdown = ({
         onPress={toggleModal}
         onLayout={handleLayout}
         style={{ flexDirection: 'row', alignItems: 'center', ...customMainContainer }}>
-        <Icon icon={dropdownValue.icon} style={{ width: 25, height: 25, marginRight: 2 }} />
+        <Icon icon={selectedOption.icon} style={{ width: 25, height: 25, marginRight: 2 }} />
         {includeName && (
-          <Text style={{ ...styles.buttonText, fontWeight: 'bold' }}>{dropdownValue.name}</Text>
+          <Text style={{ ...styles.buttonText, fontWeight: 'bold' }}>
+            {useUppercaseName ? selectedOption.name.toLocaleUpperCase() : selectedOption.name}
+          </Text>
         )}
         <AntDesign name={'caretdown'} size={8} color="white" />
       </TouchableOpacity>
@@ -65,7 +73,9 @@ const Dropdown = ({
                 style={{ width: 20, height: 20, justifyContent: 'center', alignItems: 'center' }}>
                 <Icon icon={option.icon} style={{ width: 20, height: 20 }} />
               </View>
-              <Text style={styles.optionText}>{option.name}</Text>
+              <Text style={styles.optionText}>
+                {useUppercaseName ? option.name.toLocaleUpperCase() : option.name}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
