@@ -2,8 +2,11 @@ import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native
 import React, { useState } from 'react';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { variables } from '~/utils/mixins';
-import { backgroundColor } from '@shopify/restyle';
+import FullScreenModal from '../common/FullScreenModal';
+import InfoModal from '../modals/InfoModal';
+
 const GamePropsDisplayStats = () => {
+  const [openInfoModal, setOpenInfoModal] = useState<boolean>(false);
   const [selectedStat, setSelectedStat] = useState<string[]>(['1']);
 
   const handleSelectStat = (id: string) => {
@@ -45,12 +48,17 @@ const GamePropsDisplayStats = () => {
 
   return (
     <View style={styles.container}>
+      <FullScreenModal visible={openInfoModal}>
+        <InfoModal toggleModal={() => setOpenInfoModal(false)} />
+      </FullScreenModal>
       <View style={styles.statContainer}>
         <View style={styles.statTextContainer}>
           <Text style={styles.displayText}>Display</Text>
           <Text style={styles.displayText}>Stat:</Text>
         </View>
-        <AntDesign name="infocirlce" size={18} color="white" />
+        <TouchableOpacity activeOpacity={0.9} onPress={() => setOpenInfoModal(true)}>
+          <AntDesign name="infocirlce" size={18} color="white" />
+        </TouchableOpacity>
       </View>
       <FlatList
         horizontal

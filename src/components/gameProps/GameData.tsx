@@ -1,17 +1,22 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import { variables } from '~/utils/mixins';
 import { Icon } from '../icon/icon';
-import DataBoxTwoBrackets from '../common/DataBoxTwoBrackets';
+import DataBoxBrackets from '../common/DataBoxBrackets';
 
 import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import GameExtraData from './GameExtraData';
 
 interface Props {
   item: any;
+  handleSelectedGame: (id: string) => void;
+  selectedGame: string;
 }
 
-const GameData = ({ item }: Props) => {
+const GameData = ({ item, selectedGame, handleSelectedGame }: Props) => {
+  const isSelectedGame = item.id === selectedGame;
+
   return (
     <View style={styles.boxContainer}>
       <View style={styles.headerContainer}>
@@ -25,9 +30,9 @@ const GameData = ({ item }: Props) => {
           <Icon icon="bullLogo" style={styles.icon} />
         </View>
         <View style={styles.dataBoxContainer}>
-          <DataBoxTwoBrackets firstContainerData={['+3.0', '-118']} secondContainerData={['40%']} />
-          <DataBoxTwoBrackets firstContainerData={['124']} secondContainerData={['40%']} />
-          <DataBoxTwoBrackets
+          <DataBoxBrackets firstContainerData={['+3.0', '-118']} secondContainerData={['40%']} />
+          <DataBoxBrackets firstContainerData={['124']} secondContainerData={['40%']} />
+          <DataBoxBrackets
             firstContainerData={['0 46.5', '-108']}
             secondContainerData={['BAL', '0%']}
             thirdContainerData={['KC', '60%']}
@@ -48,13 +53,13 @@ const GameData = ({ item }: Props) => {
           <Icon icon="LClogo" style={styles.icon} />
         </View>
         <View style={styles.dataBoxContainer}>
-          <DataBoxTwoBrackets
+          <DataBoxBrackets
             firstContainerData={['+3.0', '-118']}
             secondContainerData={['20%']}
             secondContainerStyle={{ backgroundColor: variables.colors.statsRed }}
           />
-          <DataBoxTwoBrackets firstContainerData={['124']} secondContainerData={['40%']} />
-          <DataBoxTwoBrackets
+          <DataBoxBrackets firstContainerData={['124']} secondContainerData={['40%']} />
+          <DataBoxBrackets
             firstContainerData={['0 46.5', '-108']}
             secondContainerData={['BAL', '100%']}
             thirdContainerData={['KC', '40%']}
@@ -63,14 +68,17 @@ const GameData = ({ item }: Props) => {
         </View>
       </View>
       <View style={styles.bottomButtons}>
-        <View>
-          <AntDesign name={'caretdown'} size={14} color="white" />
-        </View>
+        <TouchableOpacity
+          onPress={() => handleSelectedGame(item.id)}
+          style={{ paddingHorizontal: 20, marginBottom: 4 }}>
+          <AntDesign name={isSelectedGame ? 'caretup' : 'caretdown'} size={14} color="white" />
+        </TouchableOpacity>
         <View style={styles.viewGameButton}>
           <Text style={styles.viewGameButtonText}>View Game</Text>
           <FontAwesome5 name="angle-double-right" size={14} color="white" />
         </View>
       </View>
+      {isSelectedGame && <GameExtraData />}
     </View>
   );
 };
@@ -79,7 +87,6 @@ export default GameData;
 
 const styles = StyleSheet.create({
   boxContainer: {
-    height: 170,
     width: '100%',
     backgroundColor: variables.colors.grey,
     marginBottom: 10,
@@ -132,11 +139,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 20
+    paddingTop: 5,
+    marginTop: 15,
+    borderTopWidth: 1,
+    borderTopColor: variables.colors.black
   },
   viewGameButton: {
     position: 'absolute',
     right: 0,
+    top: 5,
     flexDirection: 'row',
     alignItems: 'center'
   },

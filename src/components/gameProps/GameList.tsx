@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import GameData from './GameData';
 
 const GameList = () => {
@@ -131,12 +131,25 @@ const GameList = () => {
     }
   ];
 
+  const [selectedGame, setSelectedGame] = useState('');
+
+  const handleSelectedGame = (id: string) => {
+    if (selectedGame === id) {
+      return setSelectedGame('');
+    }
+    return setSelectedGame(id);
+  };
+
   return (
     <FlatList
       data={data}
-      renderItem={({ item }: any) => <GameData item={item} />}
+      renderItem={({ item }: any) => (
+        <GameData item={item} handleSelectedGame={handleSelectedGame} selectedGame={selectedGame} />
+      )}
       keyExtractor={(item) => item.id}
+      windowSize={6}
       style={styles.container}
+      extraData={selectedGame}
     />
   );
 };
