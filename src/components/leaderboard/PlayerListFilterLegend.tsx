@@ -33,11 +33,13 @@ const PlayerListFilterLegend = () => {
           label="l5"
           value={filterSelected.l5}
           onChange={() => setSelectedFilter({ ...filterSelected, l5: !filterSelected.l5 })}
+          containerStyle={{ width: '33%' }}
         />
         <PlayerFilterOptionsButton
           label="Streak"
           value={filterSelected.streak}
           onChange={() => setSelectedFilter({ ...filterSelected, streak: !filterSelected.streak })}
+          containerStyle={{ width: '33%' }}
         />
         <PlayerFilterOptionsButton
           label={`Match \nGrade`}
@@ -45,6 +47,7 @@ const PlayerListFilterLegend = () => {
           onChange={() =>
             setSelectedFilter({ ...filterSelected, matchGrade: !filterSelected.matchGrade })
           }
+          containerStyle={{ width: '33%' }}
         />
       </View>
       <View style={styles.oddsFilterContainer}>
@@ -75,7 +78,7 @@ const styles = StyleSheet.create({
   barFilterContainer: {
     justifyContent: 'space-around',
     alignItems: 'flex-end',
-    width: '30%',
+    width: '29%',
     flexDirection: 'row'
   },
   oddsFilterContainer: {
