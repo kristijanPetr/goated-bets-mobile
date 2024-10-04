@@ -7,6 +7,7 @@ import { MatchReviewScrollerSkeleton } from '../skeletons/MatchReviewScrollerSke
 const MatchReviewScroller = () => {
   const { data, isFetching } = useContext(SingletonDataContextProvider);
   const [selectedGames, setSelectedGames] = useState<number[]>([]);
+
   if (isFetching) {
     return (
       <View style={{ ...styles.container, marginBottom: 9 }}>
@@ -66,6 +67,14 @@ const MatchReviewScroller = () => {
       </TouchableOpacity>
     );
   };
+
+  if (matchData.length === 0) {
+    return (
+      <View style={styles.noMatchesContainer}>
+        <Text style={styles.noMatchesText}>No matches today</Text>
+      </View>
+    );
+  }
 
   return (
     <FlatList
@@ -129,5 +138,18 @@ const styles = StyleSheet.create({
   dummyImage: {
     height: 35,
     width: 35
+  },
+  noMatchesContainer: {
+    marginLeft: 6,
+    height: 76,
+    marginBottom: 10,
+    width: '94%',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  noMatchesText: {
+    color: variables.colors.white,
+    fontSize: 14,
+    fontWeight: '600'
   }
 });

@@ -7,10 +7,14 @@ interface Props {
   value: boolean;
   onChange: () => void;
   label: string;
+  containerStyle?: any;
 }
-const PlayerFilterOptionsButton = ({ value, onChange, label }: Props) => {
+const PlayerFilterOptionsButton = ({ value, onChange, label, containerStyle }: Props) => {
   return (
-    <TouchableOpacity onPress={onChange} style={styles.container} activeOpacity={0.8}>
+    <TouchableOpacity
+      onPress={onChange}
+      style={{ ...styles.container, ...containerStyle }}
+      activeOpacity={0.8}>
       <Text style={styles.textLegend}>{label}</Text>
       <AntDesign name={value ? 'caretup' : 'caretdown'} size={12} color="white" />
     </TouchableOpacity>
