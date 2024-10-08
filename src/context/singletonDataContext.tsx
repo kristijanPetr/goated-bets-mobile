@@ -2,10 +2,12 @@ import { StyleSheet } from 'react-native';
 import React, { createContext, useState } from 'react';
 import singleton from '../utils/singelton';
 import toolkit from 'jsen-cls-sdk-prj-packagejs-mod-toolkit-pkg-interface-for-sdk-ecmascript';
-import { format } from 'date-fns';
+import { format, set } from 'date-fns';
 
 type SingletonDataType = {
   data: any;
+  selectedGames: string[];
+  setSelectedGame: (game: string) => void;
   isFetching: boolean;
   initiateData: (data: any) => void;
   refetchData: (team: string, bookameker: string) => void;
@@ -18,6 +20,7 @@ type Props = {
 
 export const SingletonDataContext = ({ children }: Props) => {
   const [data, setData] = useState({});
+  const [selectedGames, setSelectedGames] = useState<string[]>([]);
   const [isFetching, setIsFetching] = useState(false);
 
   let dom = new toolkit.sdk.dom(
@@ -56,8 +59,18 @@ export const SingletonDataContext = ({ children }: Props) => {
     setData({});
   };
 
+  const handleSelecGame = (game: string) => {
+    if (selectedGames.includes(game)) {
+      setSelectedGames((prevState) => prevState.filter((item) => item !== game));
+    } else {
+      setSelectedGames((prevState) => [...prevState, game]);
+    }
+  };
+
   const initialData = {
     data,
+    selectedGames: selectedGames,
+    setSelectedGame: handleSelecGame,
     isFetching: isFetching,
     initiateData: loadInitialSingletonData,
     refetchData: refetchData,
@@ -72,6 +85,8 @@ export const SingletonDataContext = ({ children }: Props) => {
 
 export const SingletonDataContextProvider = createContext<SingletonDataType>({
   data: {},
+  selectedGames: [],
+  setSelectedGame: () => {},
   isFetching: false,
   initiateData: () => {},
   refetchData: () => {},

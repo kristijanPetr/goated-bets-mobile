@@ -1,33 +1,40 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 
-import dummyPlayerImage from './dummyPlayerImage.png';
 import { variables } from '~/utils/mixins';
 import PlayerExtraData from './PlayerExtraData';
 
 interface Props {
   item: any;
+  index: number;
   selectedPlayer: string;
   handleSelectedPlayer: (id: string) => void;
 }
 
-const PlayerBox = ({ item, selectedPlayer, handleSelectedPlayer }: Props) => {
-  const isSelectedPlayer = item.id === selectedPlayer;
+const PlayerBox = ({ item, index, selectedPlayer, handleSelectedPlayer }: Props) => {
+  const isSelectedPlayer = `${item.playerPosition}${index}` === selectedPlayer;
 
   return (
     <TouchableOpacity
-      onPress={() => handleSelectedPlayer(item.id)}
+      onPress={() => handleSelectedPlayer(`${item.playerPosition}${index}`)}
       key={item.id}
       style={styles.touchableContainer}
       activeOpacity={1}>
       <View style={styles.container}>
         <View style={styles.imageContainer}>
-          <Image source={dummyPlayerImage} style={styles.dummyPlayerImage} resizeMode="contain" />
+          <Image
+            source={{ uri: item.playerAvatarImage }}
+            style={styles.dummyPlayerImage}
+            resizeMode="contain"
+          />
         </View>
         <View style={styles.nameContainer}>
-          <Text style={styles.textName}>{`${item.playerName} (${item.position})`}</Text>
-          <Text style={styles.textStats}>{item.stats}</Text>
-          <Text style={styles.textMatch}>{item.match}</Text>
+          <Text
+            style={
+              styles.textName
+            }>{`${item.player.attributes.name['=']} (${item.playerPosition})`}</Text>
+          <Text style={styles.textStats}>{item.stats || '-'}</Text>
+          <Text style={styles.textMatch}>{item.matchup}</Text>
         </View>
         <View style={styles.barContainer}>
           <View
@@ -35,18 +42,18 @@ const PlayerBox = ({ item, selectedPlayer, handleSelectedPlayer }: Props) => {
               ...styles.bar,
               backgroundColor: variables.colors.statsYellow
             }}>
-            <Text style={styles.textBar}>{`${item.l5}%`}</Text>
+            <Text style={styles.textBar}>{`${item.l5 || '0'}%`}</Text>
           </View>
           <View style={{ ...styles.bar, backgroundColor: variables.colors.statsRed }}>
-            <Text style={styles.textBar}> {item.streak}</Text>
+            <Text style={styles.textBar}> {item.streak || '0'}</Text>
           </View>
           <View style={{ ...styles.bar, backgroundColor: variables.colors.statsGreen }}>
-            <Text style={styles.textBar}>{item.matchGrade}</Text>
+            <Text style={styles.textBar}>{item.matchGrade || '0'}</Text>
           </View>
         </View>
         <View style={styles.oddsContainer}>
           <View style={styles.oddsBox}>
-            <Text style={styles.oddsText}>{`+${item.odds}`}</Text>
+            <Text style={styles.oddsText}>{`+${item.odds || 0}`}</Text>
           </View>
         </View>
       </View>

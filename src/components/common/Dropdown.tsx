@@ -61,7 +61,7 @@ const Dropdown = ({
         <View
           style={[
             styles.modalContent,
-            { top: buttonLayout?.y + buttonLayout?.height, left: -22 },
+            { top: buttonLayout?.y + buttonLayout?.height + 8, left: -12 },
             customItemContainer
           ]}>
           {options.map((option, index) => (
@@ -103,12 +103,11 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     position: 'absolute',
-    backgroundColor: 'transparent',
     borderRadius: 10,
-    padding: 10,
     width: 130,
     elevation: 4,
-    zIndex: 1
+    zIndex: 1,
+    backgroundColor: variables.colors.black
   },
   option: {
     height: 30,
