@@ -62,7 +62,7 @@ const ScreenHeader = ({ title }: Props) => {
             handleDropdownChange={(value) => handleDropdownChange(value, 'sport')}
             options={dataSportsOptions}
             customMainContainer={{ width: 60 }}
-            customItemContainer={{ width: 110 }}
+            customItemContainer={{ width: 85 }}
             includeName
             useUppercaseName
           />

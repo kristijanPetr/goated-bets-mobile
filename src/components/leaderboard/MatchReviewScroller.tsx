@@ -5,8 +5,9 @@ import { SingletonDataContextProvider } from '~/context/singletonDataContext';
 import { MatchReviewScrollerSkeleton } from '../skeletons/MatchReviewScrollerSkeleton';
 
 const MatchReviewScroller = () => {
-  const { data, isFetching } = useContext(SingletonDataContextProvider);
-  const [selectedGames, setSelectedGames] = useState<number[]>([]);
+  const { data, isFetching, selectedGames, setSelectedGame } = useContext(
+    SingletonDataContextProvider
+  );
 
   if (isFetching) {
     return (
@@ -17,22 +18,14 @@ const MatchReviewScroller = () => {
   }
   const matchData = data?.tickers || [];
 
-  const handleSelectGame = (id: number) => {
-    if (selectedGames.includes(id)) {
-      setSelectedGames((prevState) => prevState.filter((item) => item !== id));
-    } else {
-      setSelectedGames((prevState) => [...prevState, id]);
-    }
-  };
-
-  const renderItem = ({ item, index }: any) => {
-    const isItemActive = selectedGames.includes(index);
+  const renderItem = ({ item }: any) => {
+    const isItemActive = selectedGames.includes(`${item.awayName}${item.homeName}`);
 
     const textColor = isItemActive ? variables.colors.black : variables.colors.white;
     return (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => handleSelectGame(index)}
+        onPress={() => setSelectedGame(`${item.awayName}${item.homeName}`)}
         style={{
           ...styles.item,
           backgroundColor: isItemActive ? variables.colors.activeGrey : variables.colors.grey

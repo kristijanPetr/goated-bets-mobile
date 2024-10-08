@@ -1,144 +1,24 @@
 import { FlatList, StyleSheet } from 'react-native';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import PlayerBox from './PlayerBox';
-
-const DATA = [
-  {
-    id: '1',
-    playerName: 'P. Mahomes',
-    position: 'QB',
-    stats: 'Over 250 Passing Yds',
-    match: 'Raven @ Chiefs',
-    l5: 40,
-    streak: 1,
-    matchGrade: 'B',
-    odds: 400
-  },
-  {
-    id: '2',
-    playerName: 'P. Mahomes',
-    position: 'QB',
-    stats: 'Over 250 Passing Yds',
-    match: 'Raven @ Chiefs',
-    l5: 40,
-    streak: 1,
-    matchGrade: 'B',
-    odds: 400
-  },
-  {
-    id: '3',
-    playerName: 'P. Mahomes',
-    position: 'QB',
-    stats: 'Over 250 Passing Yds',
-    match: 'Raven @ Chiefs',
-    l5: 40,
-    streak: 1,
-    matchGrade: 'B',
-    odds: 400
-  },
-  {
-    id: '4',
-    playerName: 'P. Mahomes',
-    position: 'QB',
-    stats: 'Over 250 Passing Yds',
-    match: 'Raven @ Chiefs',
-    l5: 40,
-    streak: 1,
-    matchGrade: 'B',
-    odds: 400
-  },
-  {
-    id: '5',
-    playerName: 'P. Mahomes',
-    position: 'QB',
-    stats: 'Over 250 Passing Yds',
-    match: 'Raven @ Chiefs',
-    l5: 40,
-    streak: 1,
-    matchGrade: 'B',
-    odds: 400
-  },
-  {
-    id: '6',
-    playerName: 'P. Mahomes',
-    position: 'QB',
-    stats: 'Over 250 Passing Yds',
-    match: 'Raven @ Chiefs',
-    l5: 40,
-    streak: 1,
-    matchGrade: 'B',
-    odds: 400
-  },
-  {
-    id: '7',
-    playerName: 'P. Mahomes',
-    position: 'QB',
-    stats: 'Over 250 Passing Yds',
-    match: 'Raven @ Chiefs',
-    l5: 40,
-    streak: 1,
-    matchGrade: 'B',
-    odds: 400
-  },
-  {
-    id: '8',
-    playerName: 'P. Mahomes',
-    position: 'QB',
-    stats: 'Over 250 Passing Yds',
-    match: 'Raven @ Chiefs',
-    l5: 40,
-    streak: 1,
-    matchGrade: 'B',
-    odds: 400
-  },
-  {
-    id: '9',
-    playerName: 'P. Mahomes',
-    position: 'QB',
-    stats: 'Over 250 Passing Yds',
-    match: 'Raven @ Chiefs',
-    l5: 40,
-    streak: 1,
-    matchGrade: 'B',
-    odds: 400
-  },
-  {
-    id: '10',
-    playerName: 'P. Mahomes',
-    position: 'QB',
-    stats: 'Over 250 Passing Yds',
-    match: 'Raven @ Chiefs',
-    l5: 40,
-    streak: 1,
-    matchGrade: 'B',
-    odds: 400
-  },
-  {
-    id: '11',
-    playerName: 'P. Mahomes',
-    position: 'QB',
-    stats: 'Over 250 Passing Yds',
-    match: 'Raven @ Chiefs',
-    l5: 40,
-    streak: 1,
-    matchGrade: 'B',
-    odds: 400
-  },
-  {
-    id: '12',
-    playerName: 'P. Mahomes',
-    position: 'QB',
-    stats: 'Over 250 Passing Yds',
-    match: 'Raven @ Chiefs',
-    l5: 40,
-    streak: 1,
-    matchGrade: 'B',
-    odds: 400
-  }
-];
+import { SingletonDataContextProvider } from '~/context/singletonDataContext';
 
 const PlayersList = () => {
+  const { data, selectedGames } = useContext(SingletonDataContextProvider);
   const [selectedPlayer, setSelectedPlayer] = useState<string>('');
+  const playerGamesSelected =
+    selectedGames.length === 0
+      ? data?.tickers
+      : data?.tickers.filter((item: any) =>
+          selectedGames.includes(`${item.awayName}${item.homeName}`)
+        );
+  const playerData = playerGamesSelected
+    ?.map((ticker: any) =>
+      ticker.lineups.map((item: any) => {
+        return { ...item, matchup: `${ticker.awayName} @ ${ticker.homeName}` };
+      })
+    )
+    .flat();
 
   const handleSelectedPlayer = (id: string) => {
     if (selectedPlayer === id) {
@@ -149,15 +29,16 @@ const PlayersList = () => {
 
   return (
     <FlatList
-      data={DATA}
-      renderItem={({ item }) => (
+      data={playerData}
+      renderItem={({ item, index }) => (
         <PlayerBox
           item={item}
+          index={index}
           handleSelectedPlayer={handleSelectedPlayer}
           selectedPlayer={selectedPlayer}
         />
       )}
-      keyExtractor={(item: any) => item.id}
+      keyExtractor={(item: any, index: number) => `${item.playerPosition}${index}`}
       showsHorizontalScrollIndicator={false}
       windowSize={6}
       style={styles.scrollContainer}
