@@ -3,6 +3,7 @@ import React from 'react';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import { variables } from '~/utils/mixins';
+import { Swipeable } from 'react-native-gesture-handler';
 
 const ExpandedBettingData = () => {
   const data = [
@@ -73,22 +74,9 @@ const ExpandedBettingData = () => {
   ];
 
   const renderButtons = (item: any) => {
-    if (item.hasCloseButton) {
-      return (
-        <View style={styles.closeButton}>
-          <Fontisto name="close-a" size={20} color="white" />
-        </View>
-      );
-    }
-
     return (
-      <View style={styles.selectButtonContainer}>
-        <TouchableOpacity style={styles.selectButton}>
-          <AntDesign name="left" size={16} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity style={{ ...styles.selectButton, marginLeft: 6 }}>
-          <AntDesign name="right" size={16} color="black" />
-        </TouchableOpacity>
+      <View style={styles.closeButton}>
+        <Fontisto name="close-a" size={20} color="white" />
       </View>
     );
   };
@@ -96,39 +84,48 @@ const ExpandedBettingData = () => {
     const isLastElement = index === data.length - 1;
 
     return (
-      <View
-        style={{
-          ...styles.itemContainer,
-          borderBottomWidth: !isLastElement ? 0.2 : 0,
-          borderColor: !isLastElement ? variables.colors.activeGrey : variables.colors.white
-        }}>
-        <Text style={styles.itemOddsText}>{item.odds}</Text>
-        <View>
-          <Text style={styles.itemPlayerName}>{item.playerName}</Text>
-          <Text style={styles.itemStats}>{item.stats}</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={{ ...styles.itemStats, marginRight: 4 }}>l5:</Text>
-              <View style={styles.box}>
-                <Text style={styles.itemStats}>{item.l5}</Text>
+      <Swipeable renderRightActions={() => renderButtons(item)}>
+        <View
+          style={{
+            ...styles.itemContainer,
+            borderBottomWidth: !isLastElement ? 0.2 : 0,
+            borderColor: !isLastElement ? variables.colors.activeGrey : variables.colors.white
+          }}>
+          <Text style={styles.itemOddsText}>{item.odds}</Text>
+          <View>
+            <Text style={styles.itemPlayerName}>{item.playerName}</Text>
+            <Text style={styles.itemStats}>{item.stats}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={{ ...styles.itemStats, marginRight: 4 }}>l5:</Text>
+                <View style={styles.box}>
+                  <Text style={styles.itemStats}>{item.l5}</Text>
+                </View>
               </View>
-            </View>
-            <View style={{ flexDirection: 'row', marginLeft: 10 }}>
-              <Text style={{ ...styles.itemStats, marginRight: 4 }}>L10:</Text>
-              <View style={styles.box}>
-                <Text style={styles.itemStats}>{item.l10}</Text>
+              <View style={{ flexDirection: 'row', marginLeft: 10 }}>
+                <Text style={{ ...styles.itemStats, marginRight: 4 }}>L10:</Text>
+                <View style={styles.box}>
+                  <Text style={styles.itemStats}>{item.l10}</Text>
+                </View>
               </View>
-            </View>
-            <View style={{ flexDirection: 'row', marginLeft: 10 }}>
-              <Text style={{ ...styles.itemStats, marginRight: 4 }}>Streak:</Text>
-              <View style={styles.box}>
-                <Text style={styles.itemStats}>{item.streak}</Text>
+              <View style={{ flexDirection: 'row', marginLeft: 10 }}>
+                <Text style={{ ...styles.itemStats, marginRight: 4 }}>Streak:</Text>
+                <View style={styles.box}>
+                  <Text style={styles.itemStats}>{item.streak}</Text>
+                </View>
               </View>
             </View>
           </View>
+          <View style={styles.selectButtonContainer}>
+            <TouchableOpacity style={styles.selectButton}>
+              <AntDesign name="left" size={16} color="black" />
+            </TouchableOpacity>
+            <TouchableOpacity style={{ ...styles.selectButton, marginLeft: 6 }}>
+              <AntDesign name="right" size={16} color="black" />
+            </TouchableOpacity>
+          </View>
         </View>
-        {renderButtons(item)}
-      </View>
+      </Swipeable>
     );
   };
 
