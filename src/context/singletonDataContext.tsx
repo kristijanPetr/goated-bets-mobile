@@ -6,7 +6,7 @@ import { format, set } from 'date-fns';
 
 type SingletonDataType = {
   data: any;
-  selectedGames: string[];
+  selectedGames: string;
   setSelectedGame: (game: string) => void;
   isFetching: boolean;
   initiateData: (data: any) => void;
@@ -20,7 +20,7 @@ type Props = {
 
 export const SingletonDataContext = ({ children }: Props) => {
   const [data, setData] = useState({});
-  const [selectedGames, setSelectedGames] = useState<string[]>([]);
+  const [selectedGames, setSelectedGames] = useState<string>('');
   const [isFetching, setIsFetching] = useState(false);
 
   let dom = new toolkit.sdk.dom(
@@ -44,7 +44,7 @@ export const SingletonDataContext = ({ children }: Props) => {
 
   const refetchData = async (sport: string, bookmaker: string) => {
     setIsFetching((prevState) => !prevState);
-    navigator.dom.ms_set_authorization('');
+    // navigator.dom.ms_set_authorization('');
     const date = new Date();
     await singleton
       .ma_reboot(toolkit, null, navigator, null, {}, sport, format(date, 'yyyyMMdd'), bookmaker)
@@ -60,11 +60,7 @@ export const SingletonDataContext = ({ children }: Props) => {
   };
 
   const handleSelecGame = (game: string) => {
-    if (selectedGames.includes(game)) {
-      setSelectedGames((prevState) => prevState.filter((item) => item !== game));
-    } else {
-      setSelectedGames((prevState) => [...prevState, game]);
-    }
+    setSelectedGames(game);
   };
 
   const initialData = {
@@ -85,7 +81,7 @@ export const SingletonDataContext = ({ children }: Props) => {
 
 export const SingletonDataContextProvider = createContext<SingletonDataType>({
   data: {},
-  selectedGames: [],
+  selectedGames: '',
   setSelectedGame: () => {},
   isFetching: false,
   initiateData: () => {},

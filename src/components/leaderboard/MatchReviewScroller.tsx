@@ -19,7 +19,7 @@ const MatchReviewScroller = () => {
   const matchData = data?.tickers || [];
 
   const renderItem = ({ item }: any) => {
-    const isItemActive = selectedGames.includes(`${item.awayName}${item.homeName}`);
+    const isItemActive = selectedGames === `${item.awayName}${item.homeName}`;
 
     const textColor = isItemActive ? variables.colors.black : variables.colors.white;
     return (

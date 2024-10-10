@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 
 interface LoginProps {}
@@ -12,12 +12,35 @@ import { variables } from '~/utils/mixins';
 import OverlayLoader from '~/components/common/OverlayLoader';
 //kristijan@localhost
 //test'
+
 const Login = (props: LoginProps) => {
   const { initiateData } = React.useContext(SingletonDataContextProvider);
   const [isLoading, setIsLoading] = useState(false);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('kristijan@localhost');
+  const [password, setPassword] = useState('test');
   const navigation = useNavigation() as any;
+
+  let dom = new toolkit.sdk.dom(
+    'widget_worker', // dom name
+    'http://137.184.135.111:49992/openapi.json'
+  );
+
+  let navigator = new toolkit.sdk.navigator(dom);
+  navigator.state = {
+    doms: {
+      widget_worker: dom
+    },
+    navigators: {
+      widget_worker: navigator
+    }
+  };
+
+  // useEffect(() => {
+  //   const intervalId = setInterval(async () => {
+  //     console.log('singleton data:', singleton.data);
+  //   }, 3000);
+  //   return () => clearInterval(intervalId);
+  // }, []);
 
   const onChangeText = (value: string, key: string) => {
     if (key === 'username') {
@@ -29,20 +52,6 @@ const Login = (props: LoginProps) => {
 
   const handleLogIn = async () => {
     setIsLoading(true);
-    let dom = new toolkit.sdk.dom(
-      'widget_worker', // dom name
-      'http://137.184.135.111:49992/openapi.json'
-    );
-
-    let navigator = new toolkit.sdk.navigator(dom);
-    navigator.state = {
-      doms: {
-        widget_worker: dom
-      },
-      navigators: {
-        widget_worker: navigator
-      }
-    };
 
     await dom.ma_init().then(async () => {
       const loginForm = navigator.dom.root.lists['identitydb.identities'].actions['POST:/login'];
@@ -56,7 +65,6 @@ const Login = (props: LoginProps) => {
       await loginForm
         .ma_submit()
         .then((res: any) => {
-          console.log(res, 'see this');
           isLoggedIn = true;
         })
         .catch((error: any) => {
@@ -66,7 +74,8 @@ const Login = (props: LoginProps) => {
       // FIXME: resubmit token on relog
       // navigator.dom.ms_set_authorization('savedToken');
       if (isLoggedIn) {
-        navigator.dom.ms_set_authorization('');
+        singleton.data.updateAllTickers = true;
+        // navigator.dom.ms_set_authorization('');
         await singleton.ma_reboot(toolkit, null, navigator, null, {}, 'mlb').catch((error) => {
           console.log('error', error);
         });
@@ -79,6 +88,25 @@ const Login = (props: LoginProps) => {
       }
     });
   };
+
+  // chart generation
+  // const getData = async () => {
+  //   console.log(singleton.data, 'see data before function');
+  //   await singleton
+  //     .ma_generate_chart_for_player(
+  //       toolkit,
+  //       null,
+  //       navigator,
+  //       null,
+  //       {},
+  //       singleton.data.ticker,
+  //       singleton.data.ticker?.lineups[0],
+  //       JSON.parse(singleton.data.chartDefaults),
+  //       'batter_hits',
+  //       '10def'
+  //     )
+  //     .then((resp) => console.log('ma_generate_chart_for_player', resp));
+  // };
 
   if (isLoading) {
     return <OverlayLoader isLoading={isLoading} />;
@@ -109,6 +137,9 @@ const Login = (props: LoginProps) => {
           <Text style={styles.logInText}>Log in</Text>
         </View>
       </TouchableOpacity>
+      {/* <TouchableOpacity onPress={() => getData()}>
+        <Text>Get data</Text>
+      </TouchableOpacity> */}
     </View>
   );
 };

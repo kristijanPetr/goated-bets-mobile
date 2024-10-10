@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import ScreenHeader from '~/components/common/ScreenHeader';
 import MatchReviewScroller from '~/components/leaderboard/MatchReviewScroller';
 import StatsSelectorAndFilter from '~/components/leaderboard/StatsSelectorAndFilter';
@@ -10,6 +10,16 @@ import { LinearGradient } from 'expo-linear-gradient';
 import FloatingBettingMenu from '~/components/floatingBettingMenu/FloatingBettingMenu';
 
 const Leaderboard = () => {
+  const [statsSelected, setStatsSelected] = useState<string[]>([]);
+  const [searchFilter, setSearchFilter] = useState<string>('');
+  const handleStatSelect = (selectOption: string) => {
+    if (statsSelected.includes(selectOption)) {
+      setStatsSelected((prevState) => prevState.filter((item) => item !== selectOption));
+    } else {
+      setStatsSelected((prevState) => [...prevState, selectOption]);
+    }
+  };
+
   return (
     <LinearGradient
       colors={[variables.colors.backgroundLinearDark, variables.colors.backgroundLinearBright]}
@@ -19,9 +29,14 @@ const Leaderboard = () => {
       <View style={styles.container}>
         <ScreenHeader title="Leaderboard" />
         <MatchReviewScroller />
-        <StatsSelectorAndFilter />
+        <StatsSelectorAndFilter
+          statsSelected={statsSelected}
+          searchFilter={searchFilter}
+          handleStatSelect={handleStatSelect}
+          setSearchFilter={setSearchFilter}
+        />
         <PlayerListFilterLegend />
-        <PlayersList />
+        <PlayersList statsSelected={statsSelected} searchFilter={searchFilter} />
         <FloatingBettingMenu />
       </View>
     </LinearGradient>
