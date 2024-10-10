@@ -1,0 +1,16 @@
+{
+  "name": "jsen-cls-sdk-prj-packagejs-mod-toolkit-pkg-interface-for-sdk-ecmascript",
+  "description": "@todo",
+  "version": "1.0.5",
+  "author": {
+    "name": "PackageJS",
+    "url": "https://packagejs.com"
+  },
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "src/index.js",
+  "engines": {
+    "node": "^14.18.2 || ^16.20.2 || ^18.18.0 || ^20.9.0"
+  },
+  "dependencies": {}
+}

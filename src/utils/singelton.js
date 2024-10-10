@@ -1645,7 +1645,7 @@ const ma_update_ticker_lineups = function (
       }
 
       // @return
-      resolve();
+      resolve(ticker);
       return;
     } catch (e) {
       reject(new toolkit.utl.error(e.message));
@@ -1774,7 +1774,6 @@ const ma_update_ticker_injuries = function (
             } catch (e) {
               // @ignore
             }
-
             // @action
             try {
               ticker[sides[i1i] + 'Injuries'] = responseBody
@@ -3015,7 +3014,6 @@ const ma_init_ticker_chart_data_for_player = function (
           true,
           navigator.dom.constructor.fs_action_default_search_init
         );
-
         // @action
         await action.ma_resubmit();
       }
@@ -3041,9 +3039,10 @@ const ma_init_ticker_chart_data_for_player = function (
       }
 
       // @return
-      resolve();
+      resolve(tickerPlayer);
       return;
     } catch (e) {
+      console.log('ma_init_ticker_chart_data_for_player', e);
       reject(new toolkit.utl.error(e.message));
       return;
     }
@@ -3590,7 +3589,7 @@ const ma_generate_chart_for_team = function (
       }
 
       // @return
-      resolve();
+      resolve(chart);
       return;
     } catch (e) {
       reject(new toolkit.utl.error(e.message));
@@ -4839,6 +4838,7 @@ const ma_reboot = function (
         // @assign
         data['setIntervalAll'] = setInterval(() => {
           // @switch
+
           if (
             setIntervalAllIncrement % 300 === 0 ||
             setIntervalAllLastUpdateAllTickersValue !== data['updateAllTickers']
@@ -4846,10 +4846,11 @@ const ma_reboot = function (
             // @switch
             if (setIntervalAllLastUpdateAllTickersValue !== data['updateAllTickers']) {
               // @assign
+
               (setIntervalAllLastUpdateAllTickersValue = data['updateAllTickers']),
                 (setIntervalAllIncrement = 1);
             }
-
+            console.log('Interval Singleton data', data);
             // @action
             fa_reboot_interval(toolkit, component, navigator, context, componentData).catch((e) => {
               // @ignore

@@ -3,44 +3,94 @@ import { Text, View, StyleSheet, TouchableOpacity, TextInput } from 'react-nativ
 
 interface LoginProps {}
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-import toolkit from 'jsen-cls-sdk-prj-packagejs-mod-toolkit-pkg-interface-for-sdk-ecmascript';
+// import toolkit from 'jsen-cls-sdk-prj-packagejs-mod-toolkit-pkg-interface-for-sdk-ecmascript';
 
-import singleton from '../utils/singelton';
+// import singleton from '../utils/singelton';
 import { SingletonDataContextProvider } from '~/context/singletonDataContext';
 import { useNavigation } from '@react-navigation/native';
 import { variables } from '~/utils/mixins';
 import OverlayLoader from '~/components/common/OverlayLoader';
+import OffDefSection from '~/components/OffDefSection';
+import MatchupList from '~/components/MatchupList';
+import BarChart from '~/components/BarChart';
 //kristijan@localhost
 //test'
 
 const Login = (props: LoginProps) => {
-  const { initiateData } = React.useContext(SingletonDataContextProvider);
+  const { initiateData, singleton, navigator, toolkit, dom } = React.useContext(
+    SingletonDataContextProvider
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [username, setUsername] = useState('kristijan@localhost');
   const [password, setPassword] = useState('test');
   const navigation = useNavigation() as any;
 
-  let dom = new toolkit.sdk.dom(
-    'widget_worker', // dom name
-    'http://137.184.135.111:49992/openapi.json'
-  );
+  useEffect(() => {
+    const intervalId = setInterval(async () => {
+      console.log('singleton data: ', singleton.data);
+    }, 3000);
+    return () => clearInterval(intervalId);
+  }, []);
 
-  let navigator = new toolkit.sdk.navigator(dom);
-  navigator.state = {
-    doms: {
-      widget_worker: dom
-    },
-    navigators: {
-      widget_worker: navigator
+  const ma_init_ticker_chart_data_for_player = async () => {
+    console.log('singleton data: ', singleton.data);
+    if (singleton.data.ticker && singleton.data.ticker.lineups[0]) {
+      // await singleton
+      //   .ma_init_ticker_chart_data_for_player(
+      //     toolkit,
+      //     null,
+      //     navigator,
+      //     null,
+      //     {},
+      //     singleton.data.ticker,
+      //     singleton.data.ticker?.lineups[0]
+      //   )
+      //   .then((tick) => console.log('tick', tick))
+      //   .catch((err) => console.log('err', err));
+      // await singleton
+      //   .ma_update_ticker_lineups(toolkit, null, navigator, null, {}, singleton.data.ticker)
+      //   .then((tick) => console.log('tick', tick));
+      console.log(
+        'ms_generate_stats_for_player',
+        singleton.ms_generate_stats_for_player(
+          toolkit,
+          null,
+          navigator,
+          null,
+          {},
+          singleton.data.ticker,
+          singleton.data.ticker?.lineups[0]
+        )
+      );
+      console.log('getHitsPerGame', getHitsPerGame(singleton.data.ticker?.lineups[0]));
+      // await singleton
+      //   .ma_generate_chart_for_team(
+      //     toolkit,
+      //     null,
+      //     navigator,
+      //     null,
+      //     {},
+      //     singleton.data.ticker,
+      //     'away',
+      //     JSON.parse(singleton.data.chartDefaults)
+      //   )
+      //   .then((resp) => console.log('ma_generate_chart_for_team', resp));
+
+      // singleton.ms_calc_hitrate(null,null,null,null,null,)
+      await singleton
+        .ma_generate_chart_for_player(
+          toolkit,
+          null,
+          navigator,
+          null,
+          {},
+          singleton.data.ticker,
+          singleton.data.ticker?.lineups[0],
+          JSON.parse(singleton.data.chartDefaults)
+        )
+        .then((resp: any) => console.log('ma_generate_chart_for_player', resp));
     }
   };
-
-  // useEffect(() => {
-  //   const intervalId = setInterval(async () => {
-  //     console.log('singleton data:', singleton.data);
-  //   }, 3000);
-  //   return () => clearInterval(intervalId);
-  // }, []);
 
   const onChangeText = (value: string, key: string) => {
     if (key === 'username') {
@@ -71,23 +121,78 @@ const Login = (props: LoginProps) => {
           console.log('error', error);
         });
 
-      // FIXME: resubmit token on relog
-      // navigator.dom.ms_set_authorization('savedToken');
       if (isLoggedIn) {
+        // console.log('Auth', navigator.dom.auth);
         singleton.data.updateAllTickers = true;
-        // navigator.dom.ms_set_authorization('');
-        await singleton.ma_reboot(toolkit, null, navigator, null, {}, 'mlb').catch((error) => {
+        // navigator.dom.ms_set_authorization(navigator.dom.auth['=']);
+        try {
+          await singleton.ma_reboot(toolkit, null, navigator, null, {}, 'mlb');
+
+          // await singleton
+          //   .ma_update_tickers_gamelines(toolkit, null, navigator, null, {})
+          //   .then((ticker) => console.log('ticker', ticker));
+          // await singleton
+          //   .ma_update_ticker_lineups(toolkit, null, navigator, null, {}, singleton.data.ticker)
+          //   .then((ticker) => console.log('ma_update_ticker_lineups', ticker));
+
+          console.log('singleton.data', singleton.data);
+
+          // console.log('singleton.data', singleton.data);
+          initiateData(singleton.data);
+          setIsLoading(false);
+          navigation.navigate('TabNavigator');
+        } catch (error) {
           console.log('error', error);
-        });
-        initiateData(singleton.data);
-        setIsLoading(false);
-        return navigation.navigate('TabNavigator');
+          setIsLoading(false);
+        }
       } else {
         setIsLoading(false);
-        return null;
       }
     });
   };
+
+  function getHitsPerGame(player: any) {
+    try {
+      // Find the player in the ticker's lineups or performances
+      // let player = ticker.lineups.find(player => player.player.id === playerId);
+
+      if (!player) {
+        console.log('Player not found in ticker.');
+        return;
+      }
+
+      // Get the player's performances data
+      let performances = player.performances;
+
+      let totalHits = 0;
+      let gamesPlayed = 0;
+
+      // Loop through the performances to calculate total hits and games played
+      performances.forEach((performance: any) => {
+        if (performance.attributes.status['='] === 'final') {
+          // Ensure the performance meta contains hits data
+          const metaStats = JSON.parse(performance.attributes.meta['=']);
+          console.log('metaStats', metaStats);
+          let hits = metaStats.batter_hits || 0;
+          totalHits += parseInt(hits, 10);
+          gamesPlayed += 1;
+        }
+      });
+
+      if (gamesPlayed === 0) {
+        console.log('No games played.');
+        return 0;
+      }
+
+      // Calculate hits per game
+      let hitsPerGame = totalHits / gamesPlayed;
+
+      console.log(`Hits per Game for player `, hitsPerGame);
+      return hitsPerGame;
+    } catch (e) {
+      console.error('Error calculating hits per game:', e);
+    }
+  }
 
   // chart generation
   // const getData = async () => {
@@ -132,14 +237,34 @@ const Login = (props: LoginProps) => {
       <View style={styles.forgotPasswordContainer}>
         <Text style={styles.forgotPasswordText}>Forgot Password</Text>
       </View>
-      <TouchableOpacity onPress={() => handleLogIn()}>
+      <TouchableOpacity onPress={handleLogIn}>
         <View style={styles.logInButton}>
           <Text style={styles.logInText}>Log in</Text>
         </View>
       </TouchableOpacity>
-      {/* <TouchableOpacity onPress={() => getData()}>
-        <Text>Get data</Text>
+
+      {/* <TouchableOpacity onPress={ma_init_ticker_chart_data_for_player}>
+        <View style={styles.logInButton}>
+          <Text style={styles.logInText}>get data</Text>
+        </View>
       </TouchableOpacity> */}
+      {/* <BarChart
+        data={[
+          { label: 'A', value: 50 },
+          { label: 'B', value: 100 },
+          { label: 'C', value: 150 },
+          { label: 'D', value: 200 },
+          { label: 'E', value: 80 }
+        ]}
+        width={350}
+        height={200}
+        barColor="#4CAF50"
+      /> */}
+      {/* <OffDefSection
+        mapGamelinesToTitles={singleton.data.mapGamelinesToTitles['mlb']}
+        meta={JSON.parse(singleton.data.ticker.matchup.attributes['meta']['='])}
+      /> */}
+      {/* <MatchupList singleton={singleton.data} ticker={singleton.data.ticker} /> */}
     </View>
   );
 };

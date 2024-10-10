@@ -12,6 +12,10 @@ type SingletonDataType = {
   initiateData: (data: any) => void;
   refetchData: (team: string, bookameker: string) => void;
   removeData: () => void;
+  singleton: any;
+  navigator: any;
+  toolkit: any;
+  dom: any;
 };
 
 type Props = {
@@ -70,7 +74,11 @@ export const SingletonDataContext = ({ children }: Props) => {
     isFetching: isFetching,
     initiateData: loadInitialSingletonData,
     refetchData: refetchData,
-    removeData
+    removeData,
+    singleton,
+    navigator,
+    toolkit,
+    dom
   };
   return (
     <SingletonDataContextProvider.Provider value={initialData}>
@@ -86,6 +94,9 @@ export const SingletonDataContextProvider = createContext<SingletonDataType>({
   isFetching: false,
   initiateData: () => {},
   refetchData: () => {},
-  removeData: () => {}
+  removeData: () => {},
+  singleton,
+  navigator,
+  toolkit,
+  dom: {}
 });
-const styles = StyleSheet.create({});

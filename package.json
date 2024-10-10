@@ -9,7 +9,11 @@
     "format": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix && prettier \"**/*.{js,jsx,ts,tsx,json}\" --write",
     "web": "expo start --web",
     "postinstall": "patch-package",
-    "build:local": "npx eas build --platform ios --local --profile development"
+    "update:dev": "npx eas update --profile development",
+    "build:local": "npx eas build --platform ios --local --profile development",
+    "build:local:android": "npx eas build --platform android --local --profile development",
+    "build:prod:ios": "npx eas build -p ios --clear-cache --profile production",
+    "submit:prod": "npx eas submit --profile production --platform ios --latest"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.0",
@@ -19,11 +23,12 @@
     "@shopify/restyle": "^2.4.2",
     "date-fns": "^4.1.0",
     "expo": "^51.0.32",
+    "expo-build-properties": "~0.12.5",
     "expo-dev-client": "~4.0.27",
     "expo-linear-gradient": "~13.0.2",
     "expo-status-bar": "~1.12.1",
     "expo-updates": "~0.25.25",
-    "jsen-cls-sdk-prj-packagejs-mod-toolkit-pkg-interface-for-sdk-ecmascript": "git+http://192.168.0.111:49418/Repositories/packagejs-repository/jsen-cls-sdk-prj-packagejs-mod-toolkit-pkg-interface-for-sdk-ecmascript/1.0.0-6.0.0-compiled.git/",
+    "jsen-cls-sdk-prj-packagejs-mod-toolkit-pkg-interface-for-sdk-ecmascript": "./libraries/jsen-cls-sdk-prj-packagejs-mod-toolkit-pkg-interface-for-sdk-ecmascript",
     "patch-package": "^8.0.0",
     "postinstall-postinstall": "^2.1.0",
     "react": "18.2.0",
