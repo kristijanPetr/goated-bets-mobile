@@ -739,7 +739,7 @@ const ms_calc_hitrate = function (
     }
 
     // @assign
-    let past = cacheHitrate[performanceId][attribute].slice(0, hitratesSize);
+    let past = cacheHitrate?.[performanceId]?.[attribute]?.slice(0, hitratesSize);
 
     // @return
     return Array.isArray(past)
@@ -4004,7 +4004,7 @@ const ma_generate_chart_for_player = function (
       }
 
       // @return
-      resolve();
+      resolve(chart);
       return;
     } catch (e) {
       reject(new toolkit.utl.error(e.message));

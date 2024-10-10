@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     bottom: 90,
-    backgroundColor: variables.colors.betSlipBackground,
+    backgroundColor: variables.colors.white,
     width: '90%',
     left: '5%',
     zIndex: 10,
@@ -54,7 +54,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     borderRadius: 25,
     borderWidth: 1,
-    borderColor: variables.colors.black
+    borderColor: variables.colors.black,
+    backgroundColor: variables.colors.betSlipBackground
   },
   numberOfBetsCircle: {
     width: 45,

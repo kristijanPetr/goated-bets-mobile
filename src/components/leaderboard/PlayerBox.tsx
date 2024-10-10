@@ -1,39 +1,69 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { variables } from '~/utils/mixins';
 import PlayerExtraData from './PlayerExtraData';
+import { PlayerData } from './PlayersList';
+import { SingletonDataContextProvider } from '~/context/singletonDataContext';
+import singleton from '../../utils/singelton';
 
 interface Props {
-  item: any;
-  index: number;
+  item: PlayerData;
   selectedPlayer: string;
   handleSelectedPlayer: (id: string) => void;
 }
 
-const PlayerBox = ({ item, index, selectedPlayer, handleSelectedPlayer }: Props) => {
-  const isSelectedPlayer = `${item.playerPosition}${index}` === selectedPlayer;
+const PlayerBox = ({ item, selectedPlayer, handleSelectedPlayer }: Props) => {
+  const { data } = useContext(SingletonDataContextProvider);
+  const isSelectedPlayer = item.id === selectedPlayer;
+
+  const getStatTitle = (key: string) => {
+    return data?.mapMarketsToTitles?.[data?.sport]?.[key] || '';
+  };
+
+  const generateL5 = () => {
+    if (item.performance.hitrate && item.performance.id) {
+      return singleton.ms_calc_hitrate(
+        null,
+        null,
+        null,
+        null,
+        null,
+        item.stats.point,
+        item.playerInfo.name,
+        item.performance.id,
+        item.performance.hitrate,
+        item.stats.key,
+        5,
+        {}
+      );
+    }
+    return 0;
+  };
 
   return (
     <TouchableOpacity
-      onPress={() => handleSelectedPlayer(`${item.playerPosition}${index}`)}
+      onPress={() => handleSelectedPlayer(item.id)}
       key={item.id}
       style={styles.touchableContainer}
       activeOpacity={1}>
       <View style={styles.container}>
         <View style={styles.imageContainer}>
-          <Image
-            source={{ uri: item.playerAvatarImage }}
-            style={styles.dummyPlayerImage}
-            resizeMode="contain"
-          />
+          {item.playerInfo.avatar && (
+            <Image
+              source={{ uri: item.playerInfo.avatar }}
+              style={styles.dummyPlayerImage}
+              resizeMode="contain"
+            />
+          )}
         </View>
         <View style={styles.nameContainer}>
           <Text
+            style={styles.textName}>{`${item.playerInfo.name} (${item.playerInfo.position})`}</Text>
+          <Text
             style={
-              styles.textName
-            }>{`${item.player.attributes.name['=']} (${item.playerPosition})`}</Text>
-          <Text style={styles.textStats}>{item.stats || '-'}</Text>
+              styles.textStats
+            }>{`${getStatTitle(item.stats.key)} ${item.stats.name} ${item.stats.point}`}</Text>
           <Text style={styles.textMatch}>{item.matchup}</Text>
         </View>
         <View style={styles.barContainer}>
@@ -42,18 +72,18 @@ const PlayerBox = ({ item, index, selectedPlayer, handleSelectedPlayer }: Props)
               ...styles.bar,
               backgroundColor: variables.colors.statsYellow
             }}>
-            <Text style={styles.textBar}>{`${item.l5 || '0'}%`}</Text>
+            <Text style={styles.textBar}>{generateL5()}</Text>
           </View>
           <View style={{ ...styles.bar, backgroundColor: variables.colors.statsRed }}>
-            <Text style={styles.textBar}> {item.streak || '0'}</Text>
+            <Text style={styles.textBar}> {'0'}</Text>
           </View>
           <View style={{ ...styles.bar, backgroundColor: variables.colors.statsGreen }}>
-            <Text style={styles.textBar}>{item.matchGrade || '0'}</Text>
+            <Text style={styles.textBar}>{'0'}</Text>
           </View>
         </View>
         <View style={styles.oddsContainer}>
           <View style={styles.oddsBox}>
-            <Text style={styles.oddsText}>{`+${item.odds || 0}`}</Text>
+            <Text style={styles.oddsText}>{item.stats.price}</Text>
           </View>
         </View>
       </View>

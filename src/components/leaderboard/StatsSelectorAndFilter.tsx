@@ -1,37 +1,36 @@
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { variables } from '~/utils/mixins';
 import Feather from '@expo/vector-icons/Feather';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Icon } from '../icon/icon';
+import { SingletonDataContextProvider } from '~/context/singletonDataContext';
 
-const DATA = [
-  { id: '1', name: 'Anytime', metric: 'TD' },
-  { id: '2', name: 'Passing', metric: 'Yds' },
-  { id: '3', name: 'Rushing', metric: 'Yds' },
-  { id: '4', name: 'Rec1', metric: 'Yds' },
-  { id: '5', name: 'Rec2', metric: 'Yds' },
-  { id: '6', name: 'Rec3', metric: 'Yds' },
-  { id: '7', name: 'Rec4', metric: 'Yds' }
-];
-const StatsSelectorAndFilter = () => {
-  const [statsSelected, setStatsSelected] = useState<string[]>([]);
+interface Props {
+  statsSelected: string[];
+  searchFilter: string;
+  handleStatSelect: (item: string) => void;
+  setSearchFilter: React.Dispatch<React.SetStateAction<string>>;
+}
+const StatsSelectorAndFilter = ({
+  statsSelected,
+  searchFilter,
+  handleStatSelect,
+  setSearchFilter
+}: Props) => {
+  const { data } = useContext(SingletonDataContextProvider);
+
   const [isSearchFilterSelected, setIsSearchFilterSelected] = useState<boolean>(false);
-  const [searchFilter, setSearchFilter] = useState<string>('');
-  const handleStatSelect = (selectOption: string) => {
-    if (statsSelected.includes(selectOption)) {
-      setStatsSelected((prevState) => prevState.filter((item) => item !== selectOption));
-    } else {
-      setStatsSelected((prevState) => [...prevState, selectOption]);
-    }
-  };
-  const renderItem = (item: any) => {
-    const isItemActive = statsSelected.includes(item.name);
+
+  const filterMarketsTitles: string[] = data?.mapMarketsToTitles?.[data?.sport] || [];
+
+  const renderItem = (item: string) => {
+    const isItemActive = statsSelected.includes(item);
     return (
       <TouchableOpacity
         activeOpacity={0.9}
-        key={item.id}
-        onPress={() => handleStatSelect(item.name)}
+        key={item}
+        onPress={() => handleStatSelect(item)}
         style={{
           ...styles.statsContainer,
           backgroundColor: isItemActive ? variables.colors.activeGrey : variables.colors.grey
@@ -41,14 +40,7 @@ const StatsSelectorAndFilter = () => {
             ...styles.statsText,
             color: isItemActive ? variables.colors.black : variables.colors.white
           }}>
-          {item.name}
-        </Text>
-        <Text
-          style={{
-            ...styles.statsText,
-            color: isItemActive ? variables.colors.black : variables.colors.white
-          }}>
-          {item.metric}
+          {item}
         </Text>
       </TouchableOpacity>
     );
@@ -68,7 +60,10 @@ const StatsSelectorAndFilter = () => {
           <TouchableOpacity
             activeOpacity={0.9}
             style={styles.closeSearchFilterButton}
-            onPress={() => setIsSearchFilterSelected(false)}>
+            onPress={() => {
+              setIsSearchFilterSelected(false);
+              setSearchFilter('');
+            }}>
             <Ionicons name="close" size={24} color="black" />
           </TouchableOpacity>
         </View>
@@ -83,7 +78,7 @@ const StatsSelectorAndFilter = () => {
     <View style={styles.container}>
       <View style={styles.horizontalContainer}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: '97%' }}>
-          {DATA.map((item) => {
+          {Object.values(filterMarketsTitles).map((item) => {
             return renderItem(item);
           })}
         </ScrollView>
@@ -125,7 +120,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
   },
   statsContainer: {
-    width: 66,
+    width: 70,
     height: 40,
     borderRadius: 30,
     marginHorizontal: 4,
@@ -133,6 +128,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   statsText: {
+    width: 55,
+    textAlign: 'center',
     fontSize: 11
   },
   verticalDivider: {
