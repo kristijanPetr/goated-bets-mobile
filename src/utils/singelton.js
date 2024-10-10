@@ -718,11 +718,6 @@ const fs_chart_postprocess = function (chart, bars, oprice, opoint) {
 
 // @signature
 const ms_calc_hitrate = function (
-  toolkit,
-  component,
-  navigator,
-  context,
-  componentData,
   propPoint,
   propArrow,
   performanceId,
@@ -950,11 +945,6 @@ const ms_calc_simrate = function (
 
 // @signature
 const ms_calc_ev_hr = function (
-  toolkit,
-  component,
-  navigator,
-  context,
-  componentData,
   odds,
   propPoint,
   propArrow,
@@ -970,11 +960,6 @@ const ms_calc_ev_hr = function (
 
     // @assign
     let hitrate = ms_calc_hitrate(
-      toolkit,
-      component,
-      navigator,
-      context,
-      componentData,
       propPoint,
       propArrow,
       performanceId,
@@ -4013,16 +3998,7 @@ const ma_generate_chart_for_player = function (
 };
 
 // @signature
-const ms_generate_stats_for_player = function (
-  toolkit,
-  component,
-  navigator,
-  context,
-  componentData,
-  ticker,
-  tickerPlayer,
-  toggleStats = false
-) {
+const ms_generate_stats_for_player = function (toolkit, ticker, tickerPlayer, toggleStats = false) {
   try {
     // @assign
     let seasonStats = [],

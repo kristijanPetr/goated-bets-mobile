@@ -54,12 +54,9 @@ const Login = (props: LoginProps) => {
         'ms_generate_stats_for_player',
         singleton.ms_generate_stats_for_player(
           toolkit,
-          null,
-          navigator,
-          null,
-          {},
           singleton.data.ticker,
-          singleton.data.ticker?.lineups[0]
+          singleton.data.ticker?.lineups[0],
+          true
         )
       );
       console.log('getHitsPerGame', getHitsPerGame(singleton.data.ticker?.lineups[0]));

@@ -21,9 +21,9 @@ const PlayerBox = ({ item, selectedPlayer, handleSelectedPlayer }: Props) => {
     return data?.mapMarketsToTitles?.[data?.sport]?.[key] || '';
   };
 
-  const generateL5 = () => {
+  const generateL5 = React.useCallback(() => {
     if (item.performance.hitrate && item.performance.id) {
-      return singleton.ms_calc_hitrate(
+      const hitrate = singleton.ms_calc_hitrate(
         null,
         null,
         null,
@@ -37,9 +37,11 @@ const PlayerBox = ({ item, selectedPlayer, handleSelectedPlayer }: Props) => {
         5,
         {}
       );
+
+      return hitrate;
     }
     return 0;
-  };
+  }, [item]);
 
   return (
     <TouchableOpacity

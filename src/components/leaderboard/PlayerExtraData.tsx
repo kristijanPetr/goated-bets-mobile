@@ -1,18 +1,72 @@
 import { Image, StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import dummyChartImage from './dummyChartImage.png';
 import dummyBarImage from './dummyBarImage.png';
 import { variables } from '~/utils/mixins';
+import BarChart from '../BarChart';
+import { SingletonDataContextProvider } from '~/context/singletonDataContext';
 
 interface Props {
   item: any;
 }
 
 const PlayerExtraData = ({ item }: Props) => {
+  const [chartData, setChartData] = useState<any>({});
+  const { initiateData, singleton, navigator, toolkit, dom } = useContext(
+    SingletonDataContextProvider
+  );
+  useEffect(() => {
+    // singleton.ms_calc_ev_hr(odds,
+    //   propPoint,
+    //   propArrow,
+    //   performanceId,
+    //   performanceHHR,
+    //   attribute,
+    //   hitratesSize = 10,
+    //   cacheHitrate = {})
+
+    const player = singleton.data.ticker?.lineups.find(
+      (pl) => pl.player.attributes.name['='] === item.playerInfo.name
+    );
+
+    console.log(
+      'ms_generate_stats_for_player',
+      singleton.ms_generate_stats_for_player(toolkit, singleton.data.ticker, player)
+    );
+    console.log('item', player);
+    singleton
+      .ma_generate_chart_for_player(
+        toolkit,
+        null,
+        navigator,
+        null,
+        {},
+        singleton.data.ticker,
+        player,
+        JSON.parse(singleton.data.chartDefaults),
+        'batter_hits',
+        '10def'
+      )
+      .then((resp: any) => setChartData(resp));
+  }, []);
   return (
     <View style={styles.extraDataContainer}>
       <View style={styles.divider} />
-      <Image source={dummyChartImage} style={styles.dummyImage} resizeMode="contain" />
+      {/* <Image source={dummyChartImage} style={styles.dummyImage} resizeMode="contain" /> */}
+
+      {chartData?.bars && (
+        <BarChart
+          data={chartData.bars.map((item: any) => {
+            return {
+              label: item.againstName,
+              value: item.value
+            };
+          })}
+          width={350}
+          height={200}
+          barColor="#F8696B"
+        />
+      )}
       <View style={styles.divider} />
       <Text style={styles.extraDataHeading}> Matchup and Rankings</Text>
       <View
