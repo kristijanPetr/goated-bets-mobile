@@ -14,7 +14,7 @@
         "expo-build-properties",
         {
           "android": {
-            "usesCleartextTraffic": true // ? enable HTTP requests
+            "usesCleartextTraffic": true
           }
         }
       ]
@@ -30,7 +30,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.goatebets.app",
+      "bundleIdentifier": "com.goatebets",
       "infoPlist": {
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true,

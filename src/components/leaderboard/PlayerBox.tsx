@@ -5,7 +5,6 @@ import { variables } from '~/utils/mixins';
 import PlayerExtraData from './PlayerExtraData';
 import { PlayerData } from './PlayersList';
 import { SingletonDataContextProvider } from '~/context/singletonDataContext';
-import singleton from '../../utils/singelton';
 
 interface Props {
   item: PlayerData;
@@ -14,7 +13,7 @@ interface Props {
 }
 
 const PlayerBox = ({ item, selectedPlayer, handleSelectedPlayer }: Props) => {
-  const { data } = useContext(SingletonDataContextProvider);
+  const { data, singleton } = useContext(SingletonDataContextProvider);
   const isSelectedPlayer = item.id === selectedPlayer;
 
   const getStatTitle = (key: string) => {
@@ -24,11 +23,6 @@ const PlayerBox = ({ item, selectedPlayer, handleSelectedPlayer }: Props) => {
   const generateL5 = React.useCallback(() => {
     if (item.performance.hitrate && item.performance.id) {
       const hitrate = singleton.ms_calc_hitrate(
-        null,
-        null,
-        null,
-        null,
-        null,
         item.stats.point,
         item.playerInfo.name,
         item.performance.id,

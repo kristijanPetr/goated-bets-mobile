@@ -1,6 +1,5 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View, LayoutChangeEvent } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
-import dummyChartImage from './dummyChartImage.png';
 import dummyBarImage from './dummyBarImage.png';
 import { variables } from '~/utils/mixins';
 import BarChart from '../BarChart';
@@ -11,10 +10,15 @@ interface Props {
 }
 
 const PlayerExtraData = ({ item }: Props) => {
+  const { singleton, navigator, toolkit } = useContext(SingletonDataContextProvider);
   const [chartData, setChartData] = useState<any>({});
-  const { initiateData, singleton, navigator, toolkit, dom } = useContext(
-    SingletonDataContextProvider
-  );
+  const [containerWidth, setContainerWidth] = useState<number>(0);
+
+  const handleLayout = (event: LayoutChangeEvent) => {
+    const { width } = event.nativeEvent.layout;
+    setContainerWidth(width);
+  };
+
   useEffect(() => {
     // singleton.ms_calc_ev_hr(odds,
     //   propPoint,
@@ -26,14 +30,14 @@ const PlayerExtraData = ({ item }: Props) => {
     //   cacheHitrate = {})
 
     const player = singleton.data.ticker?.lineups.find(
-      (pl) => pl.player.attributes.name['='] === item.playerInfo.name
+      (pl: any) => pl.player.attributes.name['='] === item.playerInfo.name
     );
 
-    console.log(
-      'ms_generate_stats_for_player',
-      singleton.ms_generate_stats_for_player(toolkit, singleton.data.ticker, player)
-    );
-    console.log('item', player);
+    // console.log(
+    //   'ms_generate_stats_for_player',
+    //   singleton.ms_generate_stats_for_player(toolkit, singleton.data.ticker, player)
+    // );
+
     singleton
       .ma_generate_chart_for_player(
         toolkit,
@@ -44,17 +48,16 @@ const PlayerExtraData = ({ item }: Props) => {
         singleton.data.ticker,
         player,
         JSON.parse(singleton.data.chartDefaults),
-        'batter_hits',
+        item.stats.key,
         '10def'
       )
       .then((resp: any) => setChartData(resp));
   }, []);
   return (
-    <View style={styles.extraDataContainer}>
+    <View style={styles.extraDataContainer} onLayout={handleLayout}>
       <View style={styles.divider} />
-      {/* <Image source={dummyChartImage} style={styles.dummyImage} resizeMode="contain" /> */}
-
-      {chartData?.bars && (
+      <Text style={styles.extraDataHeading}> Last 10 Games</Text>
+      {chartData?.bars ? (
         <BarChart
           data={chartData.bars.map((item: any) => {
             return {
@@ -62,10 +65,12 @@ const PlayerExtraData = ({ item }: Props) => {
               value: item.value
             };
           })}
-          width={350}
-          height={200}
+          width={containerWidth}
+          height={250}
           barColor="#F8696B"
         />
+      ) : (
+        <View style={{ height: 250, width: containerWidth, marginTop: 20 }} />
       )}
       <View style={styles.divider} />
       <Text style={styles.extraDataHeading}> Matchup and Rankings</Text>
@@ -84,7 +89,7 @@ const PlayerExtraData = ({ item }: Props) => {
             color: variables.colors.black,
             fontSize: 12,
             textTransform: 'uppercase'
-          }}>{`Matchup grade ${item.matchGrade}`}</Text>
+          }}>{`Matchup grade N/A`}</Text>
       </View>
 
       <Image source={dummyBarImage} style={styles.dummyImage} resizeMode="contain" />
@@ -121,11 +126,10 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: 0.3,
-    width: '60%',
+    width: '100%',
     backgroundColor: variables.colors.activeGrey,
     marginTop: 4,
-    marginBottom: 10,
-    marginRight: '30%'
+    marginBottom: 10
   },
   extraDataContainer: {
     alignItems: 'center'
