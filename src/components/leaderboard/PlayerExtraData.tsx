@@ -49,15 +49,27 @@ const PlayerExtraData = ({ item }: Props) => {
         player,
         JSON.parse(singleton.data.chartDefaults),
         item.stats.key,
-        '10def'
+        'recent'
       )
-      .then((resp: any) => setChartData(resp));
+      .then((resp: any) => {
+        if (resp.bars.length > 10) {
+          return setChartData({
+            ...resp,
+            bars: resp.bars.slice(resp.bars.length - 10, resp.bars.length)
+          });
+        }
+        return setChartData(resp);
+      })
+      .catch((err: any) => {
+        setChartData({ bars: null });
+      });
   }, []);
+
   return (
     <View style={styles.extraDataContainer} onLayout={handleLayout}>
       <View style={styles.divider} />
       <Text style={styles.extraDataHeading}> Last 10 Games</Text>
-      {chartData?.bars ? (
+      {chartData?.loaded === true ? (
         <BarChart
           data={chartData.bars.map((item: any) => {
             return {

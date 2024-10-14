@@ -20,9 +20,27 @@ const PlayerBox = ({ item, selectedPlayer, handleSelectedPlayer }: Props) => {
     return data?.mapMarketsToTitles?.[data?.sport]?.[key] || '';
   };
 
+  const generateStreak = React.useCallback(() => {
+    if (item.performance.hitrate && item.performance.id) {
+      const hitrate = singleton.ms_calc_hitrate_raw(
+        item.stats.price,
+        item.stats.point,
+        item.performance.id,
+        item.performance.hitrate,
+        item.stats.key,
+        5,
+        {}
+      );
+
+      return hitrate;
+    }
+    return 0;
+  }, [item]);
+
   const generateL5 = React.useCallback(() => {
     if (item.performance.hitrate && item.performance.id) {
-      const hitrate = singleton.ms_calc_hitrate(
+      const hitrate = singleton.ms_calc_ev_hr(
+        item.stats.price,
         item.stats.point,
         item.playerInfo.name,
         item.performance.id,
@@ -71,7 +89,7 @@ const PlayerBox = ({ item, selectedPlayer, handleSelectedPlayer }: Props) => {
             <Text style={styles.textBar}>{generateL5()}</Text>
           </View>
           <View style={{ ...styles.bar, backgroundColor: variables.colors.statsRed }}>
-            <Text style={styles.textBar}> {'0'}</Text>
+            <Text style={styles.textBar}> {generateStreak()}</Text>
           </View>
           <View style={{ ...styles.bar, backgroundColor: variables.colors.statsGreen }}>
             <Text style={styles.textBar}>{'0'}</Text>

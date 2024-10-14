@@ -758,11 +758,6 @@ const ms_calc_hitrate = function (
 
 // @signature
 const ms_calc_hitrate_raw = function (
-  toolkit,
-  component,
-  navigator,
-  context,
-  componentData,
   propPoint,
   propArrow,
   performanceId,
@@ -779,7 +774,7 @@ const ms_calc_hitrate_raw = function (
     }
 
     // @assign
-    let past = cacheHitrate[performanceId][attribute].slice(0, hitratesSize);
+    let past = cacheHitrate?.[performanceId]?.[attribute]?.slice(0, hitratesSize);
 
     // @return
     return Array.isArray(past)

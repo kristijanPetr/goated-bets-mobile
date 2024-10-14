@@ -14,7 +14,7 @@ const BarChart: React.FC<BarChartProps> = ({ data, width = 300, height = 200 }) 
   const meanValue = data.reduce((acc, item) => acc + item.value, 0) / data.length; // Calculate the mean value
   const barWidth = width / data.length - 10; // Calculate the width of each bar with some margin
 
-  const meanY = (1 - meanValue / maxValue) * (height - 70); // Y-position of the mean line
+  const meanY = (1 - meanValue / (maxValue || 1)) * (height - 70); // Y-position of the mean line
 
   return (
     <View
@@ -28,7 +28,7 @@ const BarChart: React.FC<BarChartProps> = ({ data, width = 300, height = 200 }) 
       ]}>
       <Svg width={'100%'} height={height}>
         {data.map((item, index) => {
-          const barHeight = (item.value / maxValue) * (height - 70); // Scale bar height based on maxValue
+          const barHeight = (item.value / (maxValue || 1)) * (height - 70); // Scale bar height based on maxValue
           const x = index * (barWidth + 5) + 5; // X position for each bar
           const y = height - barHeight - 50; // Y position for each bar
 
