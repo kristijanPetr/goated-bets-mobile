@@ -25,12 +25,12 @@ const Login = (props: LoginProps) => {
   const [password, setPassword] = useState('test');
   const navigation = useNavigation() as any;
 
-  useEffect(() => {
-    const intervalId = setInterval(async () => {
-      console.log('singleton data: ', singleton.data);
-    }, 3000);
-    return () => clearInterval(intervalId);
-  }, []);
+  // useEffect(() => {
+  //   const intervalId = setInterval(async () => {
+  //     console.log('singleton data: ', singleton.data);
+  //   }, 3000);
+  //   return () => clearInterval(intervalId);
+  // }, []);
 
   const ma_init_ticker_chart_data_for_player = async () => {
     console.log('singleton data: ', singleton.data);
@@ -123,7 +123,19 @@ const Login = (props: LoginProps) => {
         singleton.data.updateAllTickers = true;
         // navigator.dom.ms_set_authorization(navigator.dom.auth['=']);
         try {
-          await singleton.ma_reboot(toolkit, null, navigator, null, {}, 'mlb');
+          await singleton.ma_reboot(
+            toolkit,
+            null,
+            navigator,
+            null,
+            {},
+            'mlb',
+            '',
+            '',
+            '',
+            false,
+            initiateData
+          );
 
           // await singleton
           //   .ma_update_tickers_gamelines(toolkit, null, navigator, null, {})

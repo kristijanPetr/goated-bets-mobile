@@ -1,5 +1,5 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useContext } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 
 import { variables } from '~/utils/mixins';
 import PlayerExtraData from './PlayerExtraData';
@@ -13,23 +13,24 @@ interface Props {
 }
 
 const PlayerBox = ({ item, selectedPlayer, handleSelectedPlayer }: Props) => {
-  const { data, singleton } = useContext(SingletonDataContextProvider);
+  const { data, singleton, toolkit, selectedGames } = useContext(SingletonDataContextProvider);
   const isSelectedPlayer = item.id === selectedPlayer;
+  let cache = {};
 
   const getStatTitle = (key: string) => {
     return data?.mapMarketsToTitles?.[data?.sport]?.[key] || '';
   };
 
-  const generateStreak = React.useCallback(() => {
+  const generateStreak = useCallback(() => {
     if (item.performance.hitrate && item.performance.id) {
       const hitrate = singleton.ms_calc_hitrate_raw(
         item.stats.price,
-        item.stats.point,
+        item.stats.name,
         item.performance.id,
         item.performance.hitrate,
         item.stats.key,
         5,
-        {}
+        cache
       );
 
       return hitrate;
@@ -37,23 +38,55 @@ const PlayerBox = ({ item, selectedPlayer, handleSelectedPlayer }: Props) => {
     return 0;
   }, [item]);
 
-  const generateL5 = React.useCallback(() => {
+  const generateL5 = useMemo(() => {
     if (item.performance.hitrate && item.performance.id) {
       const hitrate = singleton.ms_calc_ev_hr(
-        item.stats.price,
         item.stats.point,
-        item.playerInfo.name,
+        item.stats.price,
+        item.stats.name,
         item.performance.id,
         item.performance.hitrate,
         item.stats.key,
         5,
-        {}
+        cache
       );
 
       return hitrate;
     }
     return 0;
   }, [item]);
+
+  const calculateMatchGrade = useMemo(() => {
+    const player = selectedGames.lineups?.find(
+      (pl: any) => pl.player.attributes.name['='] === item.playerInfo.name
+    );
+    if (!player) {
+      return 0;
+    }
+    const playerStats = singleton.ms_generate_stats_for_player(toolkit, selectedGames, player);
+
+    const weights = {
+      hits: 2,
+      home_runs: 4,
+      rbis: 3,
+      strikeouts: -1
+    };
+
+    // Extract the relevant stats
+    const hits = playerStats.seasonStatsRaw['batter_hits'] || 0;
+    const homeRuns = playerStats.seasonStatsRaw['batter_home_runs'] || 0;
+    const rbis = playerStats.seasonStatsRaw['batter_rbis'] || 0;
+    const strikeouts = playerStats.seasonStatsRaw['batter_strikeouts'] || 0;
+
+    // Calculate the match grade using a weighted sum of stats
+    const matchGrade =
+      hits * weights.hits +
+      homeRuns * weights.home_runs +
+      rbis * weights.rbis +
+      strikeouts * weights.strikeouts;
+
+    return matchGrade;
+  }, [item, selectedGames, singleton]);
 
   return (
     <TouchableOpacity
@@ -86,13 +119,13 @@ const PlayerBox = ({ item, selectedPlayer, handleSelectedPlayer }: Props) => {
               ...styles.bar,
               backgroundColor: variables.colors.statsYellow
             }}>
-            <Text style={styles.textBar}>{generateL5()}</Text>
+            <Text style={styles.textBar}>{generateL5}</Text>
           </View>
           <View style={{ ...styles.bar, backgroundColor: variables.colors.statsRed }}>
             <Text style={styles.textBar}> {generateStreak()}</Text>
           </View>
           <View style={{ ...styles.bar, backgroundColor: variables.colors.statsGreen }}>
-            <Text style={styles.textBar}>{'0'}</Text>
+            <Text style={styles.textBar}>{calculateMatchGrade}</Text>
           </View>
         </View>
         <View style={styles.oddsContainer}>

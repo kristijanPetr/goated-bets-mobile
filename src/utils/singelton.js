@@ -4698,7 +4698,8 @@ const ma_reboot = function (
   yyyymmdd = '',
   bookmaker = '',
   matchupId = '',
-  setTicker = false
+  setTicker = false,
+  dataSetterCallback = (data) => {}
 ) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -4822,6 +4823,7 @@ const ma_reboot = function (
                 (setIntervalAllIncrement = 1);
             }
             console.log('Interval Singleton data', data);
+            dataSetterCallback?.(data);
             // @action
             fa_reboot_interval(toolkit, component, navigator, context, componentData).catch((e) => {
               // @ignore

@@ -19,13 +19,13 @@ const MatchReviewScroller = () => {
   const matchData = data?.tickers || [];
 
   const renderItem = ({ item }: any) => {
-    const isItemActive = selectedGames === `${item.awayName}${item.homeName}`;
-
+    const isItemActive =
+      selectedGames?.matchup?.attributes['id']['='] === item.matchup.attributes['id']['='];
     const textColor = isItemActive ? variables.colors.black : variables.colors.white;
     return (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => setSelectedGame(`${item.awayName}${item.homeName}`)}
+        onPress={() => setSelectedGame(item)}
         style={{
           ...styles.item,
           backgroundColor: isItemActive ? variables.colors.activeGrey : variables.colors.grey

@@ -23,42 +23,35 @@ export type PlayerData = {
 const PlayersList = ({ statsSelected, searchFilter }: Props) => {
   const { data, selectedGames } = useContext(SingletonDataContextProvider);
   const [selectedPlayer, setSelectedPlayer] = useState<string>('');
-  const playerGamesSelected =
-    selectedGames.length === 0
-      ? data?.tickers
-      : data?.tickers.filter((item: any) =>
-          selectedGames.includes(`${item.awayName}${item.homeName}`)
-        );
-  const playerData = playerGamesSelected
-    ?.map((ticker: any) =>
-      ticker.lineups.map((item: any, index: number) => {
-        let playerData: PlayerData[] = [];
-        Object.keys(item.propositions).map((key: string) => {
-          const statsArray = Object.values(item.propositions[key].raw);
-          if (statsArray.length > 0) {
-            statsArray.forEach((stat: any, index: number) => {
-              playerData.push({
-                playerInfo: {
-                  name: item.player.attributes.name['='],
-                  avatar: item.player.attributes.avatar['='],
-                  position: item.player.attributes.position['=']
-                },
-                matchup: `${ticker.awayName} @ ${ticker.homeName}`,
-                stats: { ...stat, key: key },
-                performance: {
-                  hitrate: item.performance.attributes.hitrate['='],
-                  id: item.performance.attributes.id['=']
-                },
-                id: `${item.player.attributes.name['=']}${key}${index}`
-              });
-            });
-          }
-        });
+  const playerGamesSelected = !selectedGames ? data?.tickers : [selectedGames];
+  const playerData = playerGamesSelected?.reduce((acc: PlayerData[], ticker: any) => {
+    ticker.lineups.forEach((lineup: any) => {
+      const playerAttributes = lineup.player.attributes;
+      const performanceAttributes = lineup.performance.attributes;
+      const matchup = `${ticker.awayName} @ ${ticker.homeName}`;
+      Object.entries(lineup.propositions).forEach(([key, proposition]: [string, any]) => {
+        const statsArray = Object.values(proposition.raw);
 
-        return playerData;
-      })
-    )
-    .flat(2);
+        statsArray.forEach((stat: any, index: number) => {
+          acc.push({
+            playerInfo: {
+              name: playerAttributes.name['='],
+              avatar: playerAttributes.avatar['='],
+              position: playerAttributes.position['=']
+            },
+            matchup,
+            stats: { ...stat, key: data.mapMarketsToAttributes[data.sport][key] },
+            performance: {
+              hitrate: performanceAttributes.hitrate['='],
+              id: performanceAttributes.id['=']
+            },
+            id: `${playerAttributes.name['=']}${key}${index}`
+          });
+        });
+      });
+    });
+    return acc;
+  }, []);
 
   const filterPlayerData = (playerData: PlayerData[]) => {
     if (searchFilter !== '') {

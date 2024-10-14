@@ -10,7 +10,7 @@ interface Props {
 }
 
 const PlayerExtraData = ({ item }: Props) => {
-  const { singleton, navigator, toolkit } = useContext(SingletonDataContextProvider);
+  const { singleton, navigator, toolkit, selectedGames } = useContext(SingletonDataContextProvider);
   const [chartData, setChartData] = useState<any>({});
   const [containerWidth, setContainerWidth] = useState<number>(0);
 
@@ -28,42 +28,43 @@ const PlayerExtraData = ({ item }: Props) => {
     //   attribute,
     //   hitratesSize = 10,
     //   cacheHitrate = {})
+    if (selectedGames) {
+      const player = selectedGames.lineups.find(
+        (pl: any) => pl.player.attributes.name['='] === item.playerInfo.name
+      );
 
-    const player = singleton.data.ticker?.lineups.find(
-      (pl: any) => pl.player.attributes.name['='] === item.playerInfo.name
-    );
+      // console.log(
+      //   'ms_generate_stats_for_player',
+      //   singleton.ms_generate_stats_for_player(toolkit, singleton.data.ticker, player)
+      // );
 
-    // console.log(
-    //   'ms_generate_stats_for_player',
-    //   singleton.ms_generate_stats_for_player(toolkit, singleton.data.ticker, player)
-    // );
-
-    singleton
-      .ma_generate_chart_for_player(
-        toolkit,
-        null,
-        navigator,
-        null,
-        {},
-        singleton.data.ticker,
-        player,
-        JSON.parse(singleton.data.chartDefaults),
-        item.stats.key,
-        'recent'
-      )
-      .then((resp: any) => {
-        if (resp.bars.length > 10) {
-          return setChartData({
-            ...resp,
-            bars: resp.bars.slice(resp.bars.length - 10, resp.bars.length)
-          });
-        }
-        return setChartData(resp);
-      })
-      .catch((err: any) => {
-        setChartData({ bars: null });
-      });
-  }, []);
+      singleton
+        .ma_generate_chart_for_player(
+          toolkit,
+          null,
+          navigator,
+          null,
+          {},
+          selectedGames,
+          player,
+          JSON.parse(singleton.data.chartDefaults),
+          item.stats.key,
+          'recent'
+        )
+        .then((resp: any) => {
+          if (resp.bars.length > 10) {
+            return setChartData({
+              ...resp,
+              bars: resp.bars.slice(resp.bars.length - 10, resp.bars.length)
+            });
+          }
+          return setChartData(resp);
+        })
+        .catch((err: any) => {
+          setChartData({ bars: null });
+        });
+    }
+  }, [selectedGames]);
 
   return (
     <View style={styles.extraDataContainer} onLayout={handleLayout}>

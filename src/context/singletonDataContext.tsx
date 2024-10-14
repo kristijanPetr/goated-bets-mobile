@@ -1,12 +1,11 @@
-import { StyleSheet } from 'react-native';
+import { format } from 'date-fns';
+import toolkit from 'jsen-cls-sdk-prj-packagejs-mod-toolkit-pkg-interface-for-sdk-ecmascript';
 import React, { createContext, useState } from 'react';
 import singleton from '../utils/singelton';
-import toolkit from 'jsen-cls-sdk-prj-packagejs-mod-toolkit-pkg-interface-for-sdk-ecmascript';
-import { format, set } from 'date-fns';
 
 type SingletonDataType = {
   data: any;
-  selectedGames: string;
+  selectedGames: Record<string, any>;
   setSelectedGame: (game: string) => void;
   isFetching: boolean;
   initiateData: (data: any) => void;
@@ -63,14 +62,14 @@ export const SingletonDataContext = ({ children }: Props) => {
     setData({});
   };
 
-  const handleSelecGame = (game: string) => {
+  const handleSelectGame = (game: string) => {
     setSelectedGames(game);
   };
 
   const initialData = {
     data,
     selectedGames: selectedGames,
-    setSelectedGame: handleSelecGame,
+    setSelectedGame: handleSelectGame,
     isFetching: isFetching,
     initiateData: loadInitialSingletonData,
     refetchData: refetchData,
