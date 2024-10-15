@@ -102,7 +102,9 @@ const data = {
       batter_doubles: 'Doubles',
       batter_triples: 'Triples',
       batter_stolen_bases: 'Stolen Bases',
-      pitcher_strikeouts: 'Strikeouts'
+      pitcher_strikeouts: 'Strikeouts',
+      batter_runs: 'Runs in Runs',
+      batter_runs_batted_in: 'RBIs'
     }
   },
   mapMarketsToTitlesShort: {
@@ -1074,6 +1076,17 @@ const ms_calc_ev_sr = function (
   } catch (e) {
     throw e;
   }
+};
+
+const ms_calc_streaks = function (arr = [], name, point, hitratesSize = 10) {
+  const condition = name === 'Over' ? (n) => n >= point : (n) => n <= point;
+  const streaksArr = arr.slice(0, hitratesSize);
+  const streak =
+    streaksArr.findIndex((n) => !condition(n)) === -1
+      ? streaksArr.length
+      : streaksArr.findIndex((n) => !condition(n));
+
+  return `${streak}/${streaksArr.length}`;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -4943,6 +4956,8 @@ $xM['ms_calc_ev_hr'] = ms_calc_ev_hr;
 
 // @assign
 $xM['ms_calc_ev_sr'] = ms_calc_ev_sr;
+
+$xM['ms_calc_streaks'] = ms_calc_streaks;
 
 // @readme
 //  Public methods.

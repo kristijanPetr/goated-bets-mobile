@@ -1,9 +1,9 @@
-import { Image, StyleSheet, Text, View, LayoutChangeEvent } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
-import dummyBarImage from './dummyBarImage.png';
+import { Image, LayoutChangeEvent, StyleSheet, Text, View } from 'react-native';
+import { SingletonDataContextProvider } from '~/context/singletonDataContext';
 import { variables } from '~/utils/mixins';
 import BarChart from '../BarChart';
-import { SingletonDataContextProvider } from '~/context/singletonDataContext';
+const dummyBarImage = require('./dummyBarImage.png');
 
 interface Props {
   item: any;
@@ -20,14 +20,6 @@ const PlayerExtraData = ({ item }: Props) => {
   };
 
   useEffect(() => {
-    // singleton.ms_calc_ev_hr(odds,
-    //   propPoint,
-    //   propArrow,
-    //   performanceId,
-    //   performanceHHR,
-    //   attribute,
-    //   hitratesSize = 10,
-    //   cacheHitrate = {})
     if (selectedGames) {
       const player = selectedGames.lineups.find(
         (pl: any) => pl.player.attributes.name['='] === item.playerInfo.name
@@ -81,6 +73,7 @@ const PlayerExtraData = ({ item }: Props) => {
           width={containerWidth}
           height={250}
           barColor="#F8696B"
+          meanValue={item.stats.point}
         />
       ) : (
         <View style={{ height: 250, width: containerWidth, marginTop: 20 }} />

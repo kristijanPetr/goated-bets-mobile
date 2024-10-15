@@ -1,10 +1,10 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useContext, useMemo } from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import { SingletonDataContextProvider } from '~/context/singletonDataContext';
 import { variables } from '~/utils/mixins';
 import PlayerExtraData from './PlayerExtraData';
 import { PlayerData } from './PlayersList';
-import { SingletonDataContextProvider } from '~/context/singletonDataContext';
 
 interface Props {
   item: PlayerData;
@@ -15,46 +15,10 @@ interface Props {
 const PlayerBox = ({ item, selectedPlayer, handleSelectedPlayer }: Props) => {
   const { data, singleton, toolkit, selectedGames } = useContext(SingletonDataContextProvider);
   const isSelectedPlayer = item.id === selectedPlayer;
-  // let cache = {};
 
   const getStatTitle = (key: string) => {
     return data?.mapMarketsToTitles?.[data?.sport]?.[key] || '';
   };
-
-  // const generateStreak = useCallback(() => {
-  //   if (item.performance.hitrate && item.performance.id) {
-  //     const hitrate = singleton.ms_calc_hitrate_raw(
-  //       item.stats.price,
-  //       item.stats.name,
-  //       item.performance.id,
-  //       item.performance.hitrate,
-  //       item.stats.key,
-  //       10,
-  //       cache
-  //     );
-
-  //     return hitrate;
-  //   }
-  //   return 0;
-  // }, [item]);
-
-  // const generateL10 = useMemo(() => {
-  //   if (item.performance.hitrate && item.performance.id) {
-  //     const hitrate = singleton.ms_calc_ev_hr(
-  //       item.stats.point,
-  //       item.stats.price,
-  //       item.stats.name,
-  //       item.performance.id,
-  //       item.performance.hitrate,
-  //       item.stats.key,
-  //       10,
-  //       cache
-  //     );
-
-  //     return hitrate;
-  //   }
-  //   return 0;
-  // }, [item]);
 
   const calculateMatchGrade = useMemo(() => {
     const player = selectedGames.lineups?.find(
@@ -117,11 +81,15 @@ const PlayerBox = ({ item, selectedPlayer, handleSelectedPlayer }: Props) => {
           <View
             style={{
               ...styles.bar,
-              backgroundColor: variables.colors.statsYellow
+              backgroundColor: variables.colorHeatMap(item.performance.L10, 'l10')
             }}>
             <Text style={styles.textBar}>{item.performance.L10}</Text>
           </View>
-          <View style={{ ...styles.bar, backgroundColor: variables.colors.statsRed }}>
+          <View
+            style={{
+              ...styles.bar,
+              backgroundColor: variables.colorHeatMap(item.performance.streak, 'streak')
+            }}>
             <Text style={styles.textBar}> {item.performance.streak}</Text>
           </View>
           <View style={{ ...styles.bar, backgroundColor: variables.colors.statsGreen }}>

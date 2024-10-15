@@ -1,20 +1,19 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import Svg, { Rect, Text, Line } from 'react-native-svg';
+import { StyleSheet, View } from 'react-native';
+import Svg, { Line, Rect, Text } from 'react-native-svg';
 
 interface BarChartProps {
   data: { label: string; value: number }[];
   width?: number;
   height?: number;
   barColor?: string;
+  meanValue: number;
 }
 
-const BarChart: React.FC<BarChartProps> = ({ data, width = 300, height = 200 }) => {
+const BarChart: React.FC<BarChartProps> = ({ data, width = 300, height = 200, meanValue = 0 }) => {
   const maxValue = Math.max(...data.map((item) => item.value)); // Find the max value in the dataset
-  const meanValue = data.reduce((acc, item) => acc + item.value, 0) / data.length; // Calculate the mean value
   const barWidth = width / data.length - 10; // Calculate the width of each bar with some margin
-
-  const meanY = (1 - meanValue / (maxValue || 1)) * (height - 70); // Y-position of the mean line
+  const meanYPosition = height - (meanValue / maxValue) * (height - 70) - 50; // Calculate Y position for meanValue
 
   return (
     <View
@@ -64,11 +63,12 @@ const BarChart: React.FC<BarChartProps> = ({ data, width = 300, height = 200 }) 
           );
         })}
 
+        {/* Mean value line */}
         <Line
           x1="0"
-          y1={meanY}
+          y1={meanYPosition}
           x2={width}
-          y2={meanY}
+          y2={meanYPosition}
           stroke="white"
           strokeWidth=".7"
           strokeDasharray={'2,2'}
