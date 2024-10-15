@@ -51,7 +51,7 @@ export const getPlayerData = (ticker: any, data: any, singleton: any) => {
             position: playerAttributes.position['=']
           },
           matchup,
-          stats: { ...stat, key: data.mapMarketsToAttributes[data.sport][key] },
+          stats: { ...stat, key: key },
           performance: getPerformance(
             stat.price,
             stat.point,
