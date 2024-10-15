@@ -2,10 +2,12 @@ import { FlatList, StyleSheet } from 'react-native';
 import React, { useContext, useState } from 'react';
 import PlayerBox from './PlayerBox';
 import { SingletonDataContextProvider } from '~/context/singletonDataContext';
+import { filterPlayerData, generateL10, generateStreak, getPlayerData } from './helper';
 
 interface Props {
   statsSelected: string[];
   searchFilter: string;
+  filterSelected: string;
 }
 
 export type PlayerData = {
@@ -14,60 +16,20 @@ export type PlayerData = {
     avatar: string;
     position: string;
   };
-  performance: { hitrate: string; id: string };
+  performance: { L10: any; streak: any };
   matchup: string;
   stats: any;
   id: string;
 };
 
-const PlayersList = ({ statsSelected, searchFilter }: Props) => {
-  const { data, selectedGames } = useContext(SingletonDataContextProvider);
+const PlayersList = ({ statsSelected, searchFilter, filterSelected }: Props) => {
+  const { data, selectedGames, singleton } = useContext(SingletonDataContextProvider);
   const [selectedPlayer, setSelectedPlayer] = useState<string>('');
   const playerGamesSelected = !selectedGames ? data?.tickers : [selectedGames];
+
   const playerData = playerGamesSelected?.reduce((acc: PlayerData[], ticker: any) => {
-    ticker.lineups.forEach((lineup: any) => {
-      const playerAttributes = lineup.player.attributes;
-      const performanceAttributes = lineup.performance.attributes;
-      const matchup = `${ticker.awayName} @ ${ticker.homeName}`;
-      Object.entries(lineup.propositions).forEach(([key, proposition]: [string, any]) => {
-        const statsArray = Object.values(proposition.raw);
-
-        statsArray.forEach((stat: any, index: number) => {
-          acc.push({
-            playerInfo: {
-              name: playerAttributes.name['='],
-              avatar: playerAttributes.avatar['='],
-              position: playerAttributes.position['=']
-            },
-            matchup,
-            stats: { ...stat, key: data.mapMarketsToAttributes[data.sport][key] },
-            performance: {
-              hitrate: performanceAttributes.hitrate['='],
-              id: performanceAttributes.id['=']
-            },
-            id: `${playerAttributes.name['=']}${key}${index}`
-          });
-        });
-      });
-    });
-    return acc;
+    return [...acc, ...getPlayerData(ticker, data, singleton)];
   }, []);
-
-  const filterPlayerData = (playerData: PlayerData[]) => {
-    if (searchFilter !== '') {
-      return playerData.filter((item: PlayerData) => {
-        return item.playerInfo.name.toLowerCase().includes(searchFilter.toLowerCase());
-      });
-    }
-
-    if (statsSelected.length !== 0) {
-      return playerData.filter((item: PlayerData) => {
-        return statsSelected.includes(data?.mapMarketsToTitles?.[data.sport]?.[item.stats.key]);
-      });
-    }
-
-    return playerData;
-  };
 
   const handleSelectedPlayer = (id: string) => {
     if (selectedPlayer === id) {
@@ -78,7 +40,7 @@ const PlayersList = ({ statsSelected, searchFilter }: Props) => {
 
   return (
     <FlatList
-      data={filterPlayerData(playerData)}
+      data={filterPlayerData(playerData, searchFilter, statsSelected, filterSelected, data)}
       renderItem={({ item }) => (
         <PlayerBox
           item={item}

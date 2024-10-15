@@ -10,6 +10,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import FloatingBettingMenu from '~/components/floatingBettingMenu/FloatingBettingMenu';
 
 const Leaderboard = () => {
+  const [filterSelected, setSelectedFilter] = useState<string>('');
   const [statsSelected, setStatsSelected] = useState<string[]>([]);
   const [searchFilter, setSearchFilter] = useState<string>('');
   const handleStatSelect = (selectOption: string) => {
@@ -35,8 +36,15 @@ const Leaderboard = () => {
           handleStatSelect={handleStatSelect}
           setSearchFilter={setSearchFilter}
         />
-        <PlayerListFilterLegend />
-        <PlayersList statsSelected={statsSelected} searchFilter={searchFilter} />
+        <PlayerListFilterLegend
+          filterSelected={filterSelected}
+          setSelectedFilter={setSelectedFilter}
+        />
+        <PlayersList
+          statsSelected={statsSelected}
+          searchFilter={searchFilter}
+          filterSelected={filterSelected}
+        />
         <FloatingBettingMenu />
       </View>
     </LinearGradient>

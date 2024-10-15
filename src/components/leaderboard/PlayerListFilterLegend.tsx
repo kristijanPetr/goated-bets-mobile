@@ -1,60 +1,47 @@
 import { StyleSheet, View } from 'react-native';
-import React, { useState } from 'react';
+import React from 'react';
 import PlayerFilterOptionsButton from './PlayerFilterOptionsButton';
 
-const PlayerListFilterLegend = () => {
-  const [filterSelected, setSelectedFilter] = useState<{
-    playerProp: boolean;
-    l5: boolean;
-    streak: boolean;
-    matchGrade: boolean;
-    odds: boolean;
-  }>({
-    playerProp: false,
-    l5: false,
-    streak: false,
-    matchGrade: false,
-    odds: false
-  });
+interface Props {
+  filterSelected: string;
+  setSelectedFilter: React.Dispatch<React.SetStateAction<string>>;
+}
 
+const PlayerListFilterLegend = ({ filterSelected, setSelectedFilter }: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.playerPropContainer}>
         <PlayerFilterOptionsButton
           label="Player/Prop"
-          value={filterSelected.playerProp}
-          onChange={() =>
-            setSelectedFilter({ ...filterSelected, playerProp: !filterSelected.playerProp })
-          }
+          value={filterSelected === 'playerProp'}
+          onChange={() => setSelectedFilter('playerProp')}
         />
       </View>
       <View style={styles.barFilterContainer}>
         <PlayerFilterOptionsButton
-          label="l5"
-          value={filterSelected.l5}
-          onChange={() => setSelectedFilter({ ...filterSelected, l5: !filterSelected.l5 })}
+          label="L10"
+          value={filterSelected === 'l10'}
+          onChange={() => setSelectedFilter('l10')}
           containerStyle={{ width: '33%' }}
         />
         <PlayerFilterOptionsButton
           label="Streak"
-          value={filterSelected.streak}
-          onChange={() => setSelectedFilter({ ...filterSelected, streak: !filterSelected.streak })}
+          value={filterSelected === 'streak'}
+          onChange={() => setSelectedFilter('streak')}
           containerStyle={{ width: '33%' }}
         />
         <PlayerFilterOptionsButton
           label={`Match \nGrade`}
-          value={filterSelected.matchGrade}
-          onChange={() =>
-            setSelectedFilter({ ...filterSelected, matchGrade: !filterSelected.matchGrade })
-          }
+          value={filterSelected === 'matchGrade'}
+          onChange={() => setSelectedFilter('matchGrade')}
           containerStyle={{ width: '33%' }}
         />
       </View>
       <View style={styles.oddsFilterContainer}>
         <PlayerFilterOptionsButton
           label="Odds"
-          value={filterSelected.odds}
-          onChange={() => setSelectedFilter({ ...filterSelected, odds: !filterSelected.odds })}
+          value={filterSelected === 'odds'}
+          onChange={() => setSelectedFilter('odds')}
         />
       </View>
     </View>
