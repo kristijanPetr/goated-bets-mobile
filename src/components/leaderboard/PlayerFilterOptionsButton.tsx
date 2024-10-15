@@ -16,7 +16,7 @@ const PlayerFilterOptionsButton = ({ value, onChange, label, containerStyle }: P
       style={{ ...styles.container, ...containerStyle }}
       activeOpacity={0.8}>
       <Text style={styles.textLegend}>{label}</Text>
-      <AntDesign name={value ? 'caretup' : 'caretdown'} size={12} color="white" />
+      <AntDesign name={value ? 'caretdown' : 'caretup'} size={12} color="white" />
     </TouchableOpacity>
   );
 };
