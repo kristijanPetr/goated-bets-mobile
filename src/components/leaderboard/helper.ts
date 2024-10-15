@@ -19,7 +19,7 @@ export const generateL10 = (
 };
 
 export const generateStreak = (
-  price: any,
+  point: any,
   name: any,
   hitrate: any,
   id: any,
@@ -28,7 +28,7 @@ export const generateStreak = (
   cache: any
 ) => {
   if (hitrate && id && hitrate !== '{}') {
-    const data = singleton.ms_calc_hitrate_raw(price, name, id, hitrate, key, 10, cache);
+    const data = singleton.ms_calc_hitrate_raw(point, name, id, hitrate, key, 10, cache);
 
     return data;
   }
@@ -51,11 +51,11 @@ export const getPlayerData = (ticker: any, data: any, singleton: any) => {
             position: playerAttributes.position['=']
           },
           matchup,
-          stats: { ...stat, key: data.mapMarketsToAttributes[data.sport][key] },
+          stats: { ...stat, key: key },
           performance: getPerformance(
             stat.price,
             stat.point,
-            playerAttributes.name['='],
+            stat.name,
             performanceAttributes.hitrate['='],
             performanceAttributes.id['='],
             data.mapMarketsToAttributes[data.sport][key],
