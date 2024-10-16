@@ -4910,6 +4910,79 @@ const ma_reboot_ticker = function (toolkit, component, navigator, context, compo
   });
 };
 
+const ms_calculate_hitrate_team = function (
+  teamId, // null for attribute = total_over, total_under
+  teamHHR, // {[teamId1]:{'home_score':[...],'away_score':[...],'side':[...]},[teamId2]:{'home_score':[...],'away_score':[...],'side':[...]}}
+  point, // null for attribute = h2h
+  attribute, // spread, total_over, total_under, h2h
+  hitratesSize = 10
+) {
+  let hitrates = JSON.parse(teamHHR),
+    outputCount = 0,
+    outputTotal = 0;
+
+  if (teamId !== null) {
+    if (hitrates[teamId] && Array.isArray(hitrates[teamId]['side'])) {
+      if (attribute === 'spread') {
+        hitrates[teamId]['side'].slice(0, hitratesSize).forEach((i1v, i1i) => {
+          if (
+            parseInt(hitrates[teamId][i1v + '_score'][i1i]) -
+              parseInt(hitrates[teamId][(i1v === 'home' ? 'away' : 'home') + '_score'][i1i]) >=
+            parseFloat(point)
+          ) {
+            outputCount += 1;
+          }
+          outputTotal += 1;
+        });
+      } else if (attribute === 'h2h') {
+        hitrates[teamId]['side'].slice(0, hitratesSize).forEach((i1v, i1i) => {
+          if (
+            parseInt(hitrates[teamId][i1v + '_score'][i1i]) >=
+            parseInt(hitrates[teamId][(i1v === 'home' ? 'away' : 'home') + '_score'][i1i])
+          ) {
+            outputCount += 1;
+          }
+          outputTotal += 1;
+        });
+      }
+    }
+  } else {
+    if (attribute === 'total_over') {
+      Object.keys(hitrates).forEach((teamId) => {
+        if (hitrates[teamId] && Array.isArray(hitrates[teamId]['side'])) {
+          hitrates[teamId]['side'].slice(0, hitratesSize).forEach((i1v, i1i) => {
+            if (
+              parseInt(hitrates[teamId][i1v + '_score'][i1i]) +
+                parseInt(hitrates[teamId][(i1v === 'home' ? 'away' : 'home') + '_score'][i1i]) >=
+              parseFloat(point)
+            ) {
+              outputCount += 1;
+            }
+            outputTotal += 1;
+          });
+        }
+      });
+    } else if (attribute === 'total_under') {
+      Object.keys(hitrates).forEach((teamId) => {
+        if (hitrates[teamId] && Array.isArray(hitrates[teamId]['side'])) {
+          hitrates[teamId]['side'].slice(0, hitratesSize).forEach((i1v, i1i) => {
+            if (
+              parseInt(hitrates[teamId][i1v + '_score'][i1i]) +
+                parseInt(hitrates[teamId][(i1v === 'home' ? 'away' : 'home') + '_score'][i1i]) <=
+              parseFloat(point)
+            ) {
+              outputCount += 1;
+            }
+            outputTotal += 1;
+          });
+        }
+      });
+    }
+  }
+
+  return String(outputCount) + '/' + String(outputTotal);
+};
+
 ////////////////////////////////////////////////////////////////////////////////
 
 // @define
@@ -5036,6 +5109,9 @@ $xM['ma_reboot'] = ma_reboot;
 
 // @assign
 $xM['ma_reboot_ticker'] = ma_reboot_ticker;
+
+// @assign
+$xM['ms_calculate_hitrate_team'] = ms_calculate_hitrate_team;
 
 ////////////////////////////////////////////////////////////////////////////////
 

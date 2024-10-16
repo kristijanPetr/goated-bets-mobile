@@ -1,5 +1,5 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useContext } from 'react';
 import { variables } from '~/utils/mixins';
 import { Icon } from '../icon/icon';
 import DataBoxBrackets from '../common/DataBoxBrackets';
@@ -7,63 +7,165 @@ import DataBoxBrackets from '../common/DataBoxBrackets';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import GameExtraData from './GameExtraData';
+import { SingletonDataContextProvider } from '~/context/singletonDataContext';
 
 interface Props {
   item: any;
   handleSelectedGame: (id: string) => void;
   selectedGame: string;
+  selectedStat: string;
 }
 
-const GameData = ({ item, selectedGame, handleSelectedGame }: Props) => {
+const GameData = ({ item, selectedGame, handleSelectedGame, selectedStat }: Props) => {
+  const { singleton } = useContext(SingletonDataContextProvider);
   const isSelectedGame = item.id === selectedGame;
+
+  const { gamelines } = item;
+
+  const homeOverUnder = gamelines.home_spread.oprice ? 'O' : 'U';
+  const awayOverUnder = gamelines.away_spread.oprice ? 'O' : 'U';
+
+  const calculateData = (side: string | null, attribute: string | null, type: string) => {
+    const statMap: { [key: string]: number } = { L5: 5, L10: 10, L25: 25 };
+    const selectedStatData = statMap[selectedStat] || 10;
+    const data = singleton.ms_calculate_hitrate_team(
+      side ? item.matchup.attributes[side]['='] : null,
+      item.matchup.attributes.hitrate['='],
+      attribute
+        ? attribute === 'total_under'
+          ? gamelines[attribute].upoint
+          : gamelines[attribute].opoint
+        : null,
+      type,
+      selectedStatData
+    );
+    if (!data) return 'N/A';
+
+    const splitNumbers = data.split('/');
+    return `${((splitNumbers[0] * 1) / (splitNumbers[1] * 1)) * 100}%`;
+  };
 
   return (
     <View style={styles.boxContainer}>
       <View style={styles.headerContainer}>
-        <Text style={styles.headingText}>{item.game}</Text>
-        <Text style={styles.headingText}>{item.time}</Text>
+        <Text style={styles.headingText}>{`${item.awayName} @ ${item.homeName}`}</Text>
+        <Text style={styles.headingText}>{item.startTime}</Text>
       </View>
 
       <View style={styles.teamDataContainer}>
         <View style={styles.teamAndIconContainer}>
-          <Text style={{ ...styles.teamText, position: 'absolute', top: -15, left: 2 }}>HOU</Text>
-          <Icon icon="bullLogo" style={styles.icon} />
+          <Text style={{ ...styles.teamText, position: 'absolute', top: -15, left: 2 }}>
+            {item.awayName.substring(0, 3)}
+          </Text>
+          <Image source={{ uri: item.awayLogoImage }} style={styles.icon} resizeMode="contain" />
         </View>
         <View style={styles.dataBoxContainer}>
-          <DataBoxBrackets firstContainerData={['+3.0', '-118']} secondContainerData={['40%']} />
-          <DataBoxBrackets firstContainerData={['124']} secondContainerData={['40%']} />
-          <DataBoxBrackets
-            firstContainerData={['0 46.5', '-108']}
-            secondContainerData={['BAL', '0%']}
-            thirdContainerData={['KC', '60%']}
-            secondContainerStyle={{ backgroundColor: variables.colors.statsRed }}
-          />
           <View style={styles.dataBoxLegendContainer}>
             <Text style={styles.dataBoxLegendText}>Spread</Text>
             <Text style={styles.dataBoxLegendText}>Moneyline</Text>
             <Text style={styles.dataBoxLegendText}>Total</Text>
           </View>
+          <DataBoxBrackets
+            firstContainerData={[
+              gamelines.away_spread.opoint || gamelines.away_spread.upoint || '-',
+              gamelines.away_spread.oprice || gamelines.away_spread.uprice || '-'
+            ]}
+            secondContainerData={[calculateData('away', 'away_spread', 'spread')]}
+            secondContainerStyle={{
+              backgroundColor: variables.colorHeatMap(
+                calculateData('away', 'away_spread', 'spread'),
+                'hitrate'
+              )
+            }}
+          />
+          <DataBoxBrackets
+            firstContainerData={[gamelines.away_h2h.oprice || gamelines.away_h2h.uprice || '-']}
+            secondContainerData={[calculateData('away', null, 'h2h')]}
+            secondContainerStyle={{
+              backgroundColor: variables.colorHeatMap(calculateData('away', null, 'h2h'), 'hitrate')
+            }}
+          />
+          <DataBoxBrackets
+            firstContainerData={[
+              `${awayOverUnder} ${awayOverUnder === 'O' ? gamelines.total_over.opoint : gamelines.total_under.upoint}`,
+              awayOverUnder === 'O' ? gamelines.total_over.oprice : gamelines.total_under.uprice
+            ]}
+            secondContainerData={[
+              item.awayName.substring(0, 3),
+              calculateData(null, 'total_over', 'total_over')
+            ]}
+            thirdContainerData={[
+              item.homeName.substring(0, 3),
+              calculateData(null, 'total_under', 'total_under')
+            ]}
+            secondContainerStyle={{
+              backgroundColor: variables.colorHeatMap(
+                calculateData(null, 'total_over', 'total_over'),
+                'hitrate'
+              )
+            }}
+            thirdContainerStyle={{
+              backgroundColor: variables.colorHeatMap(
+                calculateData(null, 'total_under', 'total_under'),
+                'hitrate'
+              )
+            }}
+          />
         </View>
       </View>
       <View style={styles.teamDataContainer}>
         <View style={styles.teamAndIconContainer}>
           <Text style={{ ...styles.teamText, position: 'absolute', bottom: -15, left: 2 }}>
-            LAC
+            {item.homeName.substring(0, 3)}
           </Text>
-          <Icon icon="LClogo" style={styles.icon} />
+          <Image source={{ uri: item.homeLogoImage }} style={styles.icon} resizeMode="contain" />
         </View>
         <View style={styles.dataBoxContainer}>
           <DataBoxBrackets
-            firstContainerData={['+3.0', '-118']}
-            secondContainerData={['20%']}
-            secondContainerStyle={{ backgroundColor: variables.colors.statsRed }}
+            firstContainerData={[
+              gamelines.home_spread.opoint || gamelines.home_spread.upoint || '-',
+              gamelines.home_spread.oprice || gamelines.home_spread.uprice || '-'
+            ]}
+            secondContainerData={[calculateData('home', 'home_spread', 'spread')]}
+            secondContainerStyle={{
+              backgroundColor: variables.colorHeatMap(
+                calculateData('home', 'home_spread', 'spread'),
+                'hitrate'
+              )
+            }}
           />
-          <DataBoxBrackets firstContainerData={['124']} secondContainerData={['40%']} />
           <DataBoxBrackets
-            firstContainerData={['0 46.5', '-108']}
-            secondContainerData={['BAL', '100%']}
-            thirdContainerData={['KC', '40%']}
-            secondContainerStyle={{ backgroundColor: variables.colors.statsGreen }}
+            firstContainerData={[gamelines.home_h2h.oprice || gamelines.home_h2h.uprice || '-']}
+            secondContainerData={[calculateData('home', null, 'h2h')]}
+            secondContainerStyle={{
+              backgroundColor: variables.colorHeatMap(calculateData('home', null, 'h2h'), 'hitrate')
+            }}
+          />
+          <DataBoxBrackets
+            firstContainerData={[
+              `${homeOverUnder} ${homeOverUnder === 'O' ? gamelines.total_over.opoint : gamelines.total_under.upoint}`,
+              homeOverUnder === 'O' ? gamelines.total_over.oprice : gamelines.total_under.uprice
+            ]}
+            secondContainerData={[
+              item.homeName.substring(0, 3),
+              calculateData(null, 'total_over', 'total_over')
+            ]}
+            thirdContainerData={[
+              item.awayName.substring(0, 3),
+              calculateData(null, 'total_under', 'total_under')
+            ]}
+            secondContainerStyle={{
+              backgroundColor: variables.colorHeatMap(
+                calculateData(null, 'total_over', 'total_over'),
+                'hitrate'
+              )
+            }}
+            thirdContainerStyle={{
+              backgroundColor: variables.colorHeatMap(
+                calculateData(null, 'total_under', 'total_under'),
+                'hitrate'
+              )
+            }}
           />
         </View>
       </View>
@@ -78,7 +180,7 @@ const GameData = ({ item, selectedGame, handleSelectedGame }: Props) => {
           <FontAwesome5 name="angle-double-right" size={14} color="white" />
         </View>
       </View>
-      {isSelectedGame && <GameExtraData />}
+      {isSelectedGame && <GameExtraData data={item} />}
     </View>
   );
 };

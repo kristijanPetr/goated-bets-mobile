@@ -8,12 +8,19 @@ interface BarChartProps {
   height?: number;
   barColor?: string;
   meanValue: number;
+  showWinOrLose?: boolean;
 }
 
-const BarChart: React.FC<BarChartProps> = ({ data, width = 300, height = 200, meanValue = 0 }) => {
+const BarChart: React.FC<BarChartProps> = ({
+  data,
+  width = 300,
+  height = 200,
+  meanValue = 0,
+  showWinOrLose = false
+}) => {
   const maxValue = Math.max(...data.map((item) => item.value)); // Find the max value in the dataset
   const barWidth = width / data.length - 10; // Calculate the width of each bar with some margin
-  const meanYPosition = height - (meanValue / maxValue) * (height - 70) - 50; // Calculate Y position for meanValue
+  const meanYPosition = height - (meanValue / (maxValue || 1)) * (height - 70) - 50; // Calculate Y position for meanValue
 
   return (
     <View
@@ -44,11 +51,11 @@ const BarChart: React.FC<BarChartProps> = ({ data, width = 300, height = 200, me
               {/* Display value above each bar */}
               <Text
                 x={x + barWidth / 2}
-                y={y - 5}
+                y={barHeight < 1 ? height - 55 : y - 5}
                 fontSize="12"
                 fill={item.value < meanValue ? '#F8696B' : '#63BE7B'}
                 textAnchor="middle">
-                {item.value}
+                {showWinOrLose ? (item.value === 1 ? 'W' : 'L') : item.value}
               </Text>
               {/* Display title (label) below each bar */}
               <Text

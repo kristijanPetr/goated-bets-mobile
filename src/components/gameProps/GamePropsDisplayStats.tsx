@@ -5,15 +5,16 @@ import { variables } from '~/utils/mixins';
 import FullScreenModal from '../common/FullScreenModal';
 import InfoModal from '../modals/InfoModal';
 
-const GamePropsDisplayStats = () => {
+interface Props {
+  selectedStat: string;
+  setSelectedStat: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const GamePropsDisplayStats = ({ selectedStat, setSelectedStat }: Props) => {
   const [openInfoModal, setOpenInfoModal] = useState<boolean>(false);
-  const [selectedStat, setSelectedStat] = useState<string[]>(['1']);
 
   const handleSelectStat = (id: string) => {
-    if (selectedStat.includes(id)) {
-      return setSelectedStat((prevState) => prevState.filter((item) => item !== id));
-    }
-    return setSelectedStat((prevState) => [...prevState, id]);
+    return setSelectedStat(id);
   };
 
   const stats = [
@@ -26,7 +27,7 @@ const GamePropsDisplayStats = () => {
   ];
 
   const renderItem = ({ item }: any) => {
-    const isSelectedState = selectedStat.includes(item.id);
+    const isSelectedState = selectedStat.includes(item.name);
 
     const backgroundColor = isSelectedState
       ? { backgroundColor: variables.colors.activeGrey }
@@ -39,7 +40,7 @@ const GamePropsDisplayStats = () => {
     return (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => handleSelectStat(item.id)}
+        onPress={() => handleSelectStat(item.name)}
         style={{ ...styles.statOptionContainer, ...backgroundColor }}>
         <Text style={{ ...styles.statsText, ...textColor }}>{item.name}</Text>
       </TouchableOpacity>

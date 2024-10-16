@@ -1,30 +1,111 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState } from 'react';
+import { Image, LayoutChangeEvent, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
 import { variables } from '~/utils/mixins';
 
-import dummyGameChart from './dummyGameChart.png';
+import { SingletonDataContextProvider } from '~/context/singletonDataContext';
+import BarChart from '../BarChart';
 
-const GameExtraData = () => {
-  const [selectedStat, setSelectedStat] = useState<string[]>(['']);
+interface Props {
+  data: any;
+}
+
+const GameExtraData = ({ data }: Props) => {
+  const { singleton, toolkit, navigator } = useContext(SingletonDataContextProvider);
+  const [selectedStat, setSelectedStat] = useState<string>('spread');
+  const [chartDataHome, setChartDataHome] = useState<any>({});
+  const [chartDataAway, setChartDataAway] = useState<any>({});
 
   const handleSelectStats = (id: string) => {
-    if (selectedStat.includes(id)) {
-      return setSelectedStat((prevState) => prevState.filter((stat) => stat !== id));
-    }
-    return setSelectedStat((prevState) => [...prevState, id]);
+    return setSelectedStat(id);
+  };
+  const [containerWidth, setContainerWidth] = useState<number>(0);
+
+  const handleLayout = (event: LayoutChangeEvent) => {
+    const { width } = event.nativeEvent.layout;
+    setContainerWidth(width);
   };
 
-  const statsOptions = ['Spread', 'Moneyline', 'Total Over', 'Total Under'];
+  const chartMarketHome =
+    selectedStat === 'total_under' || selectedStat === 'total_over'
+      ? selectedStat
+      : `home_${selectedStat}`;
+  const chartMarketAway =
+    selectedStat === 'total_under' || selectedStat === 'total_over'
+      ? selectedStat
+      : `away_${selectedStat}`;
+
+  useEffect(() => {
+    singleton
+      .ma_generate_chart_for_team(
+        toolkit,
+        null,
+        navigator,
+        null,
+        {},
+        data,
+        'home',
+        JSON.parse(singleton.data.chartDefaults),
+        chartMarketHome,
+        ''
+      )
+      .then((resp: any) => {
+        if (resp.bars.length > 5) {
+          return setChartDataHome({
+            ...resp,
+            bars: resp.bars.slice(resp.bars.length - 5, resp.bars.length)
+          });
+        }
+
+        return setChartDataHome(resp);
+      })
+      .catch((err: any) => {
+        setChartDataHome({ bars: null });
+      });
+    singleton
+      .ma_generate_chart_for_team(
+        toolkit,
+        null,
+        navigator,
+        null,
+        {},
+        data,
+        'away',
+        JSON.parse(singleton.data.chartDefaults),
+        chartMarketAway,
+        ''
+      )
+      .then((resp: any) => {
+        if (resp.bars.length > 5) {
+          return setChartDataAway({
+            ...resp,
+            bars: resp.bars.slice(resp.bars.length - 5, resp.bars.length)
+          });
+        }
+
+        return setChartDataAway(resp);
+      })
+      .catch((err: any) => {
+        setChartDataAway({ bars: null });
+      });
+  }, [selectedStat]);
+
+  const statsOptions = [
+    { name: 'Spread', id: 'spread' },
+    { name: 'Moneyline', id: 'h2h' },
+    { name: 'Total Over', id: 'total_over' },
+    { name: 'Total Under', id: 'total_under' }
+  ];
+
   return (
-    <View style={styles.container}>
+    <View style={styles.container} onLayout={handleLayout}>
       <View style={styles.statsSelectContainer}>
         {statsOptions.map((item) => {
-          const isSelectedStat = selectedStat.includes(item);
+          const isSelectedStat = selectedStat.includes(item.id);
 
           return (
             <TouchableOpacity
               activeOpacity={0.9}
-              onPress={() => handleSelectStats(item)}
+              onPress={() => handleSelectStats(item.id)}
               style={{
                 ...styles.statsContainer,
                 backgroundColor: isSelectedStat
@@ -36,15 +117,78 @@ const GameExtraData = () => {
                   ...styles.statText,
                   color: isSelectedStat ? variables.colors.black : variables.colors.white
                 }}>
-                {item}
+                {item.name}
               </Text>
             </TouchableOpacity>
           );
         })}
       </View>
       <Text style={styles.headingText}>Last 5 Games</Text>
-      <View style={styles.imageContainer}>
-        <Image source={dummyGameChart} style={styles.dummyGameImage} resizeMode="contain" />
+      <View style={styles.chartsContainer}>
+        <View style={{ width: '50%' }}>
+          <View style={styles.teamLogoAndNameContainer}>
+            <Image source={{ uri: data.awayLogoImage }} style={styles.icon} resizeMode="contain" />
+            <Text style={styles.teamNamesText}>{data.awayName}</Text>
+          </View>
+          {chartDataAway?.bars && chartDataAway?.bars.length > 0 ? (
+            <BarChart
+              data={chartDataAway.bars.map((item: any) => {
+                return {
+                  label: item.againstName,
+                  value:
+                    item.value === 'W' || item.value === 'L'
+                      ? item.value === 'W'
+                        ? 1
+                        : 0
+                      : item.value
+                };
+              })}
+              width={containerWidth / 2 - 20}
+              height={150}
+              barColor="#F8696B"
+              meanValue={chartDataAway.statsPoint}
+              showWinOrLose={
+                chartDataAway.bars[0].value === 'W' || chartDataAway.bars[0].value === 'L'
+                  ? true
+                  : false
+              }
+            />
+          ) : (
+            <View style={{ height: 150, width: containerWidth / 2 - 20, marginTop: 20 }} />
+          )}
+        </View>
+        <View style={{ width: '50%' }}>
+          <View style={styles.teamLogoAndNameContainer}>
+            <Image source={{ uri: data.homeLogoImage }} style={styles.icon} resizeMode="contain" />
+            <Text style={styles.teamNamesText}>{data.homeName}</Text>
+          </View>
+          {chartDataHome?.bars && chartDataHome?.bars.length > 0 ? (
+            <BarChart
+              data={chartDataHome.bars.map((item: any) => {
+                return {
+                  label: item.againstName,
+                  value:
+                    item.value === 'W' || item.value === 'L'
+                      ? item.value === 'W'
+                        ? 1
+                        : 0
+                      : item.value
+                };
+              })}
+              width={containerWidth / 2 - 20}
+              height={150}
+              barColor="#F8696B"
+              meanValue={chartDataHome.statsPoint}
+              showWinOrLose={
+                chartDataHome.bars[0].value === 'W' || chartDataHome.bars[0].value === 'L'
+                  ? true
+                  : false
+              }
+            />
+          ) : (
+            <View style={{ height: 150, width: containerWidth / 2 - 20, marginTop: 20 }} />
+          )}
+        </View>
       </View>
     </View>
   );
@@ -80,13 +224,21 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: variables.colors.white
   },
-  imageContainer: {
-    height: 200,
-    width: '100%',
-    marginBottom: 10
+  teamNamesText: {
+    fontSize: 12,
+    fontWeight: '400',
+    color: variables.colors.white
   },
-  dummyGameImage: {
-    width: 400,
-    height: 200
-  }
+  icon: {
+    width: 24,
+    height: 24
+  },
+  chartsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    marginTop: 16
+  },
+  teamLogoAndNameContainer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }
 });

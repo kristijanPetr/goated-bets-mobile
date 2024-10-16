@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { variables } from '~/utils/mixins';
 import { LinearGradient } from 'expo-linear-gradient';
 import ScreenHeader from '~/components/common/ScreenHeader';
@@ -8,6 +8,8 @@ import GameList from '~/components/gameProps/GameList';
 import FloatingBettingMenu from '~/components/floatingBettingMenu/FloatingBettingMenu';
 
 const GameProps = () => {
+  const [selectedStat, setSelectedStat] = useState<string>('L5');
+
   return (
     <LinearGradient
       colors={[variables.colors.backgroundLinearDark, variables.colors.backgroundLinearBright]}
@@ -16,8 +18,8 @@ const GameProps = () => {
       style={styles.background}>
       <View style={styles.container}>
         <ScreenHeader title="Game props" />
-        <GamePropsDisplayStats />
-        <GameList />
+        <GamePropsDisplayStats selectedStat={selectedStat} setSelectedStat={setSelectedStat} />
+        <GameList selectedStat={selectedStat} />
         <FloatingBettingMenu />
       </View>
     </LinearGradient>
