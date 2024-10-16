@@ -19,6 +19,12 @@ const PlayerListFilterLegend = ({ filterSelected, setSelectedFilter }: Props) =>
       </View>
       <View style={styles.barFilterContainer}>
         <PlayerFilterOptionsButton
+          label="L5"
+          value={filterSelected === 'l5'}
+          onChange={() => setSelectedFilter('l5')}
+          containerStyle={{ width: '33%' }}
+        />
+        <PlayerFilterOptionsButton
           label="L10"
           value={filterSelected === 'l10'}
           onChange={() => setSelectedFilter('l10')}
@@ -30,12 +36,12 @@ const PlayerListFilterLegend = ({ filterSelected, setSelectedFilter }: Props) =>
           onChange={() => setSelectedFilter('streak')}
           containerStyle={{ width: '33%' }}
         />
-        <PlayerFilterOptionsButton
+        {/* <PlayerFilterOptionsButton
           label={`Match \nGrade`}
           value={filterSelected === 'matchGrade'}
           onChange={() => setSelectedFilter('matchGrade')}
           containerStyle={{ width: '33%' }}
-        />
+        /> */}
       </View>
       <View style={styles.oddsFilterContainer}>
         <PlayerFilterOptionsButton

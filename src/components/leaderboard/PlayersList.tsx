@@ -2,7 +2,7 @@ import { FlatList, StyleSheet } from 'react-native';
 import React, { useContext, useState } from 'react';
 import PlayerBox from './PlayerBox';
 import { SingletonDataContextProvider } from '~/context/singletonDataContext';
-import { filterPlayerData, generateL10, generateStreak, getPlayerData } from './helper';
+import { filterPlayerData, getPlayerData } from './helper';
 
 interface Props {
   statsSelected: string[];
@@ -16,7 +16,7 @@ export type PlayerData = {
     avatar: string;
     position: string;
   };
-  performance: { L10: any; streak: any };
+  performance: { L10: any; L5: any; streak: any };
   matchup: string;
   stats: any;
   id: string;

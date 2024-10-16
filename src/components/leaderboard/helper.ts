@@ -8,11 +8,11 @@ export const generateL10 = (
   id: any,
   key: any,
   singleton: any,
-  cache: any
+  cache: any,
+  size = 10
 ) => {
   if (hitrate && id && hitrate !== '{}') {
-    const data = singleton.ms_calc_hitrate(price, name, id, hitrate, key, 5, cache);
-
+    const data = singleton.ms_calc_hitrate(price, name, id, hitrate, key, size, cache);
     return data;
   }
   return 'N/A';
@@ -30,7 +30,7 @@ export const generateStreak = (
   if (hitrate && id && hitrate !== '{}') {
     const streakData = JSON.parse(hitrate)[key];
 
-    return singleton.ms_calc_streaks(streakData, name, price, 5);
+    return singleton.ms_calc_streaks(streakData, name, price, -1);
   }
   return 'N/A';
 };
@@ -81,6 +81,7 @@ export const getPerformance = (
   cache: any
 ) => {
   return {
+    L5: generateL10(price, point, name, hitrate, id, key, singleton, cache, 5),
     L10: generateL10(price, point, name, hitrate, id, key, singleton, cache),
     streak: generateStreak(point, name, hitrate, id, key, singleton, cache)
   };

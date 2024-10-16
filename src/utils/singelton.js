@@ -1080,13 +1080,13 @@ const ms_calc_ev_sr = function (
 
 const ms_calc_streaks = function (arr = [], name, point, hitratesSize = 10) {
   const condition = name === 'Over' ? (n) => n >= point : (n) => n <= point;
-  const streaksArr = arr.slice(0, hitratesSize);
+  const streaksArr = hitratesSize === -1 ? arr : arr.slice(0, hitratesSize);
   const streak =
     streaksArr.findIndex((n) => !condition(n)) === -1
       ? streaksArr.length
       : streaksArr.findIndex((n) => !condition(n));
-
-  return `${streak}/${streaksArr.length}`;
+  return streak; /// streaksArr.length; //`${streak}/${streaksArr.length}`;
+  // return `${streak}/${streaksArr.length}`;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

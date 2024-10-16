@@ -81,6 +81,13 @@ const PlayerBox = ({ item, selectedPlayer, handleSelectedPlayer }: Props) => {
           <View
             style={{
               ...styles.bar,
+              backgroundColor: variables.colorHeatMap(item.performance.L5, 'l5')
+            }}>
+            <Text style={styles.textBar}>{item.performance.L5}</Text>
+          </View>
+          <View
+            style={{
+              ...styles.bar,
               backgroundColor: variables.colorHeatMap(item.performance.L10, 'l10')
             }}>
             <Text style={styles.textBar}>{item.performance.L10}</Text>
@@ -88,17 +95,20 @@ const PlayerBox = ({ item, selectedPlayer, handleSelectedPlayer }: Props) => {
           <View
             style={{
               ...styles.bar,
-              backgroundColor: variables.colorHeatMap(item.performance.streak, 'streak')
+              backgroundColor: variables.colorHeatMap(item.performance.streak, 'hitrate')
             }}>
             <Text style={styles.textBar}> {item.performance.streak}</Text>
           </View>
-          <View style={{ ...styles.bar, backgroundColor: variables.colors.statsGreen }}>
+          {/* <View style={{ ...styles.bar, backgroundColor: variables.colors.statsGreen }}>
             <Text style={styles.textBar}>{calculateMatchGrade}</Text>
-          </View>
+          </View> */}
         </View>
         <View style={styles.oddsContainer}>
           <View style={styles.oddsBox}>
-            <Text style={styles.oddsText}>{item.stats.price}</Text>
+            <Text style={styles.oddsText}>
+              {item.stats.price > 0 ? '+' : ''}
+              {item.stats.price}
+            </Text>
           </View>
         </View>
       </View>
