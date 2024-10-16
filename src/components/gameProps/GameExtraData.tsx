@@ -146,7 +146,11 @@ const GameExtraData = ({ data }: Props) => {
               width={containerWidth / 2 - 20}
               height={150}
               barColor="#F8696B"
-              meanValue={chartDataAway.statsPoint}
+              meanValue={
+                chartDataAway.bars[0].value === 'W' || chartDataAway.bars[0].value === 'L'
+                  ? 0.5
+                  : chartDataAway.statsPoint
+              }
               showWinOrLose={
                 chartDataAway.bars[0].value === 'W' || chartDataAway.bars[0].value === 'L'
                   ? true
@@ -178,7 +182,11 @@ const GameExtraData = ({ data }: Props) => {
               width={containerWidth / 2 - 20}
               height={150}
               barColor="#F8696B"
-              meanValue={chartDataHome.statsPoint}
+              meanValue={
+                chartDataHome.bars[0].value === 'W' || chartDataHome.bars[0].value === 'L'
+                  ? 0.5
+                  : chartDataHome.statsPoint
+              }
               showWinOrLose={
                 chartDataHome.bars[0].value === 'W' || chartDataHome.bars[0].value === 'L'
                   ? true
@@ -211,6 +219,7 @@ const styles = StyleSheet.create({
   },
   statsContainer: {
     paddingHorizontal: 12,
+    marginHorizontal: 2,
     height: 30,
     borderRadius: 15,
     alignItems: 'center',
