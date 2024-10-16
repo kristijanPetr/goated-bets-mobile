@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { variables } from '~/utils/mixins';
 import { Icon } from '../icon/icon';
@@ -7,9 +7,11 @@ import DataBoxBrackets from '../common/DataBoxBrackets';
 import GamePropsDisplayStats from '../gameProps/GamePropsDisplayStats';
 
 const GamePropsSection = () => {
+  const [selectedStat, setSelectedStat] = useState<string>('L5');
+
   return (
     <View style={styles.container}>
-      <GamePropsDisplayStats />
+      <GamePropsDisplayStats selectedStat={selectedStat} setSelectedStat={setSelectedStat} />
       <ScrollView style={{ marginTop: 4, marginBottom: 10 }}>
         <View style={styles.boxContainer}>
           <View style={styles.headerContainer}>

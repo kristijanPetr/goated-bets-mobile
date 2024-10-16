@@ -5,8 +5,8 @@ import singleton from '../utils/singelton';
 
 type SingletonDataType = {
   data: any;
-  selectedGames: Record<string, any>;
-  setSelectedGame: (game: string) => void;
+  selectedGames: any;
+  setSelectedGame: (game: any) => void;
   isFetching: boolean;
   initiateData: (data: any) => void;
   refetchData: (team: string, bookameker: string) => void;
@@ -88,7 +88,7 @@ export const SingletonDataContext = ({ children }: Props) => {
 
 export const SingletonDataContextProvider = createContext<SingletonDataType>({
   data: {},
-  selectedGames: '',
+  selectedGames: {},
   setSelectedGame: () => {},
   isFetching: false,
   initiateData: () => {},

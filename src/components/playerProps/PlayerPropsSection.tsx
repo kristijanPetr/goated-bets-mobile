@@ -1,11 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import GamePropsDisplayStats from '../gameProps/GamePropsDisplayStats';
 
 const PlayerPropsSection = () => {
+  const [selectedStat, setSelectedStat] = useState<string>('L5');
+
   return (
     <View style={styles.container}>
-      <GamePropsDisplayStats />
+      <GamePropsDisplayStats selectedStat={selectedStat} setSelectedStat={setSelectedStat} />
     </View>
   );
 };
