@@ -4921,6 +4921,12 @@ const ms_calculate_hitrate_team = function (
     outputCount = 0,
     outputTotal = 0;
 
+  if (typeof hitratesSize === 'string') {
+    if (hitratesSize === 'Season') {
+      hitratesSize = hitrates[teamId]['side'].length;
+    }
+  }
+
   if (teamId !== null) {
     if (hitrates[teamId] && Array.isArray(hitrates[teamId]['side'])) {
       if (attribute === 'spread') {

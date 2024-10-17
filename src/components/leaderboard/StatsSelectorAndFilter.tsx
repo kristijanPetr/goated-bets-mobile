@@ -22,7 +22,7 @@ const StatsSelectorAndFilter = ({
 
   const [isSearchFilterSelected, setIsSearchFilterSelected] = useState<boolean>(false);
 
-  const filterMarketsTitles: string[] = data?.mapMarketsToTitles?.[data?.sport] || [];
+  const filterMarketsTitles: string[] = data?.mapMarketsToAttributes?.[data?.sport] || [];
 
   const renderItem = (item: string) => {
     const isItemActive = statsSelected.includes(item);
@@ -40,7 +40,7 @@ const StatsSelectorAndFilter = ({
             ...styles.statsText,
             color: isItemActive ? variables.colors.black : variables.colors.white
           }}>
-          {item}
+          {data?.mapMarketsToTitles?.[data?.sport]?.[item]}
         </Text>
       </TouchableOpacity>
     );

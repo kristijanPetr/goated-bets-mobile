@@ -22,19 +22,31 @@ const PlayerListFilterLegend = ({ filterSelected, setSelectedFilter }: Props) =>
           label="L5"
           value={filterSelected === 'l5'}
           onChange={() => setSelectedFilter('l5')}
-          containerStyle={{ width: '33%' }}
+          containerStyle={{ width: '20%' }}
         />
         <PlayerFilterOptionsButton
           label="L10"
           value={filterSelected === 'l10'}
           onChange={() => setSelectedFilter('l10')}
-          containerStyle={{ width: '33%' }}
+          containerStyle={{ width: '20%' }}
+        />
+        <PlayerFilterOptionsButton
+          label="Season"
+          value={filterSelected === 'season'}
+          onChange={() => setSelectedFilter('season')}
+          containerStyle={{ width: '20%' }}
+        />
+        <PlayerFilterOptionsButton
+          label="H2H"
+          value={filterSelected === 'h2h'}
+          onChange={() => setSelectedFilter('h2h')}
+          containerStyle={{ width: '20%' }}
         />
         <PlayerFilterOptionsButton
           label="Streak"
           value={filterSelected === 'streak'}
           onChange={() => setSelectedFilter('streak')}
-          containerStyle={{ width: '33%' }}
+          containerStyle={{ width: '20%' }}
         />
         {/* <PlayerFilterOptionsButton
           label={`Match \nGrade`}
@@ -66,17 +78,17 @@ const styles = StyleSheet.create({
   playerPropContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: '50%'
+    width: '43%'
   },
   barFilterContainer: {
     justifyContent: 'space-around',
     alignItems: 'flex-end',
-    width: '29%',
+    width: '45%',
     flexDirection: 'row'
   },
   oddsFilterContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: '20%'
+    width: '10%'
   }
 });
