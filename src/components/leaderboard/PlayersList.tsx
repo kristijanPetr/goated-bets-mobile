@@ -16,7 +16,7 @@ export type PlayerData = {
     avatar: string;
     position: string;
   };
-  performance: { L10: any; L5: any; streak: any };
+  performance: { L10: any; L5: any; streak: any; season: any; h2h: any };
   matchup: string;
   stats: any;
   id: string;

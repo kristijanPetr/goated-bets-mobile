@@ -21,9 +21,11 @@ const GamePropsDisplayStats = ({ selectedStat, setSelectedStat }: Props) => {
     { id: '1', name: 'L5' },
     { id: '2', name: 'L10' },
     { id: '3', name: 'L25' },
-    { id: '4', name: 'Streak' },
-    { id: '5', name: 'EV' },
-    { id: '6', name: 'Match Grade' }
+    { id: '4', name: 'Seasson' },
+    { id: '5', name: 'H2H' },
+    { id: '6', name: 'Streak' },
+    { id: '7', name: 'EV' },
+    { id: '8', name: 'Match Grade' }
   ];
 
   const renderItem = ({ item }: any) => {

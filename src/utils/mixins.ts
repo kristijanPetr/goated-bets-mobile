@@ -30,17 +30,21 @@ const colors = [
   '#86c97d',
   '#63be7b'
 ];
-function getColorByProp(value: number | string, propType: 'streak' | 'l5' | 'l10' | 'hitrate') {
+function getColorByProp(
+  value: number | string,
+  propType: 'streak' | 'l5' | 'l10' | 'hitrate',
+  reverseColors: boolean = false
+) {
   // Define color ranges for each property
   let scaleValue;
 
   switch (propType) {
     case 'streak':
       // For streak, map the value to the 1-10 scale
-      const [left, right] = (value as string).split('/');
-      if (right === '0') scaleValue = 1;
-      else {
-        scaleValue = Math.min(Math.max((parseInt(left) / parseInt(right)) * 10, 1), 10); // Scale streak to 1-10
+      if (scaleValue === 1 || scaleValue === 2 || scaleValue === 3) {
+        scaleValue = 1;
+      } else {
+        scaleValue = parseInt(value as string) + 2;
       }
 
       break;
@@ -59,6 +63,10 @@ function getColorByProp(value: number | string, propType: 'streak' | 'l5' | 'l10
 
     default:
       return '#ccc'; // Default color for unknown properties
+  }
+
+  if (reverseColors) {
+    scaleValue = 11 - scaleValue;
   }
 
   return colors[Math.floor(scaleValue) - 1]; // Return color based on scaled value (1-10)

@@ -26,7 +26,7 @@ export default PlayerFilterOptionsButton;
 const styles = StyleSheet.create({
   container: { alignItems: 'center' },
   textLegend: {
-    fontSize: 12,
+    fontSize: 10,
     color: variables.colors.white
   }
 });

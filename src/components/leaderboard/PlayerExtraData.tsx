@@ -74,6 +74,7 @@ const PlayerExtraData = ({ item }: Props) => {
           height={250}
           barColor="#F8696B"
           meanValue={item.stats.point}
+          hasRevertedColors={item.stats.name === 'Under'}
         />
       ) : (
         <View style={{ height: 250, width: containerWidth, marginTop: 20 }} />

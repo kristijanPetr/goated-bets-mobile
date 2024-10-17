@@ -81,24 +81,47 @@ const PlayerBox = ({ item, selectedPlayer, handleSelectedPlayer }: Props) => {
           <View
             style={{
               ...styles.bar,
-              backgroundColor: variables.colorHeatMap(item.performance.L5, 'l5')
+              backgroundColor: variables.colorHeatMap(
+                item.performance.L5,
+                'l10',
+                item.stats.name === 'Under'
+              )
             }}>
             <Text style={styles.textBar}>{item.performance.L5}</Text>
           </View>
           <View
             style={{
               ...styles.bar,
-              backgroundColor: variables.colorHeatMap(item.performance.L10, 'l10')
+              backgroundColor: variables.colorHeatMap(
+                item.performance.L10,
+                'l10',
+                item.stats.name === 'Under'
+              )
             }}>
             <Text style={styles.textBar}>{item.performance.L10}</Text>
           </View>
           <View
             style={{
               ...styles.bar,
-              backgroundColor: variables.colorHeatMap(item.performance.streak, 'hitrate')
+              backgroundColor: variables.colorHeatMap(item.performance.season, 'hitrate')
+            }}>
+            <Text style={styles.textBar}> {item.performance.season}</Text>
+          </View>
+          <View
+            style={{
+              ...styles.bar,
+              backgroundColor: variables.colorHeatMap(item.performance.h2h, 'hitrate')
+            }}>
+            <Text style={styles.textBar}> {item.performance.h2h}</Text>
+          </View>
+          <View
+            style={{
+              ...styles.bar,
+              backgroundColor: variables.colorHeatMap(item.performance.streak, 'streak')
             }}>
             <Text style={styles.textBar}> {item.performance.streak}</Text>
           </View>
+
           {/* <View style={{ ...styles.bar, backgroundColor: variables.colors.statsGreen }}>
             <Text style={styles.textBar}>{calculateMatchGrade}</Text>
           </View> */}
@@ -135,7 +158,7 @@ const styles = StyleSheet.create({
     width: '12%'
   },
   nameContainer: {
-    width: '36%',
+    width: '30%',
     marginLeft: '2%'
   },
   textName: {
@@ -154,25 +177,25 @@ const styles = StyleSheet.create({
   barContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: '30%'
+    width: '45%'
   },
   bar: {
     height: 25,
-    width: 35,
+    width: 30,
     alignItems: 'center',
     justifyContent: 'center'
   },
   textBar: {
-    fontSize: 10
+    fontSize: 9
   },
   oddsContainer: {
-    width: '20%',
+    width: '10%',
     justifyContent: 'center',
     alignItems: 'center'
   },
   oddsBox: {
     height: 35,
-    width: 60,
+    width: 40,
     backgroundColor: variables.colors.lightGrey,
     borderWidth: 1,
     borderColor: variables.colors.white,
@@ -182,7 +205,7 @@ const styles = StyleSheet.create({
   },
   oddsText: {
     color: variables.colors.white,
-    fontSize: 12
+    fontSize: 10
   },
 
   dummyPlayerImage: {
