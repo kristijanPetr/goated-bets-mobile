@@ -4922,12 +4922,80 @@ const ms_calculate_hitrate_team = function (
     outputTotal = 0;
 
   if (typeof hitratesSize === 'string') {
-    if (hitratesSize === 'Season') {
-      hitratesSize = hitrates[teamId]['side'].length;
-    }
-  }
+    let seasonData = hitrates[teamId]['season'];
+    let h2hData = hitrates[teamId]['h2h'];
+    const currentYear = new Date().getFullYear();
 
-  if (teamId !== null) {
+    const calculateCompareData = (data, index) => {
+      if (attribute === 'spread') {
+        return (
+          parseInt(hitrates[teamId][data + '_score'][index]) -
+          parseInt(hitrates[teamId][(data === 'home' ? 'away' : 'home') + '_score'][index])
+        );
+      }
+      if (attribute === 'moneyline') {
+        return parseInt(hitrates[teamId][data + '_score'][index]) >=
+          parseInt(hitrates[teamId][(data === 'home' ? 'away' : 'home') + '_score'][index])
+          ? 1
+          : 0;
+      }
+      if (attribute === 'total_over' || attribute === 'total_under') {
+        let count = 0;
+        Object.keys(hitrates).forEach((id) => {
+          count =
+            parseInt(hitrates[id][data + '_score'][index]) +
+            parseInt(hitrates[id][(data === 'home' ? 'away' : 'home') + '_score'][index]);
+        });
+        return count;
+      }
+    };
+
+    let dataArr = [];
+
+    seasonData.forEach((item, index) => {
+      if (parseInt(item) === currentYear - 2024 + 1 && hitratesSize === 'Seasson' && seasonData) {
+        let data = hitrates[teamId]['side'][index];
+        let compareData = calculateCompareData(data, index);
+
+        dataArr.push(compareData);
+      }
+      if (
+        parseInt(item) === currentYear - 2024 + 1 &&
+        parseInt(h2hData[index]) === 1 &&
+        hitratesSize === 'H2H' &&
+        h2hData
+      ) {
+        let data = hitrates[teamId]['side'][index];
+        let compareData = calculateCompareData(data, index);
+
+        dataArr.push(compareData);
+      }
+    });
+
+    dataArr.forEach((item) => {
+      if (attribute === 'moneyline') {
+        if (parseInt(item) === 1) {
+          outputCount += 1;
+        }
+      }
+      if (attribute === 'spread') {
+        if (parseInt(item) >= parseInt(point)) {
+          outputCount += 1;
+        }
+      }
+      if (attribute === 'total_over') {
+        if (parseInt(item) >= parseInt(point)) {
+          outputCount += 1;
+        }
+      }
+      if (attribute === 'total_under') {
+        if (parseInt(item) <= parseInt(point)) {
+          outputCount += 1;
+        }
+      }
+    });
+    outputTotal = dataArr.length;
+  } else {
     if (hitrates[teamId] && Array.isArray(hitrates[teamId]['side'])) {
       if (attribute === 'spread') {
         hitrates[teamId]['side'].slice(0, hitratesSize).forEach((i1v, i1i) => {
@@ -4940,7 +5008,8 @@ const ms_calculate_hitrate_team = function (
           }
           outputTotal += 1;
         });
-      } else if (attribute === 'h2h') {
+      }
+      if (attribute === 'moneyline') {
         hitrates[teamId]['side'].slice(0, hitratesSize).forEach((i1v, i1i) => {
           if (
             parseInt(hitrates[teamId][i1v + '_score'][i1i]) >=
@@ -4951,11 +5020,8 @@ const ms_calculate_hitrate_team = function (
           outputTotal += 1;
         });
       }
-    }
-  } else {
-    if (attribute === 'total_over') {
-      Object.keys(hitrates).forEach((teamId) => {
-        if (hitrates[teamId] && Array.isArray(hitrates[teamId]['side'])) {
+      if (attribute === 'total_over') {
+        Object.keys(hitrates).forEach((teamId) => {
           hitrates[teamId]['side'].slice(0, hitratesSize).forEach((i1v, i1i) => {
             if (
               parseInt(hitrates[teamId][i1v + '_score'][i1i]) +
@@ -4966,11 +5032,10 @@ const ms_calculate_hitrate_team = function (
             }
             outputTotal += 1;
           });
-        }
-      });
-    } else if (attribute === 'total_under') {
-      Object.keys(hitrates).forEach((teamId) => {
-        if (hitrates[teamId] && Array.isArray(hitrates[teamId]['side'])) {
+        });
+      }
+      if (attribute === 'total_under') {
+        Object.keys(hitrates).forEach((teamId) => {
           hitrates[teamId]['side'].slice(0, hitratesSize).forEach((i1v, i1i) => {
             if (
               parseInt(hitrates[teamId][i1v + '_score'][i1i]) +
@@ -4981,8 +5046,8 @@ const ms_calculate_hitrate_team = function (
             }
             outputTotal += 1;
           });
-        }
-      });
+        });
+      }
     }
   }
 
