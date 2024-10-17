@@ -103,14 +103,22 @@ const PlayerBox = ({ item, selectedPlayer, handleSelectedPlayer }: Props) => {
           <View
             style={{
               ...styles.bar,
-              backgroundColor: variables.colorHeatMap(item.performance.season, 'hitrate')
+              backgroundColor: variables.colorHeatMap(
+                item.performance.season,
+                'hitrate',
+                item.stats.name === 'Under'
+              )
             }}>
             <Text style={styles.textBar}> {item.performance.season}</Text>
           </View>
           <View
             style={{
               ...styles.bar,
-              backgroundColor: variables.colorHeatMap(item.performance.h2h, 'hitrate')
+              backgroundColor: variables.colorHeatMap(
+                item.performance.h2h,
+                'hitrate',
+                item.stats.name === 'Under'
+              )
             }}>
             <Text style={styles.textBar}> {item.performance.h2h}</Text>
           </View>
