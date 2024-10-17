@@ -1,7 +1,6 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useContext } from 'react';
 import { variables } from '~/utils/mixins';
-import { Icon } from '../icon/icon';
 import DataBoxBrackets from '../common/DataBoxBrackets';
 
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -18,7 +17,7 @@ interface Props {
 
 const GameData = ({ item, selectedGame, handleSelectedGame, selectedStat }: Props) => {
   const { singleton } = useContext(SingletonDataContextProvider);
-  const isSelectedGame = item.id === selectedGame;
+  const isSelectedGame = `${item.homeName}-${item.awayName}` === selectedGame;
 
   const { gamelines } = item;
 
@@ -26,8 +25,14 @@ const GameData = ({ item, selectedGame, handleSelectedGame, selectedStat }: Prop
   const awayOverUnder = gamelines.away_spread.oprice ? 'O' : 'U';
 
   const calculateData = (side: string | null, attribute: string | null, type: string) => {
-    const statMap: { [key: string]: number } = { L5: 5, L10: 10, L25: 25 };
-    const selectedStatData = statMap[selectedStat] || 10;
+    const statMap: { [key: string]: number | string } = {
+      L5: 5,
+      L10: 10,
+      L25: 25,
+      Season: 'Season'
+    };
+    console.log(JSON.parse(item.matchup.attributes.hitrate['=']), 'see this');
+    let selectedStatData = statMap[selectedStat] || 10;
     const data = singleton.ms_calculate_hitrate_team(
       side ? item.matchup.attributes[side]['='] : null,
       item.matchup.attributes.hitrate['='],
@@ -42,7 +47,8 @@ const GameData = ({ item, selectedGame, handleSelectedGame, selectedStat }: Prop
     if (!data) return 'N/A';
 
     const splitNumbers = data.split('/');
-    return `${((splitNumbers[0] * 1) / (splitNumbers[1] * 1)) * 100}%`;
+
+    return `${(((splitNumbers[0] * 1) / (splitNumbers[1] * 1)) * 100).toFixed(0)}%`;
   };
 
   return (
@@ -107,7 +113,8 @@ const GameData = ({ item, selectedGame, handleSelectedGame, selectedStat }: Prop
             thirdContainerStyle={{
               backgroundColor: variables.colorHeatMap(
                 calculateData(null, 'total_under', 'total_under'),
-                'hitrate'
+                'hitrate',
+                true
               )
             }}
           />
@@ -163,7 +170,8 @@ const GameData = ({ item, selectedGame, handleSelectedGame, selectedStat }: Prop
             thirdContainerStyle={{
               backgroundColor: variables.colorHeatMap(
                 calculateData(null, 'total_under', 'total_under'),
-                'hitrate'
+                'hitrate',
+                true
               )
             }}
           />
@@ -171,7 +179,7 @@ const GameData = ({ item, selectedGame, handleSelectedGame, selectedStat }: Prop
       </View>
       <View style={styles.bottomButtons}>
         <TouchableOpacity
-          onPress={() => handleSelectedGame(item.id)}
+          onPress={() => handleSelectedGame(`${item.homeName}-${item.awayName}`)}
           style={{ paddingHorizontal: 20, marginBottom: 4 }}>
           <AntDesign name={isSelectedGame ? 'caretup' : 'caretdown'} size={14} color="white" />
         </TouchableOpacity>

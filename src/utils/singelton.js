@@ -96,8 +96,8 @@ const data = {
       batter_home_runs: 'Home Runs',
       batter_hits: 'Hits',
       batter_total_bases: 'Total Bases',
-      batter_rbis: 'RBIs',
-      batter_runs_scored: 'Runs Scored',
+      batter_runs_batted_in: 'RBIs',
+      batter_runs: 'Runs Scored',
       batter_singles: 'Singles',
       batter_doubles: 'Doubles',
       batter_triples: 'Triples',
@@ -127,8 +127,8 @@ const data = {
       batter_home_runs: 'HR',
       batter_hits: 'H',
       batter_total_bases: 'TB',
-      batter_rbis: 'RBI',
-      batter_runs_scored: 'R',
+      batter_runs_batted_in: 'RBI',
+      batter_runs: 'R',
       batter_singles: '1B',
       batter_doubles: '2B',
       batter_triples: '3B',
@@ -156,8 +156,8 @@ const data = {
       batter_home_runs: 'batter_home_runs',
       batter_hits: 'batter_hits',
       batter_total_bases: 'batter_total_bases',
-      batter_rbis: 'batter_runs_batted_in',
-      batter_runs_scored: 'batter_runs',
+      batter_runs_batted_in: 'batter_runs_batted_in',
+      batter_runs: 'batter_runs',
       batter_singles: 'batter_singles',
       batter_doubles: 'batter_doubles',
       batter_triples: 'batter_triples',
@@ -185,8 +185,8 @@ const data = {
       batter_home_runs: 'batter_home_runs',
       batter_hits: 'batter_hits',
       batter_total_bases: 'batter_total_bases',
-      batter_runs_batted_in: 'batter_rbis',
-      batter_runs: 'batter_runs_scored',
+      batter_runs_batted_in: 'batter_runs_batted_in',
+      batter_runs: 'batter_runs',
       batter_singles: 'batter_singles',
       batter_doubles: 'batter_doubles',
       batter_triples: 'batter_triples',
@@ -1575,14 +1575,14 @@ const ma_update_ticker_lineups = function (
                               uprice: '?',
                               raw: {}
                             },
-                            batter_rbis: {
+                            batter_runs_batted_in: {
                               opoint: '?',
                               oprice: '?',
                               upoint: '?',
                               uprice: '?',
                               raw: {}
                             },
-                            batter_runs_scored: {
+                            batter_runs: {
                               opoint: '?',
                               oprice: '?',
                               upoint: '?',
@@ -2088,7 +2088,7 @@ const ma_update_ticker_propositions = function (
                     mlb:
                       'https://api.the-odds-api.com/v4/sports/baseball_mlb/events/' +
                       matchupEventIds['odds_api_event_id'] +
-                      '/odds?apiKey={{ API_KEY_ODDS }}&regions=usa&markets=batter_home_runs,batter_hits,batter_total_bases,batter_rbis,batter_runs_scored,batter_singles,batter_doubles,batter_triples,batter_stolen_bases,pitcher_strikeouts&dateFormat=iso&oddsFormat=american&bookmakers=fanduel,draftkings'
+                      '/odds?apiKey={{ API_KEY_ODDS }}&regions=usa&markets=batter_home_runs,batter_hits,batter_total_bases,batter_runs_batted_in,batter_runs,batter_singles,batter_doubles,batter_triples,batter_stolen_bases,pitcher_strikeouts&dateFormat=iso&oddsFormat=american&bookmakers=fanduel,draftkings'
                   }[ticker['sport']],
                   'API_KEY_ODDS'
                 )
@@ -4920,7 +4920,11 @@ const ms_calculate_hitrate_team = function (
   let hitrates = JSON.parse(teamHHR),
     outputCount = 0,
     outputTotal = 0;
-
+  if (typeof hitratesSize === 'string') {
+    if (hitratesSize === 'Season') {
+      hitratesSize = hitrates[teamId]['side'].length;
+    }
+  }
   if (teamId !== null) {
     if (hitrates[teamId] && Array.isArray(hitrates[teamId]['side'])) {
       if (attribute === 'spread') {

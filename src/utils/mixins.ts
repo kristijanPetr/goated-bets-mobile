@@ -30,7 +30,11 @@ const colors = [
   '#86c97d',
   '#63be7b'
 ];
-function getColorByProp(value: number | string, propType: 'streak' | 'l5' | 'l10' | 'hitrate') {
+function getColorByProp(
+  value: number | string,
+  propType: 'streak' | 'l5' | 'l10' | 'hitrate',
+  reverseColors: boolean = false
+) {
   // Define color ranges for each property
   let scaleValue;
 
@@ -60,6 +64,8 @@ function getColorByProp(value: number | string, propType: 'streak' | 'l5' | 'l10
     default:
       return '#ccc'; // Default color for unknown properties
   }
-
+  if (reverseColors) {
+    scaleValue = 10 - scaleValue;
+  }
   return colors[Math.floor(scaleValue) - 1]; // Return color based on scaled value (1-10)
 }
