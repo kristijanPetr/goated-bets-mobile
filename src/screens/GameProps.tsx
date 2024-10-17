@@ -8,7 +8,7 @@ import GameList from '~/components/gameProps/GameList';
 import FloatingBettingMenu from '~/components/floatingBettingMenu/FloatingBettingMenu';
 
 const GameProps = () => {
-  const [selectedStat, setSelectedStat] = useState<string>('L5');
+  const [selectedStat, setSelectedStat] = useState<string>('Seasson');
 
   return (
     <LinearGradient

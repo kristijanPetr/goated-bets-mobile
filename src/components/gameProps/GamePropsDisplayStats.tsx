@@ -18,10 +18,10 @@ const GamePropsDisplayStats = ({ selectedStat, setSelectedStat }: Props) => {
   };
 
   const stats = [
-    { id: '1', name: 'L5' },
-    { id: '2', name: 'L10' },
-    { id: '3', name: 'L25' },
-    { id: '4', name: 'Seasson' },
+    { id: '1', name: 'Seasson' },
+    { id: '2', name: 'L5' },
+    { id: '3', name: 'L10' },
+    { id: '4', name: 'L25' },
     { id: '5', name: 'H2H' },
     { id: '6', name: 'Streak' },
     { id: '7', name: 'EV' },
