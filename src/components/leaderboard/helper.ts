@@ -70,11 +70,13 @@ export const generateH2H = (point: any, name: any, hitrate: any, id: any, key: a
 
     if (!seasonData || !streakData) return 'N/A';
     const arr: any[] = [];
-    seasonData.forEach((item: string, index: number) => {
-      if (parseInt(item) === currentYear - 2024 + 1 && h2hData[index] === item) {
-        return arr.push(streakData[index]);
+    for (let index = 0; index < seasonData.length; index++) {
+      const year = parseInt(seasonData[index]);
+      const h2h = parseInt(h2hData[index]);
+      if (year === currentYear - 2024 + 1 && h2h === 1) {
+        arr.push(streakData[index]);
       }
-    });
+    }
 
     let total = 0;
     const condition = name === 'Over' ? (n: number) => n >= point : (n: number) => n <= point;

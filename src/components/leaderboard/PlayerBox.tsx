@@ -81,9 +81,9 @@ const PlayerBox = ({ item, selectedPlayer, handleSelectedPlayer }: Props) => {
           <View
             style={{
               ...styles.bar,
-              backgroundColor: variables.colorHeatMap(
+              backgroundColor: variables.getHeatmapColor(
                 item.performance.L5,
-                'l10',
+                'percentage',
                 item.stats.name === 'Under'
               )
             }}>
@@ -92,9 +92,9 @@ const PlayerBox = ({ item, selectedPlayer, handleSelectedPlayer }: Props) => {
           <View
             style={{
               ...styles.bar,
-              backgroundColor: variables.colorHeatMap(
+              backgroundColor: variables.getHeatmapColor(
                 item.performance.L10,
-                'l10',
+                'percentage',
                 item.stats.name === 'Under'
               )
             }}>
@@ -103,9 +103,9 @@ const PlayerBox = ({ item, selectedPlayer, handleSelectedPlayer }: Props) => {
           <View
             style={{
               ...styles.bar,
-              backgroundColor: variables.colorHeatMap(
+              backgroundColor: variables.getHeatmapColor(
                 item.performance.season,
-                'hitrate',
+                'percentage',
                 item.stats.name === 'Under'
               )
             }}>
@@ -114,9 +114,9 @@ const PlayerBox = ({ item, selectedPlayer, handleSelectedPlayer }: Props) => {
           <View
             style={{
               ...styles.bar,
-              backgroundColor: variables.colorHeatMap(
+              backgroundColor: variables.getHeatmapColor(
                 item.performance.h2h,
-                'hitrate',
+                'percentage',
                 item.stats.name === 'Under'
               )
             }}>
@@ -125,7 +125,7 @@ const PlayerBox = ({ item, selectedPlayer, handleSelectedPlayer }: Props) => {
           <View
             style={{
               ...styles.bar,
-              backgroundColor: variables.colorHeatMap(item.performance.streak, 'streak')
+              backgroundColor: variables.getHeatmapColor(item.performance.streak, 'number')
             }}>
             <Text style={styles.textBar}> {item.performance.streak}</Text>
           </View>

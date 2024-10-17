@@ -16,9 +16,10 @@ export const variables = {
     statsGreen: '#A9D27F',
     headerYellow: '#F9AB23'
   },
-  colorHeatMap: getColorByProp
+
+  getHeatmapColor
 };
-const colors = [
+const colors: string[] = [
   '#f8696b',
   '#f98570',
   '#fba276',
@@ -30,44 +31,25 @@ const colors = [
   '#86c97d',
   '#63be7b'
 ];
-function getColorByProp(
+
+function getHeatmapColor(
   value: number | string,
-  propType: 'streak' | 'l5' | 'l10' | 'hitrate',
-  reverseColors: boolean = false
-) {
-  // Define color ranges for each property
-  let scaleValue;
-
-  switch (propType) {
-    case 'streak':
-      // For streak, map the value to the 1-10 scale
-      if (scaleValue === 1 || scaleValue === 2 || scaleValue === 3) {
-        scaleValue = 1;
-      } else {
-        scaleValue = parseInt(value as string) + 2;
-      }
-
-      break;
-
-    case 'l5': // Last 5 games (e.g., 0-5)
-    case 'l10':
-      const parsedValue = (value as string).replace('%', '');
-      scaleValue = Math.min(Math.max(parseInt(parsedValue), 1), 10); // Ensure within 1-5
-      scaleValue = (scaleValue / 10) * 10; // Scale up to 1-10
-
-      break;
-
-    case 'hitrate': // Hit rate (e.g., percentage from 0 to 100)
-      scaleValue = Math.min(Math.max(parseInt(value as string) / 10, 1), 10); // Scale hitrate to 1-10
-      break;
-
-    default:
-      return '#ccc'; // Default color for unknown properties
+  prop: 'percentage' | 'number',
+  reverseColors?: boolean
+): string {
+  let index: number;
+  if (prop === 'percentage') {
+    // Convert percentage (0-100) to an index between 0 and 9
+    index = Math.floor((parseInt((value as string).replace('%', '')) / 100) * 9);
+  } else if (prop === 'number') {
+    // Convert positive integer to an index between 0 and 9
+    index = Math.min(value as number, 9); // Ensure it doesn't exceed 9
+  } else {
+    index = 0;
   }
 
-  if (reverseColors) {
-    scaleValue = 11 - scaleValue;
-  }
+  // Ensure index is within bounds
+  index = Math.max(0, Math.min(index, 9));
 
-  return colors[Math.floor(scaleValue) - 1]; // Return color based on scaled value (1-10)
+  return reverseColors ? colors.reverse()[index] : colors[index];
 }
