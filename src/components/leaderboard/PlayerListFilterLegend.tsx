@@ -4,7 +4,7 @@ import PlayerFilterOptionsButton from './PlayerFilterOptionsButton';
 
 interface Props {
   filterSelected: string;
-  setSelectedFilter: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedFilter: (selectOption: string) => void;
 }
 
 const PlayerListFilterLegend = ({ filterSelected, setSelectedFilter }: Props) => {
