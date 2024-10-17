@@ -13,6 +13,15 @@ const Leaderboard = () => {
   const [filterSelected, setSelectedFilter] = useState<string>('');
   const [statsSelected, setStatsSelected] = useState<string[]>([]);
   const [searchFilter, setSearchFilter] = useState<string>('');
+
+  const handleSelectedFilter = (selectOption: string) => {
+    if (filterSelected === selectOption) {
+      setSelectedFilter('');
+    } else {
+      setSelectedFilter(selectOption);
+    }
+  };
+
   const handleStatSelect = (selectOption: string) => {
     if (statsSelected.includes(selectOption)) {
       setStatsSelected((prevState) => prevState.filter((item) => item !== selectOption));
@@ -38,7 +47,7 @@ const Leaderboard = () => {
         />
         <PlayerListFilterLegend
           filterSelected={filterSelected}
-          setSelectedFilter={setSelectedFilter}
+          setSelectedFilter={handleSelectedFilter}
         />
         <PlayersList
           statsSelected={statsSelected}
