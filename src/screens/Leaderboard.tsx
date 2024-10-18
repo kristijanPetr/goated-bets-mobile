@@ -10,16 +10,15 @@ import { LinearGradient } from 'expo-linear-gradient';
 import FloatingBettingMenu from '~/components/floatingBettingMenu/FloatingBettingMenu';
 
 const Leaderboard = () => {
-  const [filterSelected, setSelectedFilter] = useState<string>('');
+  const [filterSelected, setSelectedFilter] = useState<{ id: string; type: string }>({
+    id: '',
+    type: ''
+  });
   const [statsSelected, setStatsSelected] = useState<string[]>([]);
   const [searchFilter, setSearchFilter] = useState<string>('');
 
-  const handleSelectedFilter = (selectOption: string) => {
-    if (filterSelected === selectOption) {
-      setSelectedFilter('');
-    } else {
-      setSelectedFilter(selectOption);
-    }
+  const handleSelectedFilter = (selectOption: { id: string; type: string }) => {
+    setSelectedFilter(selectOption);
   };
 
   const handleStatSelect = (selectOption: string) => {

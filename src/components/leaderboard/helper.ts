@@ -90,7 +90,7 @@ export const generateH2H = (point: any, name: any, hitrate: any, id: any, key: a
   return 'N/A';
 };
 
-export const getPlayerData = (ticker: any, data: any, singleton: any) => {
+export const getPlayerData = (ticker: any, singleton: any) => {
   const playerData: PlayerData[] = [];
   ticker.lineups.forEach((lineup: any) => {
     const playerAttributes = lineup.player.attributes;
@@ -155,7 +155,7 @@ export const filterPlayerData = (
   playerData: PlayerData[],
   searchFilter: string,
   statsSelected: string[],
-  filterSelected: string,
+  filterSelected: { id: string; type: string },
   data: any
 ) => {
   return playerData
@@ -169,33 +169,54 @@ export const filterPlayerData = (
         statsSelected.includes(data?.mapMarketsToAttributes?.[data.sport]?.[stats.key])
     )
     .sort((a, b) => {
-      switch (filterSelected) {
+      let type = filterSelected.type;
+      switch (filterSelected.id) {
         case 'playerProp':
-          return a.playerInfo.name.localeCompare(b.playerInfo.name);
+          if (type === 'asc') {
+            return a.playerInfo.name.localeCompare(b.playerInfo.name);
+          }
+          return b.playerInfo.name.localeCompare(a.playerInfo.name);
+
         case 'l5':
           let aPerformance5 = a.performance.L5.split('%')[0];
           let bPerformance5 = b.performance.L5.split('%')[0];
+          if (type === 'asc') {
+            return bPerformance5 - aPerformance5;
+          }
+          return aPerformance5 - bPerformance5;
 
-          return bPerformance5 - aPerformance5;
         case 'l10':
           let aPerformance10 = a.performance.L10.split('%')[0];
           let bPerformance10 = b.performance.L10.split('%')[0];
+          if (type === 'asc') {
+            return bPerformance10 - aPerformance10;
+          }
+          return aPerformance10 - bPerformance10;
 
-          return bPerformance10 - aPerformance10;
         case 'season':
           let aPerformanceS = a.performance.season.split('%')[0];
           let bPerformanceS = b.performance.season.split('%')[0];
-
-          return bPerformanceS - aPerformanceS;
+          if (type === 'asc') {
+            return bPerformanceS - aPerformanceS;
+          }
+          return aPerformanceS - bPerformanceS;
         case 'h2h':
           let aPerformanceh2h = a.performance.h2h.split('%')[0];
           let bPerformanceh2h = b.performance.h2h.split('%')[0];
-
-          return bPerformanceh2h - aPerformanceh2h;
+          if (type === 'asc') {
+            return bPerformanceh2h - aPerformanceh2h;
+          }
+          return aPerformanceh2h - bPerformanceh2h;
         case 'streak':
-          return b.performance.streak - a.performance.streak;
+          if (type === 'asc') {
+            return b.performance.streak - a.performance.streak;
+          }
+          return a.performance.streak - b.performance.streak;
         case 'odds':
-          return b.stats.price - a.stats.price;
+          if (type === 'asc') {
+            return b.stats.price - a.stats.price;
+          }
+          return a.stats.price - b.stats.price;
         default:
           return 0;
       }

@@ -7,6 +7,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import GameExtraData from './GameExtraData';
 import { SingletonDataContextProvider } from '~/context/singletonDataContext';
+import { calculateData } from './helper';
 
 interface Props {
   item: any;
@@ -24,32 +25,8 @@ const GameData = ({ item, selectedGame, handleSelectedGame, selectedStat }: Prop
   const homeOverUnder = gamelines.home_spread.oprice ? 'O' : 'U';
   const awayOverUnder = gamelines.away_spread.oprice ? 'O' : 'U';
 
-  const calculateData = (side: string, attribute: string | null, type: string) => {
-    const statMap: { [key: string]: number | string } = {
-      L5: 5,
-      L10: 10,
-      L25: 25,
-      Seasson: 'Seasson',
-      H2H: 'H2H'
-    };
-
-    let selectedStatData = statMap[selectedStat] || 10;
-    const data = singleton.ms_calculate_hitrate_team(
-      item.matchup.attributes[side]['='],
-      item.matchup.attributes.hitrate['='],
-      attribute
-        ? attribute === 'total_under'
-          ? gamelines[attribute].upoint
-          : gamelines[attribute].opoint
-        : null,
-      type,
-      selectedStatData
-    );
-    if (!data) return 'N/A';
-    if (data === 'N/A') return data;
-
-    const splitNumbers = data.split('/');
-    return `${(((splitNumbers[0] * 1) / (splitNumbers[1] * 1)) * 100).toFixed(0)}%`;
+  const getData = (side: string, attribute: string | null, type: string) => {
+    return calculateData(selectedStat, singleton, item, side, attribute, type);
   };
 
   return (
@@ -77,20 +54,20 @@ const GameData = ({ item, selectedGame, handleSelectedGame, selectedStat }: Prop
               gamelines.away_spread.opoint || gamelines.away_spread.upoint || '-',
               gamelines.away_spread.oprice || gamelines.away_spread.uprice || '-'
             ]}
-            secondContainerData={[calculateData('away', 'away_spread', 'spread')]}
+            secondContainerData={[getData('away', 'away_spread', 'spread')]}
             secondContainerStyle={{
               backgroundColor: variables.getHeatmapColor(
-                calculateData('away', 'away_spread', 'spread'),
+                getData('away', 'away_spread', 'spread'),
                 'percentage'
               )
             }}
           />
           <DataBoxBrackets
             firstContainerData={[gamelines.away_h2h.oprice || gamelines.away_h2h.uprice || '-']}
-            secondContainerData={[calculateData('away', null, 'moneyline')]}
+            secondContainerData={[getData('away', null, 'moneyline')]}
             secondContainerStyle={{
               backgroundColor: variables.getHeatmapColor(
-                calculateData('away', null, 'moneyline'),
+                getData('away', null, 'moneyline'),
                 'percentage'
               )
             }}
@@ -102,21 +79,21 @@ const GameData = ({ item, selectedGame, handleSelectedGame, selectedStat }: Prop
             ]}
             secondContainerData={[
               item.awayName.substring(0, 3),
-              calculateData('away', 'total_over', 'total_over')
+              getData('away', 'total_over', 'total_over')
             ]}
             thirdContainerData={[
               item.homeName.substring(0, 3),
-              calculateData('away', 'total_under', 'total_under')
+              getData('away', 'total_under', 'total_under')
             ]}
             secondContainerStyle={{
               backgroundColor: variables.getHeatmapColor(
-                calculateData('away', 'total_over', 'total_over'),
+                getData('away', 'total_over', 'total_over'),
                 'percentage'
               )
             }}
             thirdContainerStyle={{
               backgroundColor: variables.getHeatmapColor(
-                calculateData('away', 'total_under', 'total_under'),
+                getData('away', 'total_under', 'total_under'),
                 'percentage',
                 true
               )
@@ -137,20 +114,20 @@ const GameData = ({ item, selectedGame, handleSelectedGame, selectedStat }: Prop
               gamelines.home_spread.opoint || gamelines.home_spread.upoint || '-',
               gamelines.home_spread.oprice || gamelines.home_spread.uprice || '-'
             ]}
-            secondContainerData={[calculateData('home', 'home_spread', 'spread')]}
+            secondContainerData={[getData('home', 'home_spread', 'spread')]}
             secondContainerStyle={{
               backgroundColor: variables.getHeatmapColor(
-                calculateData('home', 'home_spread', 'spread'),
+                getData('home', 'home_spread', 'spread'),
                 'percentage'
               )
             }}
           />
           <DataBoxBrackets
             firstContainerData={[gamelines.home_h2h.oprice || gamelines.home_h2h.uprice || '-']}
-            secondContainerData={[calculateData('home', null, 'moneyline')]}
+            secondContainerData={[getData('home', null, 'moneyline')]}
             secondContainerStyle={{
               backgroundColor: variables.getHeatmapColor(
-                calculateData('home', null, 'moneyline'),
+                getData('home', null, 'moneyline'),
                 'percentage'
               )
             }}
@@ -162,21 +139,21 @@ const GameData = ({ item, selectedGame, handleSelectedGame, selectedStat }: Prop
             ]}
             secondContainerData={[
               item.homeName.substring(0, 3),
-              calculateData('home', 'total_over', 'total_over')
+              getData('home', 'total_over', 'total_over')
             ]}
             thirdContainerData={[
               item.awayName.substring(0, 3),
-              calculateData('home', 'total_under', 'total_under')
+              getData('home', 'total_under', 'total_under')
             ]}
             secondContainerStyle={{
               backgroundColor: variables.getHeatmapColor(
-                calculateData('home', 'total_over', 'total_over'),
+                getData('home', 'total_over', 'total_over'),
                 'percentage'
               )
             }}
             thirdContainerStyle={{
               backgroundColor: variables.getHeatmapColor(
-                calculateData('home', 'total_under', 'total_under'),
+                getData('home', 'total_under', 'total_under'),
                 'percentage',
                 true
               )
