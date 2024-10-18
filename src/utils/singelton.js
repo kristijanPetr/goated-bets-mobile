@@ -4971,7 +4971,7 @@ const ms_calculate_hitrate_team = function (
         dataArr.push(compareData);
       }
     });
-    if (!dataArr.length === 0) {
+    if (dataArr.length > 0) {
       dataArr.forEach((item) => {
         if (attribute === 'moneyline') {
           if (parseInt(item) === 1) {
