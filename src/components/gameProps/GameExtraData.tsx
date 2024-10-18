@@ -104,6 +104,7 @@ const GameExtraData = ({ data }: Props) => {
 
           return (
             <TouchableOpacity
+              key={item.id}
               activeOpacity={0.9}
               onPress={() => handleSelectStats(item.id)}
               style={{

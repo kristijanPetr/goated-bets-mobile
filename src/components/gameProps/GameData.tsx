@@ -46,6 +46,7 @@ const GameData = ({ item, selectedGame, handleSelectedGame, selectedStat }: Prop
       selectedStatData
     );
     if (!data) return 'N/A';
+    if (data === 'N/A') return data;
 
     const splitNumbers = data.split('/');
     return `${(((splitNumbers[0] * 1) / (splitNumbers[1] * 1)) * 100).toFixed(0)}%`;
