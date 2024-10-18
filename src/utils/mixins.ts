@@ -50,6 +50,6 @@ function getHeatmapColor(
 
   // Ensure index is within bounds
   index = Math.max(0, Math.min(index, 9));
-
+  if (value === 'N/A') return '#B5B5B5';
   return reverseColors ? colors.reverse()[index] : colors[index];
 }

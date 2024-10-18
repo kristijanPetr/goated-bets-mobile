@@ -4922,8 +4922,8 @@ const ms_calculate_hitrate_team = function (
     outputTotal = 0;
 
   if (typeof hitratesSize === 'string') {
-    let seasonData = hitrates[teamId]['season'];
-    let h2hData = hitrates[teamId]['h2h'];
+    let seasonData = hitrates[teamId]?.['season'] || [];
+    let h2hData = hitrates[teamId]?.['h2h'] || [];
     const currentYear = new Date().getFullYear();
 
     const calculateCompareData = (data, index) => {
@@ -4971,30 +4971,31 @@ const ms_calculate_hitrate_team = function (
         dataArr.push(compareData);
       }
     });
-
-    dataArr.forEach((item) => {
-      if (attribute === 'moneyline') {
-        if (parseInt(item) === 1) {
-          outputCount += 1;
+    if (!dataArr.length === 0) {
+      dataArr.forEach((item) => {
+        if (attribute === 'moneyline') {
+          if (parseInt(item) === 1) {
+            outputCount += 1;
+          }
         }
-      }
-      if (attribute === 'spread') {
-        if (parseInt(item) >= parseInt(point)) {
-          outputCount += 1;
+        if (attribute === 'spread') {
+          if (parseInt(item) >= parseInt(point)) {
+            outputCount += 1;
+          }
         }
-      }
-      if (attribute === 'total_over') {
-        if (parseInt(item) >= parseInt(point)) {
-          outputCount += 1;
+        if (attribute === 'total_over') {
+          if (parseInt(item) >= parseInt(point)) {
+            outputCount += 1;
+          }
         }
-      }
-      if (attribute === 'total_under') {
-        if (parseInt(item) <= parseInt(point)) {
-          outputCount += 1;
+        if (attribute === 'total_under') {
+          if (parseInt(item) <= parseInt(point)) {
+            outputCount += 1;
+          }
         }
-      }
-    });
-    outputTotal = dataArr.length;
+      });
+      outputTotal = dataArr.length;
+    }
   } else {
     if (hitrates[teamId] && Array.isArray(hitrates[teamId]['side'])) {
       if (attribute === 'spread') {
@@ -5050,7 +5051,9 @@ const ms_calculate_hitrate_team = function (
       }
     }
   }
-
+  if (outputCount === 0 && outputTotal === 0) {
+    return 'N/A';
+  }
   return String(outputCount) + '/' + String(outputTotal);
 };
 
