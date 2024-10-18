@@ -3,49 +3,68 @@ import React from 'react';
 import PlayerFilterOptionsButton from './PlayerFilterOptionsButton';
 
 interface Props {
-  filterSelected: string;
-  setSelectedFilter: (selectOption: string) => void;
+  filterSelected: { id: string; type: string };
+  setSelectedFilter: (selectOption: { id: string; type: string }) => void;
 }
 
 const PlayerListFilterLegend = ({ filterSelected, setSelectedFilter }: Props) => {
+  const handleSelectFilterType = (id: string) => {
+    if (filterSelected.id !== id) {
+      return setSelectedFilter({ id, type: 'asc' });
+    } else {
+      if (filterSelected.type === 'asc') {
+        return setSelectedFilter({ id, type: 'desc' });
+      }
+      if (filterSelected.type === 'desc') {
+        return setSelectedFilter({ id: '', type: '' });
+      }
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.playerPropContainer}>
         <PlayerFilterOptionsButton
           label="Player/Prop"
-          value={filterSelected === 'playerProp'}
-          onChange={() => setSelectedFilter('playerProp')}
+          value={filterSelected}
+          type="playerProp"
+          onChange={() => handleSelectFilterType('playerProp')}
         />
       </View>
       <View style={styles.barFilterContainer}>
         <PlayerFilterOptionsButton
           label="L5"
-          value={filterSelected === 'l5'}
-          onChange={() => setSelectedFilter('l5')}
+          value={filterSelected}
+          type="l5"
+          onChange={() => handleSelectFilterType('l5')}
           containerStyle={{ width: '20%' }}
         />
         <PlayerFilterOptionsButton
           label="L10"
-          value={filterSelected === 'l10'}
-          onChange={() => setSelectedFilter('l10')}
+          value={filterSelected}
+          type="l10"
+          onChange={() => handleSelectFilterType('l10')}
           containerStyle={{ width: '20%' }}
         />
         <PlayerFilterOptionsButton
           label="Season"
-          value={filterSelected === 'season'}
-          onChange={() => setSelectedFilter('season')}
+          value={filterSelected}
+          type="season"
+          onChange={() => handleSelectFilterType('season')}
           containerStyle={{ width: '20%' }}
         />
         <PlayerFilterOptionsButton
           label="H2H"
-          value={filterSelected === 'h2h'}
-          onChange={() => setSelectedFilter('h2h')}
+          value={filterSelected}
+          type="h2h"
+          onChange={() => handleSelectFilterType('h2h')}
           containerStyle={{ width: '20%' }}
         />
         <PlayerFilterOptionsButton
           label="Streak"
-          value={filterSelected === 'streak'}
-          onChange={() => setSelectedFilter('streak')}
+          value={filterSelected}
+          type="streak"
+          onChange={() => handleSelectFilterType('streak')}
           containerStyle={{ width: '20%' }}
         />
         {/* <PlayerFilterOptionsButton
@@ -58,8 +77,9 @@ const PlayerListFilterLegend = ({ filterSelected, setSelectedFilter }: Props) =>
       <View style={styles.oddsFilterContainer}>
         <PlayerFilterOptionsButton
           label="Odds"
-          value={filterSelected === 'odds'}
-          onChange={() => setSelectedFilter('odds')}
+          value={filterSelected}
+          type="odds"
+          onChange={() => handleSelectFilterType('odds')}
         />
       </View>
     </View>

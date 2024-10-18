@@ -75,7 +75,6 @@ const PlayerBox = ({ item, selectedPlayer, handleSelectedPlayer }: Props) => {
             style={
               styles.textStats
             }>{`${getStatTitle(item.stats.key)} ${item.stats.name} ${item.stats.point}`}</Text>
-          <Text style={styles.textMatch}>{item.matchup}</Text>
         </View>
         <View style={styles.barContainer}>
           <View

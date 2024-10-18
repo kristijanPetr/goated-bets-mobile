@@ -3,7 +3,6 @@ import { Image, LayoutChangeEvent, StyleSheet, Text, View } from 'react-native';
 import { SingletonDataContextProvider } from '~/context/singletonDataContext';
 import { variables } from '~/utils/mixins';
 import BarChart from '../BarChart';
-const dummyBarImage = require('./dummyBarImage.png');
 
 interface Props {
   item: any;
@@ -79,7 +78,7 @@ const PlayerExtraData = ({ item }: Props) => {
       ) : (
         <View style={{ height: 250, width: containerWidth, marginTop: 20 }} />
       )}
-      <View style={styles.divider} />
+      {/* <View style={styles.divider} />
       <Text style={styles.extraDataHeading}> Matchup and Rankings</Text>
       <View
         style={{
@@ -97,11 +96,9 @@ const PlayerExtraData = ({ item }: Props) => {
             fontSize: 12,
             textTransform: 'uppercase'
           }}>{`Matchup grade N/A`}</Text>
-      </View>
+      </View> */}
 
-      <Image source={dummyBarImage} style={styles.dummyImage} resizeMode="contain" />
-
-      <View
+      {/* <View
         style={{
           paddingHorizontal: 15,
           paddingVertical: 8,
@@ -119,7 +116,7 @@ const PlayerExtraData = ({ item }: Props) => {
           }}>
           View injuries and Rankings
         </Text>
-      </View>
+      </View> */}
     </View>
   );
 };

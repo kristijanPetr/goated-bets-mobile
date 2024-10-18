@@ -7,7 +7,7 @@ import { filterPlayerData, getPlayerData } from './helper';
 interface Props {
   statsSelected: string[];
   searchFilter: string;
-  filterSelected: string;
+  filterSelected: { id: string; type: string };
 }
 
 export type PlayerData = {
@@ -28,7 +28,7 @@ const PlayersList = ({ statsSelected, searchFilter, filterSelected }: Props) => 
   const playerGamesSelected = !selectedGames ? data?.tickers : [selectedGames];
 
   const playerData = playerGamesSelected?.reduce((acc: PlayerData[], ticker: any) => {
-    return [...acc, ...getPlayerData(ticker, data, singleton)];
+    return [...acc, ...getPlayerData(ticker, singleton)];
   }, []);
 
   const handleSelectedPlayer = (id: string) => {
