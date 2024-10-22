@@ -92,6 +92,7 @@ export const generateH2H = (point: any, name: any, hitrate: any, id: any, key: a
 
 export const getPlayerData = (ticker: any, singleton: any) => {
   const playerData: PlayerData[] = [];
+  if (!ticker || !ticker.lineups) return playerData;
   ticker.lineups.forEach((lineup: any) => {
     const playerAttributes = lineup.player.attributes;
     const performanceAttributes = lineup.performance.attributes;

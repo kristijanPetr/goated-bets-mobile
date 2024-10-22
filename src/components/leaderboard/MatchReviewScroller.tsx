@@ -5,9 +5,19 @@ import { SingletonDataContextProvider } from '~/context/singletonDataContext';
 import { MatchReviewScrollerSkeleton } from '../skeletons/MatchReviewScrollerSkeleton';
 
 const MatchReviewScroller = () => {
-  const { data, isFetching, selectedGames, setSelectedGame } = useContext(
+  const { data, isFetching, singleton, toolkit, navigator, replaceTicker } = useContext(
     SingletonDataContextProvider
   );
+
+  const handleChangeGame = async (ticker: any) => {
+    await singleton
+      .ma_reboot_ticker(toolkit, null, navigator, null, {}, ticker)
+      .then((ticker: any) => {
+        if (ticker) {
+          replaceTicker(ticker);
+        }
+      });
+  };
 
   if (isFetching) {
     return (
@@ -20,12 +30,12 @@ const MatchReviewScroller = () => {
 
   const renderItem = ({ item }: any) => {
     const isItemActive =
-      selectedGames?.matchup?.attributes['id']['='] === item.matchup.attributes['id']['='];
+      data?.ticker?.matchup?.attributes['id']['='] === item.matchup.attributes['id']['='];
     const textColor = isItemActive ? variables.colors.black : variables.colors.white;
     return (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => setSelectedGame(item)}
+        onPress={() => handleChangeGame(item)}
         style={{
           ...styles.item,
           backgroundColor: isItemActive ? variables.colors.activeGrey : variables.colors.grey

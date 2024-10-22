@@ -9,7 +9,7 @@ interface Props {
 }
 
 const PlayerExtraData = ({ item }: Props) => {
-  const { singleton, navigator, toolkit, selectedGames } = useContext(SingletonDataContextProvider);
+  const { singleton, data, navigator, toolkit } = useContext(SingletonDataContextProvider);
   const [chartData, setChartData] = useState<any>({});
   const [containerWidth, setContainerWidth] = useState<number>(0);
 
@@ -19,8 +19,8 @@ const PlayerExtraData = ({ item }: Props) => {
   };
 
   useEffect(() => {
-    if (selectedGames) {
-      const player = selectedGames.lineups.find(
+    if (data.ticker) {
+      const player = data.ticker.lineups.find(
         (pl: any) => pl.player.attributes.name['='] === item.playerInfo.name
       );
 
@@ -36,9 +36,9 @@ const PlayerExtraData = ({ item }: Props) => {
           navigator,
           null,
           {},
-          selectedGames,
+          data.ticker,
           player,
-          JSON.parse(singleton.data.chartDefaults),
+          JSON.parse(data.chartDefaults),
           item.stats.key,
           'recent'
         )
@@ -55,7 +55,7 @@ const PlayerExtraData = ({ item }: Props) => {
           setChartData({ bars: null });
         });
     }
-  }, [selectedGames]);
+  }, [data.ticker]);
 
   return (
     <View style={styles.extraDataContainer} onLayout={handleLayout}>

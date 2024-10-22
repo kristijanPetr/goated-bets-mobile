@@ -13,44 +13,44 @@ interface Props {
 }
 
 const PlayerBox = ({ item, selectedPlayer, handleSelectedPlayer }: Props) => {
-  const { data, singleton, toolkit, selectedGames } = useContext(SingletonDataContextProvider);
+  const { data } = useContext(SingletonDataContextProvider);
   const isSelectedPlayer = item.id === selectedPlayer;
 
   const getStatTitle = (key: string) => {
     return data?.mapMarketsToTitles?.[data?.sport]?.[key] || '';
   };
 
-  const calculateMatchGrade = useMemo(() => {
-    const player = selectedGames.lineups?.find(
-      (pl: any) => pl.player.attributes.name['='] === item.playerInfo.name
-    );
-    if (!player) {
-      return 0;
-    }
-    const playerStats = singleton.ms_generate_stats_for_player(toolkit, selectedGames, player);
+  // const calculateMatchGrade = useMemo(() => {
+  //   const player = selectedGames.lineups?.find(
+  //     (pl: any) => pl.player.attributes.name['='] === item.playerInfo.name
+  //   );
+  //   if (!player) {
+  //     return 0;
+  //   }
+  //   const playerStats = singleton.ms_generate_stats_for_player(toolkit, selectedGames, player);
 
-    const weights = {
-      hits: 2,
-      home_runs: 4,
-      rbis: 3,
-      strikeouts: -1
-    };
+  //   const weights = {
+  //     hits: 2,
+  //     home_runs: 4,
+  //     rbis: 3,
+  //     strikeouts: -1
+  //   };
 
-    // Extract the relevant stats
-    const hits = playerStats.seasonStatsRaw['batter_hits'] || 0;
-    const homeRuns = playerStats.seasonStatsRaw['batter_home_runs'] || 0;
-    const rbis = playerStats.seasonStatsRaw['batter_rbis'] || 0;
-    const strikeouts = playerStats.seasonStatsRaw['batter_strikeouts'] || 0;
+  //   // Extract the relevant stats
+  //   const hits = playerStats.seasonStatsRaw['batter_hits'] || 0;
+  //   const homeRuns = playerStats.seasonStatsRaw['batter_home_runs'] || 0;
+  //   const rbis = playerStats.seasonStatsRaw['batter_rbis'] || 0;
+  //   const strikeouts = playerStats.seasonStatsRaw['batter_strikeouts'] || 0;
 
-    // Calculate the match grade using a weighted sum of stats
-    const matchGrade =
-      hits * weights.hits +
-      homeRuns * weights.home_runs +
-      rbis * weights.rbis +
-      strikeouts * weights.strikeouts;
+  //   // Calculate the match grade using a weighted sum of stats
+  //   const matchGrade =
+  //     hits * weights.hits +
+  //     homeRuns * weights.home_runs +
+  //     rbis * weights.rbis +
+  //     strikeouts * weights.strikeouts;
 
-    return matchGrade;
-  }, [item, selectedGames, singleton]);
+  //   return matchGrade;
+  // }, [item, selectedGames, singleton]);
 
   return (
     <TouchableOpacity
