@@ -8,19 +8,21 @@ import { SingletonDataContextProvider } from '~/context/singletonDataContext';
 import { calculateData } from '../gameProps/helper';
 
 const GamePropsSection = () => {
-  const { selectedGames, singleton } = useContext(SingletonDataContextProvider);
+  const { data, singleton } = useContext(SingletonDataContextProvider);
   const [selectedStat, setSelectedStat] = useState<string>('L5');
 
-  if (!selectedGames) {
+  if (!data.ticker) {
     return null;
   }
-  const { gamelines } = selectedGames;
+
+  const selectedGame = data.ticker;
+  const { gamelines } = selectedGame;
 
   const homeOverUnder = gamelines.home_spread.oprice ? 'O' : 'U';
   const awayOverUnder = gamelines.away_spread.oprice ? 'O' : 'U';
 
   const getData = (side: string, attribute: string | null, type: string) => {
-    return calculateData(selectedStat, singleton, selectedGames, side, attribute, type);
+    return calculateData(selectedStat, singleton, selectedGame, side, attribute, type);
   };
 
   return (
@@ -32,17 +34,17 @@ const GamePropsSection = () => {
             <Text
               style={
                 styles.headingText
-              }>{`${selectedGames.awayName} @ ${selectedGames.homeName}`}</Text>
-            <Text style={styles.headingText}>{selectedGames.startTime}</Text>
+              }>{`${selectedGame.awayName} @ ${selectedGame.homeName}`}</Text>
+            <Text style={styles.headingText}>{selectedGame.startTime}</Text>
           </View>
 
           <View style={styles.teamDataContainer}>
             <View style={styles.teamAndIconContainer}>
               <Text style={{ ...styles.teamText, position: 'absolute', top: -15, left: 2 }}>
-                {selectedGames.awayName.substring(0, 3)}
+                {selectedGame.awayName.substring(0, 3)}
               </Text>
               <Image
-                source={{ uri: selectedGames.awayLogoImage }}
+                source={{ uri: selectedGame.awayLogoImage }}
                 style={styles.icon}
                 resizeMode="contain"
               />
@@ -82,11 +84,11 @@ const GamePropsSection = () => {
                   awayOverUnder === 'O' ? gamelines.total_over.oprice : gamelines.total_under.uprice
                 ]}
                 secondContainerData={[
-                  selectedGames.awayName.substring(0, 3),
+                  selectedGame.awayName.substring(0, 3),
                   getData('away', 'total_over', 'total_over')
                 ]}
                 thirdContainerData={[
-                  selectedGames.homeName.substring(0, 3),
+                  selectedGame.homeName.substring(0, 3),
                   getData('away', 'total_under', 'total_under')
                 ]}
                 secondContainerStyle={{
@@ -108,10 +110,10 @@ const GamePropsSection = () => {
           <View style={styles.teamDataContainer}>
             <View style={styles.teamAndIconContainer}>
               <Text style={{ ...styles.teamText, position: 'absolute', bottom: -15, left: 2 }}>
-                {selectedGames.homeName.substring(0, 3)}
+                {selectedGame.homeName.substring(0, 3)}
               </Text>
               <Image
-                source={{ uri: selectedGames.homeLogoImage }}
+                source={{ uri: selectedGame.homeLogoImage }}
                 style={styles.icon}
                 resizeMode="contain"
               />
@@ -146,11 +148,11 @@ const GamePropsSection = () => {
                   homeOverUnder === 'O' ? gamelines.total_over.oprice : gamelines.total_under.uprice
                 ]}
                 secondContainerData={[
-                  selectedGames.homeName.substring(0, 3),
+                  selectedGame.homeName.substring(0, 3),
                   getData('home', 'total_over', 'total_over')
                 ]}
                 thirdContainerData={[
-                  selectedGames.awayName.substring(0, 3),
+                  selectedGame.awayName.substring(0, 3),
                   getData('home', 'total_under', 'total_under')
                 ]}
                 secondContainerStyle={{

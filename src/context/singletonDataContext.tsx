@@ -1,14 +1,12 @@
-import { format } from 'date-fns';
 import toolkit from 'jsen-cls-sdk-prj-packagejs-mod-toolkit-pkg-interface-for-sdk-ecmascript';
-import React, { createContext, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import singleton from '../utils/singelton';
 
 type SingletonDataType = {
   data: any;
-  selectedGames: any;
-  setSelectedGame: (game: any) => void;
   isFetching: boolean;
-  initiateData: (data: any) => void;
+  addData: (data: any) => void;
+  replaceTicker: (ticker: any) => void;
   refetchData: (team: string, bookameker: string) => void;
   removeData: () => void;
   singleton: any;
@@ -23,34 +21,50 @@ type Props = {
 
 export const SingletonDataContext = ({ children }: Props) => {
   const [data, setData] = useState({});
-  const [selectedGames, setSelectedGames] = useState<string>('');
   const [isFetching, setIsFetching] = useState(false);
+  const [navigator, setNavigator] = useState<any>();
+  const [dom, setDom] = useState<any>();
 
-  let dom = new toolkit.sdk.dom(
-    'widget_worker', // dom name
-    'http://137.184.135.111:49992/openapi.json'
-  );
+  useEffect(() => {
+    let dom = new toolkit.sdk.dom(
+      'widget_worker', // dom name
+      'http://137.184.135.111:49992/openapi.json'
+    );
 
-  let navigator = new toolkit.sdk.navigator(dom);
-  navigator.state = {
-    doms: {
-      widget_worker: dom
-    },
-    navigators: {
-      widget_worker: navigator
-    }
-  };
+    let navigator = new toolkit.sdk.navigator(dom);
+    navigator.state = {
+      doms: {
+        widget_worker: dom
+      },
+      navigators: {
+        widget_worker: navigator
+      }
+    };
+    setNavigator(navigator);
+    setDom(dom);
+  }, []);
 
-  const loadInitialSingletonData = (data: any) => {
+  const addData = (data: any) => {
     setData(data);
   };
 
   const refetchData = async (sport: string, bookmaker: string) => {
     setIsFetching((prevState) => !prevState);
-    // navigator.dom.ms_set_authorization('');
-    const date = new Date();
+    singleton.data.updateAllTickers = true;
     await singleton
-      .ma_reboot(toolkit, null, navigator, null, {}, sport, format(date, 'yyyyMMdd'), bookmaker)
+      .ma_reboot(
+        toolkit,
+        null,
+        navigator,
+        null,
+        {},
+        sport,
+        singleton.data.yyyymmdd,
+        singleton.data.bookmaker,
+        undefined,
+        true,
+        addData
+      )
       .catch((error) => {
         console.log('error', error);
       });
@@ -58,20 +72,19 @@ export const SingletonDataContext = ({ children }: Props) => {
     setIsFetching((prevState) => !prevState);
   };
 
+  const replaceTicker = (ticker: any) => {
+    setData({ ...data, ticker });
+  };
+
   const removeData = () => {
     setData({});
   };
 
-  const handleSelectGame = (game: string) => {
-    setSelectedGames(game);
-  };
-
   const initialData = {
     data,
-    selectedGames: selectedGames,
-    setSelectedGame: handleSelectGame,
     isFetching: isFetching,
-    initiateData: loadInitialSingletonData,
+    addData: addData,
+    replaceTicker: replaceTicker,
     refetchData: refetchData,
     removeData,
     singleton,
@@ -88,10 +101,9 @@ export const SingletonDataContext = ({ children }: Props) => {
 
 export const SingletonDataContextProvider = createContext<SingletonDataType>({
   data: {},
-  selectedGames: {},
-  setSelectedGame: () => {},
   isFetching: false,
-  initiateData: () => {},
+  addData: () => {},
+  replaceTicker: () => {},
   refetchData: () => {},
   removeData: () => {},
   singleton,

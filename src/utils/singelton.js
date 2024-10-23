@@ -32,9 +32,9 @@ const data = {
 
   // @readme: Site sidebar navigation.
   carouselSport: {
-    nba: 'mlb',
-    mlb: 'nfl',
-    nfl: 'nba'
+    nba: 'nba',
+    mlb: 'mlb',
+    nfl: 'nfl'
   },
   carouselBookmaker: {
     fanduel: 'draftkings',
@@ -1106,7 +1106,7 @@ const ma_init_teamsX = function (toolkit, component, navigator, context, compone
           try {
             // @assign
             let action;
-
+            console.log('inide ma_init_teamsX', navigator.dom.root);
             // @action
             action = fs_init_action(
               navigator.dom.root.lists['membersdb.teams'].actions['GET'],
@@ -1117,7 +1117,7 @@ const ma_init_teamsX = function (toolkit, component, navigator, context, compone
               true,
               navigator.dom.constructor.fs_action_default_search_init
             );
-
+            console.log('after fs_init_action');
             // @action
             try {
               await action.ma_resubmit();
@@ -1196,10 +1196,10 @@ const ma_init_tickers = function (
 
           // @narrow
           try {
-            console.log('init teamsX invoke');
+            console.log('init teamsX invoke', navigator);
             // @action
             await ma_init_teamsX(toolkit, component, navigator, context, componentData, sport);
-
+            console.log('init teamsX invoke done');
             // @assign
             let action;
 
@@ -4758,6 +4758,8 @@ const ma_reboot = function (
             }
           }
         }
+      } else {
+        data['ticker'] = null;
       }
 
       // @switch

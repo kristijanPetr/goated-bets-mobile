@@ -1,93 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 
-interface LoginProps {}
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-// import toolkit from 'jsen-cls-sdk-prj-packagejs-mod-toolkit-pkg-interface-for-sdk-ecmascript';
-
-// import singleton from '../utils/singelton';
 import { SingletonDataContextProvider } from '~/context/singletonDataContext';
 import { useNavigation } from '@react-navigation/native';
 import { variables } from '~/utils/mixins';
 import OverlayLoader from '~/components/common/OverlayLoader';
-import OffDefSection from '~/components/OffDefSection';
-import MatchupList from '~/components/MatchupList';
-import BarChart from '~/components/BarChart';
+import SignUpOptions from '~/components/login/SignUpOptions';
+
 //kristijan@localhost
 //test'
 
+interface LoginProps {}
 const Login = (props: LoginProps) => {
-  const { initiateData, singleton, navigator, toolkit, dom } = React.useContext(
+  const { addData, singleton, navigator, toolkit, dom } = React.useContext(
     SingletonDataContextProvider
   );
   const [isLoading, setIsLoading] = useState(false);
   const [username, setUsername] = useState('kristijan@localhost');
   const [password, setPassword] = useState('test');
+  const [signUpPressed, setSignUpPressed] = useState(false);
   const navigation = useNavigation() as any;
-
-  // useEffect(() => {
-  //   const intervalId = setInterval(async () => {
-  //     console.log('singleton data: ', singleton.data);
-  //   }, 3000);
-  //   return () => clearInterval(intervalId);
-  // }, []);
-
-  const ma_init_ticker_chart_data_for_player = async () => {
-    console.log('singleton data: ', singleton.data);
-    if (singleton.data.ticker && singleton.data.ticker.lineups[0]) {
-      // await singleton
-      //   .ma_init_ticker_chart_data_for_player(
-      //     toolkit,
-      //     null,
-      //     navigator,
-      //     null,
-      //     {},
-      //     singleton.data.ticker,
-      //     singleton.data.ticker?.lineups[0]
-      //   )
-      //   .then((tick) => console.log('tick', tick))
-      //   .catch((err) => console.log('err', err));
-      // await singleton
-      //   .ma_update_ticker_lineups(toolkit, null, navigator, null, {}, singleton.data.ticker)
-      //   .then((tick) => console.log('tick', tick));
-      console.log(
-        'ms_generate_stats_for_player',
-        singleton.ms_generate_stats_for_player(
-          toolkit,
-          singleton.data.ticker,
-          singleton.data.ticker?.lineups[0],
-          true
-        )
-      );
-      console.log('getHitsPerGame', getHitsPerGame(singleton.data.ticker?.lineups[0]));
-      // await singleton
-      //   .ma_generate_chart_for_team(
-      //     toolkit,
-      //     null,
-      //     navigator,
-      //     null,
-      //     {},
-      //     singleton.data.ticker,
-      //     'away',
-      //     JSON.parse(singleton.data.chartDefaults)
-      //   )
-      //   .then((resp) => console.log('ma_generate_chart_for_team', resp));
-
-      // singleton.ms_calc_hitrate(null,null,null,null,null,)
-      await singleton
-        .ma_generate_chart_for_player(
-          toolkit,
-          null,
-          navigator,
-          null,
-          {},
-          singleton.data.ticker,
-          singleton.data.ticker?.lineups[0],
-          JSON.parse(singleton.data.chartDefaults)
-        )
-        .then((resp: any) => console.log('ma_generate_chart_for_player', resp));
-    }
-  };
 
   const onChangeText = (value: string, key: string) => {
     if (key === 'username') {
@@ -134,7 +66,7 @@ const Login = (props: LoginProps) => {
             '',
             '',
             false,
-            initiateData
+            addData
           );
 
           // await singleton
@@ -147,7 +79,7 @@ const Login = (props: LoginProps) => {
           console.log('singleton.data', singleton.data);
 
           // console.log('singleton.data', singleton.data);
-          initiateData(singleton.data);
+          addData(singleton.data);
           setIsLoading(false);
           navigation.navigate('TabNavigator');
         } catch (error) {
@@ -160,67 +92,9 @@ const Login = (props: LoginProps) => {
     });
   };
 
-  function getHitsPerGame(player: any) {
-    try {
-      // Find the player in the ticker's lineups or performances
-      // let player = ticker.lineups.find(player => player.player.id === playerId);
-
-      if (!player) {
-        console.log('Player not found in ticker.');
-        return;
-      }
-
-      // Get the player's performances data
-      let performances = player.performances;
-
-      let totalHits = 0;
-      let gamesPlayed = 0;
-
-      // Loop through the performances to calculate total hits and games played
-      performances.forEach((performance: any) => {
-        if (performance.attributes.status['='] === 'final') {
-          // Ensure the performance meta contains hits data
-          const metaStats = JSON.parse(performance.attributes.meta['=']);
-          console.log('metaStats', metaStats);
-          let hits = metaStats.batter_hits || 0;
-          totalHits += parseInt(hits, 10);
-          gamesPlayed += 1;
-        }
-      });
-
-      if (gamesPlayed === 0) {
-        console.log('No games played.');
-        return 0;
-      }
-
-      // Calculate hits per game
-      let hitsPerGame = totalHits / gamesPlayed;
-
-      console.log(`Hits per Game for player `, hitsPerGame);
-      return hitsPerGame;
-    } catch (e) {
-      console.error('Error calculating hits per game:', e);
-    }
+  if (signUpPressed) {
+    return <SignUpOptions back={() => setSignUpPressed(false)} />;
   }
-
-  // chart generation
-  // const getData = async () => {
-  //   console.log(singleton.data, 'see data before function');
-  //   await singleton
-  //     .ma_generate_chart_for_player(
-  //       toolkit,
-  //       null,
-  //       navigator,
-  //       null,
-  //       {},
-  //       singleton.data.ticker,
-  //       singleton.data.ticker?.lineups[0],
-  //       JSON.parse(singleton.data.chartDefaults),
-  //       'batter_hits',
-  //       '10def'
-  //     )
-  //     .then((resp) => console.log('ma_generate_chart_for_player', resp));
-  // };
 
   if (isLoading) {
     return <OverlayLoader isLoading={isLoading} />;
@@ -247,33 +121,15 @@ const Login = (props: LoginProps) => {
         <Text style={styles.forgotPasswordText}>Forgot Password</Text>
       </View>
       <TouchableOpacity onPress={handleLogIn}>
-        <View style={styles.logInButton}>
+        <View style={{ ...styles.logInButton, backgroundColor: variables.colors.blue }}>
           <Text style={styles.logInText}>Log in</Text>
         </View>
       </TouchableOpacity>
-
-      {/* <TouchableOpacity onPress={ma_init_ticker_chart_data_for_player}>
-        <View style={styles.logInButton}>
-          <Text style={styles.logInText}>get data</Text>
+      <TouchableOpacity onPress={() => setSignUpPressed(true)}>
+        <View style={{ ...styles.logInButton, backgroundColor: variables.colors.loginButtonGrey }}>
+          <Text style={styles.logInText}>Sign Up</Text>
         </View>
-      </TouchableOpacity> */}
-      {/* <BarChart
-        data={[
-          { label: 'A', value: 50 },
-          { label: 'B', value: 100 },
-          { label: 'C', value: 150 },
-          { label: 'D', value: 200 },
-          { label: 'E', value: 80 }
-        ]}
-        width={350}
-        height={200}
-        barColor="#4CAF50"
-      /> */}
-      {/* <OffDefSection
-        mapGamelinesToTitles={singleton.data.mapGamelinesToTitles['mlb']}
-        meta={JSON.parse(singleton.data.ticker.matchup.attributes['meta']['='])}
-      /> */}
-      {/* <MatchupList singleton={singleton.data} ticker={singleton.data.ticker} /> */}
+      </TouchableOpacity>
     </View>
   );
 };
@@ -305,7 +161,8 @@ const styles = StyleSheet.create({
     width: 300,
     marginTop: 6,
     justifyContent: 'flex-end',
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
+    marginBottom: 100
   },
   forgotPasswordText: {
     color: '#F8696B',
@@ -318,10 +175,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
     padding: 10,
-    backgroundColor: 'blue',
     justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 100
+    alignItems: 'center'
   },
   logInText: {
     color: variables.colors.white,

@@ -21,10 +21,9 @@ const StatsSelectorAndFilter = ({
   const { data } = useContext(SingletonDataContextProvider);
 
   const [isSearchFilterSelected, setIsSearchFilterSelected] = useState<boolean>(false);
-
   const filterMarketsTitles: string[] = data?.mapMarketsToAttributes?.[data?.sport] || [];
 
-  const renderItem = (item: string) => {
+  const renderItem = (item: string, value: string) => {
     const isItemActive = statsSelected.includes(item);
     return (
       <TouchableOpacity
@@ -40,7 +39,8 @@ const StatsSelectorAndFilter = ({
             ...styles.statsText,
             color: isItemActive ? variables.colors.black : variables.colors.white
           }}>
-          {data?.mapMarketsToTitles?.[data?.sport]?.[item]}
+          {data?.mapMarketsToTitles?.[data?.sport]?.[item] ||
+            data?.mapMarketsToTitles?.[data?.sport]?.[value]}
         </Text>
       </TouchableOpacity>
     );
@@ -78,8 +78,8 @@ const StatsSelectorAndFilter = ({
     <View style={styles.container}>
       <View style={styles.horizontalContainer}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: '97%' }}>
-          {Object.values(filterMarketsTitles).map((item) => {
-            return renderItem(item);
+          {Object.keys(filterMarketsTitles).map((key: any) => {
+            return renderItem(filterMarketsTitles[key], key);
           })}
         </ScrollView>
       </View>

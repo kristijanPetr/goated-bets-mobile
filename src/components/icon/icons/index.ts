@@ -19,6 +19,9 @@ export const icons = {
   draftKingsLogo: require('./draftKingsLogo.svg'),
   bullLogo: require('./bullLogo.svg'),
   fanDuel: require('./fanDuel.svg'),
-  emptyFilterArrow: require('./emptyFilterArrow.svg')
+  emptyFilterArrow: require('./emptyFilterArrow.svg'),
+  betsText: require('./betsText.svg'),
+  goatedText: require('./goatedText.svg'),
+  goatedLogo: require('./goatedLogo.svg')
 };
 export type IconTypes = keyof typeof icons;

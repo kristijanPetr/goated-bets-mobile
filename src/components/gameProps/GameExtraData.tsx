@@ -6,11 +6,11 @@ import { SingletonDataContextProvider } from '~/context/singletonDataContext';
 import BarChart from '../BarChart';
 
 interface Props {
-  data: any;
+  ticker: any;
 }
 
-const GameExtraData = ({ data }: Props) => {
-  const { singleton, toolkit, navigator } = useContext(SingletonDataContextProvider);
+const GameExtraData = ({ ticker }: Props) => {
+  const { singleton, data, toolkit, navigator } = useContext(SingletonDataContextProvider);
   const [selectedStat, setSelectedStat] = useState<string>('spread');
   const [chartDataHome, setChartDataHome] = useState<any>({});
   const [chartDataAway, setChartDataAway] = useState<any>({});
@@ -42,9 +42,9 @@ const GameExtraData = ({ data }: Props) => {
         navigator,
         null,
         {},
-        data,
+        ticker,
         'home',
-        JSON.parse(singleton.data.chartDefaults),
+        JSON.parse(data.chartDefaults),
         chartMarketHome,
         ''
       )
@@ -68,9 +68,9 @@ const GameExtraData = ({ data }: Props) => {
         navigator,
         null,
         {},
-        data,
+        ticker,
         'away',
-        JSON.parse(singleton.data.chartDefaults),
+        JSON.parse(data.chartDefaults),
         chartMarketAway,
         ''
       )
@@ -128,8 +128,12 @@ const GameExtraData = ({ data }: Props) => {
       <View style={styles.chartsContainer}>
         <View style={{ width: '50%' }}>
           <View style={styles.teamLogoAndNameContainer}>
-            <Image source={{ uri: data.awayLogoImage }} style={styles.icon} resizeMode="contain" />
-            <Text style={styles.teamNamesText}>{data.awayName}</Text>
+            <Image
+              source={{ uri: ticker.awayLogoImage }}
+              style={styles.icon}
+              resizeMode="contain"
+            />
+            <Text style={styles.teamNamesText}>{ticker.awayName}</Text>
           </View>
           {chartDataAway?.bars && chartDataAway?.bars.length > 0 ? (
             <BarChart
@@ -164,8 +168,12 @@ const GameExtraData = ({ data }: Props) => {
         </View>
         <View style={{ width: '50%' }}>
           <View style={styles.teamLogoAndNameContainer}>
-            <Image source={{ uri: data.homeLogoImage }} style={styles.icon} resizeMode="contain" />
-            <Text style={styles.teamNamesText}>{data.homeName}</Text>
+            <Image
+              source={{ uri: ticker.homeLogoImage }}
+              style={styles.icon}
+              resizeMode="contain"
+            />
+            <Text style={styles.teamNamesText}>{ticker.homeName}</Text>
           </View>
           {chartDataHome?.bars && chartDataHome?.bars.length > 0 ? (
             <BarChart

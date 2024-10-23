@@ -23,13 +23,11 @@ export type PlayerData = {
 };
 
 const PlayersList = ({ statsSelected, searchFilter, filterSelected }: Props) => {
-  const { data, selectedGames, singleton } = useContext(SingletonDataContextProvider);
+  const { data, singleton } = useContext(SingletonDataContextProvider);
   const [selectedPlayer, setSelectedPlayer] = useState<string>('');
-  const playerGamesSelected = !selectedGames ? data?.tickers : [selectedGames];
+  const playerGamesSelected = data?.ticker || {};
 
-  const playerData = playerGamesSelected?.reduce((acc: PlayerData[], ticker: any) => {
-    return [...acc, ...getPlayerData(ticker, singleton)];
-  }, []);
+  const playerData = getPlayerData(playerGamesSelected, singleton);
 
   const handleSelectedPlayer = (id: string) => {
     if (selectedPlayer === id) {
