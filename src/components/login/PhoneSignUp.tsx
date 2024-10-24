@@ -2,6 +2,7 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 import React, { useRef, useState } from 'react';
 import { variables } from '~/utils/mixins';
 import BackButton from '../common/BackButton';
+import Onboarding from './Onboarding';
 
 interface Props {
   back: () => void;
@@ -105,6 +106,9 @@ const PhoneSignUp = ({ back }: Props) => {
       </>
     );
   };
+  if (step === 3) {
+    return <Onboarding back={() => setStep(2)} />;
+  }
 
   return (
     <View style={styles.container}>
@@ -116,7 +120,13 @@ const PhoneSignUp = ({ back }: Props) => {
       {renderTextMessage()}
       {renderInputs()}
       <TouchableOpacity
-        onPress={() => setStep(2)}
+        onPress={() => {
+          if (step === 2) {
+            setStep(3);
+          } else {
+            setStep(2);
+          }
+        }}
         style={{ ...styles.button, marginTop: step === 1 ? 120 : 90 }}>
         <Text style={styles.buttonText}>{step === 1 ? 'Continue' : 'Verify'}</Text>
       </TouchableOpacity>

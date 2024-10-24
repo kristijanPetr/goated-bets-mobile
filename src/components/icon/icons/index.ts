@@ -22,6 +22,13 @@ export const icons = {
   emptyFilterArrow: require('./emptyFilterArrow.svg'),
   betsText: require('./betsText.svg'),
   goatedText: require('./goatedText.svg'),
-  goatedLogo: require('./goatedLogo.svg')
+  goatedLogo: require('./goatedLogo.svg'),
+  shareBetsWords: require('./shareBetsWords.svg'),
+  goPremiumWords: require('./goPremiumWords.svg'),
+  betSmarterWords: require('./betSmarterWords.svg'),
+  trackBetsWords: require('./trackBetsWords.svg'),
+  yellowCheckmarkCircle: require('./yellowCheckmarkCircle.svg'),
+  draftKingsSyncLogo: require('./draftKingsSyncLogo.svg'),
+  fanDuelSyncLogo: require('./fanDuelSyncLogo.svg')
 };
 export type IconTypes = keyof typeof icons;
