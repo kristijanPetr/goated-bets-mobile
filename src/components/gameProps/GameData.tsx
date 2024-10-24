@@ -172,7 +172,7 @@ const GameData = ({ item, selectedGame, handleSelectedGame, selectedStat }: Prop
           <FontAwesome5 name="angle-double-right" size={14} color="white" />
         </View>
       </View>
-      {isSelectedGame && <GameExtraData data={item} />}
+      {isSelectedGame && <GameExtraData ticker={item} />}
     </View>
   );
 };
