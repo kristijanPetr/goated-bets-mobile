@@ -26,7 +26,7 @@ const PlayersList = ({ statsSelected, searchFilter, filterSelected }: Props) => 
   const { data, singleton } = useContext(SingletonDataContextProvider);
   const [selectedPlayer, setSelectedPlayer] = useState<string>('');
   const playerGamesSelected = data?.ticker || {};
-
+  console.log(data, 'see data');
   const playerData = getPlayerData(playerGamesSelected, singleton);
 
   const handleSelectedPlayer = (id: string) => {

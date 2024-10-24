@@ -17,7 +17,10 @@ export const variables = {
     statsYellow: '#FEDC81',
     statsRed: '#F8696B',
     statsGreen: '#A9D27F',
-    headerYellow: '#F9AB23'
+    headerYellow: '#F9AB23',
+    onboardingText: '#B0B0B0',
+    inputBackground: '#F5F5F5',
+    closeButtonBackground: '#717171'
   },
 
   getHeatmapColor
