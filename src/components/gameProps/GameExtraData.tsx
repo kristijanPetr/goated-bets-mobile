@@ -14,7 +14,6 @@ const GameExtraData = ({ ticker }: Props) => {
   const [selectedStat, setSelectedStat] = useState<string>('spread');
   const [chartDataHome, setChartDataHome] = useState<any>({});
   const [chartDataAway, setChartDataAway] = useState<any>({});
-  console.log(ticker, 'see this');
   const handleSelectStats = (id: string) => {
     return setSelectedStat(id);
   };
